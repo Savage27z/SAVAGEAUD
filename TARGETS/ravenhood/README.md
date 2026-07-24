@@ -60,7 +60,7 @@ The following are design observations and fragility points — **none are exploi
 |---|----------|-------|--------|------------|------|
 | 1 | Vault | `claimBurn()` uses `amount0Min: 0, amount1Min: 0` — no slippage protection on liquidity burn; owner can be MEV-sandwiched for worse pricing | Medium | Low | 🟢 |
 | 2 | Vault | `claimFees()` is permissionless — anyone can trigger fee collection at any time; fees always go to owner so no fund loss, but timing control is ceded | Low | High | 🟢 |
-| 3 | StakingPool | `emergencyRewardWithdraw()` lets owner (single EOA) drain unclaimed rewards — documented but real centralization risk | High | Low | 🟡 |
+| 3 | StakingPool | `emergencyRewardWithdraw()` lets owner (single EOA) drain unclaimed rewards — documented but real centralization risk; **amplified by `deposit()`/`withdraw()` CEI ordering**: reward debt is updated BEFORE `_safeRewardTransfer`, so if owner drains rewards while users have pending earnings, the NEXT user interaction (deposit, harvest, withdraw) permanently zeros their pending rewards | **High** | **Medium** | 🟡 |
 | 4 | StakingPool | No stakers (~0 RVH staked on-chain) — rewards accumulating but unclaimed; owner could drain via #3 above | Low | High | 🟢 |
 | 5 | Protocol | **No on-chain buyback mechanism** — despite "deflationary burn engine" description, Vault only collects fees to owner; actual buyback is off-chain with no on-chain enforcement | Medium | Medium | 🟡 |
 | 6 | Protocol | **Vault owner ≠ DAO wallet** — two separate trust anchors; Vault owner can burn LP liquidity independently of DAO governance | Medium | Low | 🟡 |
