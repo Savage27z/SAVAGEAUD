@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.7.0 (Jul 24, 2026)
+
+- **Peeps (target #15)** — Full audit on Robinhood Chain: PeepsCurveFactory, PeepsBondingCurve, PeepsLaunchToken, PeepsLPFeeVault, PeepsCurveMath. Clean verdict.
+- **6 observations documented** — LP Fee Vault `onERC721Received` mapping corruption (anyone can overwrite `tokenPosition` with arbitrary NFTs), router/migrator centralization (single point of trust), sell can reverse graduation phase, factory params unset at construction, curve math verified sound
+- **Full combined stack applied** — TMAAR, 6-agent hunting, BountyForge triage, on-chain verification
+- **Curve math verified** — `PeepsCurveMath` correctly uses ceil-division for retained reserves (seller-favorable), constant product invariant is non-decreasing
+- **CHECKLIST.md + FINDINGS.md** updated
+
 ## v1.6.0 (Jul 24, 2026)
 
 - **Ravenhood (target #14)** — Full audit on Robinhood Chain: RVH token, RavenhoodVault, RVHStakingPool. Clean verdict.
