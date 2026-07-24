@@ -1,183 +1,224 @@
-# Methodology — The SAVAGEAUD Audit Playbook
+# Methodology
 
-Merged from top AI audit tools recommended by @0x3b33 (Pyro, co-founder @PhageSec, Lead Security Researcher @sherlockdefi). Each phase credits its source.
+## Cold Pickup Instructions
 
----
+Any agent reading this for the first time should do the following:
 
-## Phase 0: Recon (from Pashov's `x-ray`)
+1. **Read `RULES.md`** — non-negotiable constraints (5 minutes)
+2. **Read `CHECKLIST.md`** — vulnerability classes to check on every target (10 minutes)
+3. **Read `CHAIN_INFO.md`** — RPCs and quirks for chains you'll work on (5 minutes)
+4. **Read `QUICKSTART.md`** — how this repo works and what you need to do (5 minutes)
+5. **Check `README.md`** — which targets are done, which are pending
+6. **Find the next target** — use DefiLlama + Twitter. One pick at a time. Show user.
 
-**Goal:** Build a threat model before reading a single line of code.
+**Key rule you must not break:** Every target gets at least 2 focused passes from different attack angles before you call it "clean." One read-through is never enough.
 
-1. **Identify the contract surface:**
-   - All deployed contracts and their roles (vault, strategy, factory, etc.)
-   - Entry points for users (deposit, withdraw, swap, claim, etc.)
-   - Entry points for privileged roles (keeper, owner, guardian)
-   - Upgrade/migration paths (proxies, timelocks, strategy swaps)
+## Division of Labor
 
-2. **Map the trust model:**
-   - Who can move funds?
-   - Who can pause/panic?
-   - Who can change parameters?
-   - Is the owner a multi-sig or EOA?
-   - Can any role rug users?
+- **Agent (breadth):** Find targets, read code, flag suspicious assumptions, quantify edge cases
+- **𝖲𝖠𝖵𝖠𝖦𝖤 (depth):** Verify exploitability on a local fork, write reports, disclose privately
 
-3. **Identify external dependencies:**
-   - Oracles (Chainlink, TWAP, custom)
-   - Bridges
-   - Other protocols integrated (Uniswap, Aave, Morpho, etc.)
-   - Tokens with unusual behavior (rebasing, fee-on-transfer, pausable)
+## Workflow
 
-4. **Check what's already known:**
-   - Has the project been audited? Read the reports.
-   - What did the auditors find? What did they miss?
-   - Search Solodit (via Claudit) for similar patterns.
+### 1. Target Selection
+- Search DefiLlama, DexScreener, Twitter for small fresh protocols
+- Filter: <$5M TVL, <30 days old, EVM, reachable team, no published audit
+- Vet team via X/Twitter (followers, posting frequency, responsiveness)
+- Present options to user before diving into code
 
-**Output:** `TARGETS/<name>/threat-model.md`
+### 2. Contract Analysis
+- Always pull **verified source from chain explorer** (not GitHub — verify bytecode match)
+- Read with these questions:
+  - Who can move the money? What gates it?
+  - What happens when funds cross contract boundaries?
+  - Can a stranger trigger something only the team should?
+- Check standard seams: access control, reentrancy, oracles, rounding, upgrades, external calls, MEV
 
----
+### 3. Static Analysis
+- Run Slither on every target
+- Categorize findings: false positives vs leads to investigate
+- Never submit raw Slither output as findings
 
-## Phase 1: Read (from Nemesis — Feynman approach)
+### 4. Fork Testing
+- Fork the chain locally (`anvil --fork-url <rpc>`)
+- Write Foundry tests for basic integration + edge cases
+- 8+ test categories: deployment, config, access control, economic invariants, edge cases, reentrancy
 
-**Goal:** Question WHY every line exists. Understand the contract's assumptions before looking for violations.
+### 5. Proving (user's domain)
+- Fork the chain locally
+- Write Foundry PoC that demonstrates exploit end-to-end
+- If it doesn't work on the fork, drop it
 
-1. **Start from the verified source on the chain explorer** — never from a GitHub repo that might not match what's deployed. Verify bytecode matches.
+### 6. Finding Triage (inspired by BountyForge v2.0)
 
-2. **Read with the three questions:**
-   - **Who can move the money?** Map every function that transfers value or changes balances, and what gates it.
-   - **What happens at the risky moment?** Trace every external call. What state was written before? What happens after? Can it re-enter?
-   - **Can a stranger trigger something only the team should?** Missing/wrong modifiers, initializers left open, functions that assume an internal caller.
+Before anything goes to reporting, every finding passes through 4 gates:
 
-3. **For every function, ask WHY:**
-   - Why does this parameter exist?
-   - Why is this check here (or not here)?
-   - Why this rounding direction?
-   - Why this order of operations?
-   - What assumption would make this safe — and what happens if that assumption is wrong?
+```
+Raw Finding → Gate 0 (Reality) → Gate 1 (Impact) → Gate 2 (Dedup) → Gate 3 (Quality) → Report
+```
 
-4. **Look for state coupling** (from Nemesis):
-   - State variables that are updated in one function but not in another related function
-   - Asymmetric assumptions (e.g., "this is always called after that" with no enforcement)
+#### Gate 0: Reality Check (30 seconds)
 
-**Output:** Annotated source with questions. `TARGETS/<name>/read-notes.md`
+**Must be real** — confirmed via fork simulation or on-chain call, not speculation.
 
----
+| Evidence | What Counts | What Doesn't |
+|----------|-------------|--------------|
+| Fork PoC | Foundry test that demonstrates the path end-to-end | "The code looks like it could..." |
+| On-chain call | `eth_call` with boundary conditions proving the behavior | "This pattern is dangerous in general" |
+| Code trace | Exact line numbers for the unguarded path | "I read the code and it seems like..." |
 
-## Phase 2: Hunt (from sc-auditor — 6 parallel agents)
+**KILL conditions** (drop the finding):
+- You haven't run it. Speculation is not a finding.
+- "This type of contract is often vulnerable to..." — pattern matching without testing
+- Tested only with happy path — need the exploit path
+- Ambiguous signal — "the response was different so there might be..."
 
-**Goal:** Systematically check every vulnerability class. Run these in parallel for each contract.
+**Demote conditions** (downgrade to note):
+- Real behavior but requires specific conditions that are unlikely
+- Real but only informational (no fund movement)
 
-### Agent 1: Access Control
-- Are modifiers used correctly? No missing `onlyOwner` on sensitive functions?
-- Can a user call something only the owner should?
-- Are role assignments protected?
-- Are initializers re-callable (in upgradeable contracts)?
-- Timelocks — can they be bypassed?
+#### Gate 1: Impact Validation
 
-### Agent 2: Reentrancy (all variants)
-- **Classic:** External call before state write (check CEI pattern)
-- **Cross-function:** Two functions in the same contract share state, one makes an external call
-- **Cross-contract:** Shared state across two contracts, one makes an external call
-- **Read-only:** A view function that returns manipulated state during a reentrant call
-- **Emergency exits:** Do pause/panic functions properly stop reentrancy?
+**The Impact Litmus Test:**
 
-### Agent 3: Accounting & Rounding
-- **Rounding direction:** Who does rounding favor? User or protocol?
-- **Precision loss:** Division before multiplication, truncated amounts
-- **Share price manipulation:** First-depositor attacks, donation attacks, PPS inflation/deflation
-- **Fee calculation:** Are fees taken from principal or yield? Can fees be bypassed?
-- **Cumulative loss:** Over many transactions, does rounding create measurable value extraction?
+> "An attacker can **\_\_\_\_\_** , resulting in **\_\_\_\_\_**."
 
-### Agent 4: Price & Oracle
-- **Spot price reliance:** Is spot price used without manipulation protection?
-- **TWAP:** Is the TWAP window long enough? Can it be gamed?
-- **Single oracle:** Is there a fallback if the primary oracle fails?
-- **Oracle manipulation:** Can a flash loan move the price within the permitted range?
-- **Calmness checks:** What defines "calm"? Can it be manipulated?
+- **PASS:** "An attacker can steal all user deposits by calling `redeem()` with a crafted shares value, resulting in loss of $73K in protocol TVL."
+- **FAIL:** "potentially access funds", "theoretically could", "could be used in a chain" (build the chain first)
 
-### Agent 5: Economic
-- **MEV exposure:** Slippage parameters, deadlines, sandwich protection
-- **Front-running:** Is there a predictable state change that can be front-run?
-- **Griefing:** Can a user prevent others from using the protocol?
-- **Donation attacks:** Can tokens be donated to inflate share price and steal from depositors?
-- **Rebalancing value extraction:** Can a keeper/operator extract value through rebalancing?
+**Impact Tiers:**
 
-### Agent 6: External Calls & Integrations
-- **Unchecked return values:** Are external call return values checked?
-- **Arbitrary call targets:** Can a user or privileged role call arbitrary addresses?
-- **Fee-on-transfer tokens:** Does the contract handle tokens that take a fee on transfer?
-- **Rebasing tokens:** Does the contract assume a fixed balance?
-- **ERC-777 / callback tokens:** Can a token callback re-enter the contract?
-- **Approvals:** Standing approvals to external contracts — can they be abused?
+| Tier | Impact | Examples for Smart Contracts | Severity |
+|------|--------|------------------------------|----------|
+| T0 | Critical | Drain all funds, mint unlimited tokens, brick the contract permanently | Critical |
+| T1 | High | Drain specific user funds, steal all fees, grief all withdrawals | High |
+| T2 | Medium | Drain dust/small amounts, grief specific users, temporary DoS | Medium |
+| T3 | Low | Informational rounding, event spam, non-exploitable edge case | Low |
+| T4 | None | Missing events, gas optimization, style issues | **DO NOT REPORT** |
 
-### Devil's Advocate (from sc-auditor)
+**Common inflation to reject:**
+- "Owner can steal" ⮕ design choice unless there's a trust-minimization angle (RULES.md #6)
+- "Reentrancy" without a concrete fund-movement path ⮕ not a finding
+- "Centralization risk" without exploitability ⮕ informational at best
 
-After every finding, **try to kill it**:
-- Is this actually exploitable, or just a best-practice violation?
-- What are the preconditions? Are they realistic?
-- Can a real user trigger this, or only a privileged role?
-- Would this be caught by normal slippage/deadline checks?
-- Is there a cheaper/more obvious way to exploit the same thing?
+#### Gate 2: Deduplication Check
 
-If the finding survives the Devil's Advocate, it's worth proving.
+Search before reporting:
+- [ ] Solodit (`https://solodit.cyfrin.io`) — 50K+ searchable smart contract findings
+- [ ] Target's changelog / release notes — was this already fixed?
+- [ ] GitHub Issues for target repo — search "security", "vuln", bug class
+- [ ] Known issues / out of scope page
 
----
+| Situation | Action |
+|-----------|--------|
+| Same bug, same root cause | KILL — don't report duplicates |
+| Different bug on same surface | CONTINUE |
+| Same bug but your PoC proves higher impact | REPORT with escalation language |
 
-## Phase 3: Proving (from Plamen + foundry-poc-mainnet-fork)
+#### Gate 3: Report Quality
 
-**Goal:** Prove every finding on a fork, or discard it.
+- **Title format:** `[Bug Class] in [Contract/Function] allows [attacker] to [action]`
+- **PoC:** Copy-pasteable Foundry test. Triager runs it and sees the same result.
+- **Evidence:** Transaction hash or fork output showing the exploit
+- **Minimal:** Shortest sequence of calls that demonstrates impact
 
-1. **Fork the chain:**
-   ```bash
-   anvil --fork-url <rpc> --fork-block-number <block>
-   ```
+### 7. Reporting (user's domain)
+- Short and reproducible: what the bug is, what it costs, exact code, exact command to reproduce
+- "Do not trust me; run this yourself"
+- Send privately. Never disclose while bug is open.
 
-2. **Write a Foundry test:**
-   - Use real deployed addresses — no mocks, no `vm.store` cheats
-   - Demonstrate the exploit end-to-end
-   - Show the money moving
+## Target Discovery Sources
+1. DefiLlama API — `GET https://api.llama.fi/protocols`, filter by `listedAt > 30 days ago`, `tvl < $5M`, EVM chains, category in [Dexs, Yield, Yield Aggregator, Lending, CDP]
+2. DexScreener new pairs — `GET https://api.dexscreener.com/token-profiles/latest/v1`
+3. Twitter — search for launch announcements, cross-reference with project handles
+4. New chain hunting — recently launched L2s/L3s have fresh unaudited protocols
 
-3. **If the test passes** → the bug is real. Write it up.
-4. **If the test fails** → the finding dies here. Move on.
+## Multi-Pass Philosophy
 
-**Template:** See `TEMPLATES/poc-template.t.sol`
+**One pass is NOT an audit.** Every target gets multiple independent passes:
 
----
+1. **Phase 0: Recon** — Threat model, surface map, trust model, external deps
+2. **Phase 1: Read** — Feynman approach: question WHY every line exists
+3. **Phase 2: Hunt** — Run through 6-agent checklist systematically
+4. **Phase 3: Tools** — Slither + manual triage
+5. **Phase 4: Fork tests** — Integration + edge cases
+6. **Phase 5: Deep dive** — Second focused pass on different attack angles
 
-## Phase 4: Writing Up
+## Key Techniques (informed by Open-Kritt / Blockian)
 
-**Goal:** Short, reproducible, honest.
+### Narrow, Specific Workflows
+The narrower and more specific a pass is, the better it performs. Instead of "find all vulnerabilities," run focused passes:
+- "Find reentrancy paths in the deposit flow"
+- "Check rounding direction in share calculation"
+- "Find unprotected initializers"
 
-Every finding contains:
-- **Title** — what the bug is, one sentence
-- **Severity** — Critical / High / Medium / Low / Gas
-- **Description** — what it costs, who is affected, preconditions
-- **Location** — file, function, line numbers
-- **Proof of Concept** — exact command to reproduce and test output
-- **Recommendation** — how to fix it
+### Brute Force on Entry Points
+Map all entry points × bug classes, then attack each combination. More passes = more results.
 
-The strongest line you can give a team: *"Do not trust me; run this yourself."*
+### Anchored Deduplication
+Process findings in small batches. Merge duplicates into canonical findings, then use those as anchors for the next batch. Keeps comparisons manageable and prevents the same bug being reported N times.
 
-**Template:** See `TEMPLATES/finding.md`
+### Relative Ranking
+Rating findings in isolation inflates severity. Instead ask: "Which of these two findings is more promising?" — pairwise comparison produces more reliable prioritization.
 
----
+### Repeats for Enumeration
+A second pass often finds entry points and attack paths the first one missed. After completing all phases, run a fresh pass from a different angle.
 
-## Phase 5: Reporting
+### On-Chain Verification of Time-Bounded Operations
+Some contracts have time-windowed functions (`pin()`, `freeze()`, `commit()`) that only work within certain blocks/timestamps. **Verify these on-chain before reporting:**
 
-1. **Send privately** — email, DM, or their security contact
-2. **Include the report + PoC** — the team may bring you in to help fix
-3. **Ask what they offer as a reward** — after the report lands, not before
-4. **Help verify the fix** once the change is deployed
+1. Compute correct function selectors using `pycryptodome` (`Crypto.Hash.keccak`)
+2. Call the function with boundary timestamps (far past, near past, near future, far future)
+3. Confirm revert errors match expected behavior (e.g., `"OLD"`, `"FutureTimestamp"`)
+4. Simulate the full settlement/operation flow using `eth_call` to verify it doesn't revert with unexpected errors
+5. Test fallback paths — what happens if nobody calls the time-bounded function within the window?
 
----
+Discovered during the Cleave audit: the `PinnableOracle.pin()` appeared dangerous (permissionless price override) but on-chain testing revealed a 6-hour window and a fallback to historical TWAP, making it safe.
 
-## Tools Reference
+### Multiple Models
+Different models excel at different tasks. When available, use multiple model backends — one for code comprehension, another for creative exploit construction.
 
-| Tool | When to use | How to access |
-|------|-------------|---------------|
-| Pashov x-ray | Pre-audit scan | `skills/` in this repo |
-| Pashov solidity-auditor | Fast feedback during read | `skills/` in this repo |
-| Claudit | Find similar bugs in Solodit | MCP server |
-| Plamen ($30-100) | Deep autonomous audit | PlamenTSV/plamen on GitHub |
-| foundry-poc-mainnet-fork | PoC template | cholakovvv/foundry-poc-mainnet-fork |
-| sc-auditor | Parallel hunting + Devil's Advocate | Archethect/sc-auditor |
-| Nemesis | Feynman + state audit loop | 0xiehnnkta/nemesis-auditor |
+### Learning from Disclosed Reports ("What Changed" Method)
+
+> *"A hunter who reads 10 disclosed reports before hunting finds 3-5x more bugs than one who starts blind."*
+
+The "What Changed" method is the highest-ROI learning technique for smart contract auditing:
+
+1. **Find a disclosed report** for a similar protocol or the same tech stack (EVM, same patterns like ERC-4626, same primitives like Uniswap v4 hooks)
+2. **Locate the fix commit** → read the diff to understand exactly what was wrong
+3. **Identify the anti-pattern** — what was the developer's mistake? (e.g., using `balanceOf` without checking if the token is fee-on-transfer)
+4. **Grep your target's source** for the same anti-pattern
+5. **Test every match**
+
+**Where to find disclosed reports for smart contracts:**
+- **Solodit** (`https://solodit.cyfrin.io`) — 50K+ searchable audit findings, filter by protocol type and bug class
+- **Immunefi** disclosed reports — per-program hacktivity
+- **Code4rena** findings repo — all past contest findings
+- **Spearbit / Sherlock / Codehawks** — disclosed audit reports
+
+**Pattern extraction framework** — for every report you read, capture:
+1. What was the vulnerable endpoint/function pattern?
+2. What check was MISSING?
+3. What told the auditor to look there?
+4. What was the fix?
+5. Can you generalize this pattern?
+
+Update CHECKLIST.md with every new anti-pattern discovered.
+
+### Anti-Pattern Library (Live Document)
+
+As we audit targets and learn from disclosed reports, build a shared anti-pattern library. The CHECKLIST.md is where these live — organized by vulnerability class, not by target. Every time you learn something new, add a row to the "Added per Target" table.
+
+Examples (from BountyForge + our experience):
+- **Oracle pin windows** — time-bounded functions need on-chain boundary testing before reporting (discovered: Cleave)
+- **Single-EOA sequencer** — one compromised key can drain all funds (discovered: OBSDN)
+- **Rounding direction** — deposit DOWN, withdraw DOWN = 1 wei max but must quantify (discovered: Quiver)
+- **Staged randomness fallback** — if VRF times out, does the fallback source weaken security? (discovered: SLVR)
+
+## Walking Away
+Not every target produces a finding. After a full multi-pass analysis with nothing exploitable, say so and move on. Never inflate severity.
+
+## Repo References
+- Open-Kritt orchestration engine: https://github.com/Kritt-ai/open-kritt
+- Blockian (Immunefi #18): https://immunefi.com/profile/Blockian/
+- BountyForge v2.0 (finding triage, disclosed report learning): https://github.com/Gabson0x/bountyforge/releases/tag/v2.0.0

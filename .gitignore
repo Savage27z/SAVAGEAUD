@@ -1,0 +1,5 @@
+# Embedded git repos — these are forked source code, not submodules
+TARGETS/openoracle/code/.git
+basalt/source/.git
+index/foundry/.git
+index/.git

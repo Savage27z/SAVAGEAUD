@@ -1,44 +1,80 @@
-# SAVAGEAUD 🎯
+# SAVAGE Audit Operations
 
-**Independent smart contract security research.** No client, no invite, no special access — smart contracts are public code holding money, and anyone can read them and report what's broken.
+**Maintainer:** 𝖲𝖠𝖵𝖠𝖦𝖤 (@Savage27z)
 
-## How it works
+A living audit operations repo. Any agent can pick this up cold and continue the work.
 
-- **I (the agent)** do breadth — find candidates, read code, flag suspicious assumptions, write PoCs
-- **You (the hunter)** do depth — verify exploitability on a local fork, report findings privately, negotiate bounties
-- **The rules don't bend** — see [RULES.md](./RULES.md)
+## Quick Start
 
-## Repo structure
+New to this repo? Read `CLAUDE.md` first.
+
+## Structure
 
 ```
-SAVAGEAUD/
-├── README.md           ← You're here
-├── SOUL.md             ← Agent operating principles
-├── METHODOLOGY.md      ← Full audit playbook (merged from top auditors)
-├── CHECKLIST.md        ← Every vulnerability class to check
-├── RULES.md            ← Non-negotiable constraints
-├── CHAIN_INFO.md       ← RPCs, explorers, chain IDs
-├── TEMPLATES/          ← Finding/report/PoC templates
-├── SKILLS/             ← Loadable agent skills
-└── TARGETS/            ← Per-protocol findings
-    └── quiver-protocol/
-    └── apyee/
+audit/
+├── CLAUDE.md            # Agent context — read this first
+├── QUICKSTART.md        # Cold pickup guide
+├── METHODOLOGY.md       # How we audit — target selection → reading → proving → reporting
+├── CHECKLIST.md         # Vulnerability classes checked on every target (improves over time)
+├── RULES.md             # Non-negotiable rules
+├── CHAIN_INFO.md        # RPCs, explorers, chain IDs per chain
+├── CHANGELOG.md         # Version history
+├── FINDINGS.md          # Central findings index
+├── TEMPLATES/           # Finding/report/target-summary templates
+└── TARGETS/             # All targets (symlinks + READMEs)
+    ├── quiver-protocol/ # ✅ Robinhood Chain
+    ├── slvr/            # ✅ Robinhood Chain
+    ├── index/           # ✅ Robinhood Chain
+    ├── moonvault/       # ✅ Robinhood Chain
+    ├── openoracle/      # ✅ Base
+    ├── windfall-lotto/  # ✅ Polygon
+    ├── basalt/          # ✅ Arbitrum (symlink)
+    ├── cleave/          # ✅ Ethereum (symlink)
+    ├── obsdn/           # ✅ Monad (symlink)
+    ├── sukukfi/         # ✅ Berachain (symlink)
+    ├── arcis/           # ✅ Base (symlink)
+    └── ...              # Next target goes here
 ```
 
-## Targets
+## Current Status
 
-| Target | Status | TVL | Findings | Reportable |
-|--------|--------|-----|----------|------------|
-| Quiver Protocol | ✅ Analyzed | Not live | 0 critical, ~4 info | ❌ Nothing to report |
-| Apyee | 🔍 In progress | $17K | TBD | TBD |
-| ... | | | | |
+| # | Target | Chain | TVL | Listed | Status | Verdict | Date |
+|---|--------|-------|-----|--------|--------|---------|------|
+| 1 | Quiver Protocol | Robinhood Chain | $3.1K | Jul 21 | ✅ Complete | 🟢 Informational only | Jul 21 |
+| 2 | SLVR GridLottery | Robinhood Chain | — | — | ✅ Complete | 🟢 Clean | Jul 22 |
+| 3 | The Index | Robinhood Chain | — | — | ✅ Complete | 🟢 Clean | Jul 22 |
+| 4 | Moonvault | Robinhood Chain | $580 | Jul 22 | ✅ Complete | 🟢 Clean (Beefy fork) | Jul 22 |
+| 5 | Basalt Vault | Arbitrum | $119K | Jul 12 | ✅ Complete | 🟢 Clean | Jul 23 |
+| 6 | OBSDN | Monad | $220K | May 26 | ✅ Complete | 🟢 Clean — report shared | Jul 22 |
+| 7 | Cleave | Ethereum | $76 | Jul 1 | ✅ Complete | 🟢 Clean | Jul 23 |
+| 8 | SukukFi | Berachain | $54 | Jul 8 | ✅ Complete | 🟢 Clean (C4 audited) | Jul 23 |
+| 9 | openOracle | Base | $3.5K | — | ✅ Complete | 🟢 Clean | Jul 24 |
+| 10 | Arcis Protocol | Base | $120 | Jun 29 | ✅ Complete | 🟢 Clean | Jul 23 |
+| 11 | Windfall Lotto | Polygon | $1.4K | Jul 24 | ✅ Complete | 🟢 Clean | Jul 24 |
 
-## Built from
+## Get Started
 
-Methodology merged from top AI audit tools by @0x3b33 (Pyro / PhageSec / Sherlock):
-- Pashov skills (@pashovkrum)
-- Claudit (@MartinMarchev)
-- Plamen (@p_tsanev)
-- sc-auditor (@archethect)
-- Nemesis (@0xiehnnkta)
-- foundry-poc-mainnet-fork (@cholakovvv)
+```bash
+# Read the agent context first
+cat CLAUDE.md
+
+# Read the methodology
+cat METHODOLOGY.md
+
+# Check what's been done
+cat CHECKLIST.md
+
+# Hunt for the next target
+# → Search DefiLlama + Twitter for fresh unaudited protocols
+# → Filter: <$200K TVL, <30 days old, EVM, non-DEX, reachable team
+# → Present 1 option to user
+```
+
+## Conventions
+
+- **Finding templates:** `TEMPLATES/finding.md`
+- **Target summary template:** `TEMPLATES/target-summary.md`
+- **Multi-pass mandatory:** At least 2 focused reads with different attack angles
+- **All targets live under TARGETS/:** root-level dirs have symlinks there
+- **Reporting:** User handles disclosure. You prepare the report.
+- **Nothing reportable = say so.** Never inflate severity.

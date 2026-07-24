@@ -1,76 +1,107 @@
 # Vulnerability Checklist
 
-Systematic checklist to run against every target. Check off each item and link findings.
-Use Claudit (MCP) to search Solodit's 20k+ findings for similar patterns.
+Check every target against this list. Update as new vulnerability angles are discovered.
 
-## Access Control
-- [ ] `onlyOwner` / `onlyRole` on every sensitive function
-- [ ] Initializers protected against re-call (upgradeable contracts)
-- [ ] Role assignment is itself protected
-- [ ] No functions that assume an internal caller without enforcement
-- [ ] Emergency functions (pause, panic) — who can call? Can they unpause/unpanic?
-- [ ] Timelocks — can they be bypassed? Is the delay meaningful?
-- [ ] Self-destruct or delegatecall — any rug vectors?
+## ✅ Checked on Every Target
 
-## Reentrancy
-- [ ] CEI pattern in every state-changing function
-- [ ] Cross-function reentrancy (two functions share state, one makes external call)
-- [ ] Cross-contract reentrancy (shared state across two contracts)
-- [ ] Read-only reentrancy (view function returns manipulated state)
-- [ ] `nonReentrant` modifier on all user-facing entry points
-- [ ] Emergency exits (pause/panic) — do they properly halt reentrant flows?
-- [ ] Callback tokens (ERC-777, ERC-1155 hooks, Uniswap V3 callbacks)
+### Access Control
+- [ ] `onlyOwner` / modifiers on every state-changing function
+- [ ] Initializers guarded (can't be front-run or re-called)
+- [ ] Role assignment — can non-admins grant themselves roles?
+- [ ] Proxy admin — who controls upgrades?
+- [ ] Immutability — can the contract be upgraded or parameters changed?
 
-## Accounting & Share Math
-- [ ] Rounding direction — always check favorability
-- [ ] First-depositor / share inflation attacks
-- [ ] Donation attacks (donate to inflate PPS)
-- [ ] Division before multiplication (precision loss)
-- [ ] Fees — taken from yield or principal? Can fees be inflated?
-- [ ] Cumulative rounding loss over many transactions
-- [ ] Share price calculation — what's in the numerator and denominator?
+### Reentrancy
+- [ ] ReentrancyGuard on external-facing state-changing functions
+- [ ] CEI (Checks-Effects-Interactions) pattern
+- [ ] Cross-function reentrancy (state read before write)
+- [ ] Read-only reentrancy (view function returns inconsistent state)
+- [ ] Callback tokens (ERC-777/ERC-1363) — can token transfer trigger reentrancy?
 
-## Price & Oracle
-- [ ] Spot price usage — any manipulation protection?
-- [ ] TWAP window — long enough? Minimum enforced?
-- [ ] Calmness checks — what defines calm? Can it be manipulated?
-- [ ] Oracle fallback — what if primary oracle fails?
-- [ ] Single point of failure (one price source)
-- [ ] Price deviation tolerance — too wide?
+### Math & Accounting
+- [ ] Rounding direction — does it favor the user or the protocol?
+- [ ] First-depositor inflation (seed to dead address?)
+- [ ] Donation attacks — can PPS be inflated without minting shares?
+- [ ] Fee-on-transfer / rebasing token compatibility
+- [ ] Division by zero guards
+- [ ] Integer overflow (pre-0.8 Solidity)
+- [ ] Share ratio manipulation — can the P/N ratio be skewed?
 
-## Economic
-- [ ] MEV exposure — slippage, deadlines, sandwich protection
-- [ ] Front-running — is there a predictable state change?
-- [ ] Griefing — can one user prevent others from using the protocol?
-- [ ] Flash loan attack surface — can a flash loan move the state?
-- [ ] Rebalancing — can keeper extract value?
-- [ ] Deposit/withdraw race conditions — can someone jump ahead of you?
+### Randomness / Oracles
+- [ ] On-chain randomness source (predictable?)
+- [ ] Oracle manipulation (flash loans + spot price)
+- [ ] Stale price data
+- [ ] TWAP manipulation feasibility
+- [ ] Oracle fallback — what happens if the oracle reverts?
+- [ ] **Pin/window mechanisms** — time-bounded operations verified on-chain (call with boundary timestamps to confirm revert behavior)
+- [ ] **Historical price fallback** — does the oracle support `priceAt(timestamp)` for accurate historical data?
+- [ ] **Permissionless oracle game theory** — can a reporter manipulate settlement windows? Can dispute economics be gamed?
+- [ ] **Settlement-by-absence** — what happens if no one disputes within the window? Is there a fallback?
 
-## External Calls & Integrations
-- [ ] Unchecked return values from external calls
-- [ ] Arbitrary call targets — unbounded external calls
-- [ ] Fee-on-transfer tokens — balance assumptions
-- [ ] Rebasing tokens — balance assumptions
-- [ ] ERC-777 / callback tokens — reentrancy via token hooks
-- [ ] Infinite approvals / standing approvals to external contracts
-- [ ] Delegatecall — storage collision risk
+### Upgrades
+- [ ] Storage collision risk
+- [ ] Uninitialized implementation (can it be self-destructed?)
+- [ ] Timelock on upgrade path
 
-## Upgrades & Proxies
-- [ ] Storage layout compatibility (upgradeable contracts)
-- [ ] Initializer protection (OpenZeppelin initializer modifier)
-- [ ] Proxy admin — who controls it? Can they rug?
-- [ ] Timelock on upgrades — delay meaningful?
-- [ ] Beacon / UUPS — different upgrade paths, different risks
+### External Calls
+- [ ] Unchecked return values
+- [ ] Arbitrary call targets
+- [ ] Gas exhaustion via external calls
+- [ ] Returndata bomb protection
+- [ ] SafeERC20 used for token transfers
+- [ ] Callback ignored on failure — does settlement depend on callback outcome?
 
-## Gas & Optimization (bonus)
-- [ ] Unbounded loops (DoS)
-- [ ] Redundant storage reads
-- [ ] Inefficient data structures
-- [ ] Unnecessary external calls
+### MEV / Front-running
+- [ ] Slippage protection on user entry points
+- [ ] Deadline/timelock on user actions
+- [ ] Sandwich vulnerability on AMM interactions
 
-## Target-Specific
-- [ ] DEX: AMM math, price impact, impermanent loss accounting
-- [ ] Lending: Liquidation logic, LTV calculations, oracle usage
-- [ ] Vault: Share accounting, harvest/compound, keeper rebalancing
-- [ ] Bridge: Message verification, relayer trust assumptions
-- [ ] Yield Aggregator: Strategy swaps, fee-on-transfer tokens, harvest math
+### Gambling / Game-Specific
+- [ ] Randomness timing — can outcome be predicted before bet closes?
+- [ ] Round transition — can bets be placed after close?
+- [ ] Winner selection — manipulable weighted selection?
+- [ ] Jackpot triggers — can jackpot be forced or prevented?
+
+### Async Operations (Keeper-Driven)
+- [ ] Two-stage settlement — can a user's funds be stuck between stages?
+- [ ] Keeper griefing — can keeper skip execution to cause losses?
+- [ ] Keeper trust — what can a malicious keeper do within bounds?
+- [ ] Deadline/grace period — what happens after timeout?
+- [ ] **Access-controlled endpoints** — can a non-keeper trigger settlement functions?
+
+### Clone / Factory Systems
+- [ ] Clone initialization — can clones be front-run or self-destructed?
+- [ ] Storage collision between implementation and clone
+- [ ] Factory access control — who can mint new clones?
+
+### Handler / Module Architecture
+- [ ] Handler upgrade path — can a malicious handler be installed?
+- [ ] Cross-handler state consistency
+- [ ] Router/call dispatch — can arbitrary handler calls be injected?
+- [ ] `delegatecall` / `universalCall` paths — can arbitrary code execution be injected?
+
+### Sequencer / Operator Trust
+- [ ] **Single-EOA sequencer key** — can a compromised sequencer drain funds? Can they match orders at manipulated prices?
+- [ ] **Sequencer role separation** — is there a separate key for matching vs settlement vs withdrawal?
+- [ ] **Off-chain matching** — can the sequencer front-run user orders? Can orders be censored?
+
+### General
+- [ ] Keeper dependency — what happens if keeper stops?
+- [ ] Emergency pause — can funds be withdrawn while paused?
+- [ ] Self-destruct / force-feeding risks
+- [ ] Recoverable funds — stuck tokens rescue path
+- [ ] **No-owner / fully permissionless** — verify game theory is sound without admin oversight
+
+## 📝 Added per Target
+
+| Target | New insights / checklist items added |
+|--------|--------------------------------------|
+| Quiver Protocol | Rounding quantification (1 wei max) |
+| SLVR | Randomness safety buffer, Fenwick tree integrity |
+| Index | Router safety invariants, returndata bomb protection |
+| Moonvault | Standard Beefy fork, no novel findings |
+| Basalt Vault | Cross-system pricing (E8/E18/E28), async settlement grace, universalCall delegatecall path, clone factory initialization |
+| Cleave | Oracle pin window verification (time-bounded operations), historical TWAP fallback safety, permissionless pin as feature not bug |
+| OBSDN | Single-EOA sequencer key risk, sequencer role separation, off-chain matching trust model, multi-collateral pricing, async settlement in perp DEX |
+| openOracle | Permissionless oracle game theory, settlement-by-absence, self-dispute economics, no-owner architecture, callback gas grief protection |
+| SukukFi | Already Code4rena audited — no new checklist items from solo review |
