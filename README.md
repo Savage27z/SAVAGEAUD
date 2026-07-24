@@ -59,6 +59,7 @@ audit/
 | 15 | Peeps | Robinhood Chain | $26K | Jul 23 | ✅ Complete | 🟢 Clean | Jul 24 |
 | **16** | **HoodBets** | **Robinhood Chain** | **$803** | **Jul 3** | **✅ Complete** | **🟢 Clean** | **Jul 24** |
 | **17** | **Hood Index** | **Robinhood Chain** | **$75** | **Jul 17** | **✅ Complete** | **🟢 Clean** | **Jul 24** |
+| **18** | **STEEL** | **Robinhood Chain** | **$911** | **Jul 24** | **✅ Complete** | **🟢 Clean** | **Jul 24** |
 | | **Next target** | TBD | — | — | ⏳ Ready when you are | — | — |
 
 ## Get Started

@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.10.0 (Jul 24, 2026)
+
+- **STEEL (target #18)** — Full audit on Robinhood Chain: SteelMineV2 (SLVR.fun fork with veSTEEL staking, auto-subscribe, motherlode, refining). Clean verdict.
+- **5 observations** — Owner can redirect staker rewards (changeable veSteel address), jackpot odds derived from same drand randomness (second preimage, safe), auto-subscribe grief risk (permissionless keeper), carry accumulators unbounded (no cap, pays to next winner), integer division dust in auto-subscribe escrow
+- **New mechanics analyzed** — Auto-subscribe escrow system, motherlode accumulators with 1/625 jackpot roll, ORE-style refining dividend index, carry-forward for no-winner rounds
+- **Contract sources saved** — SteelMineV2 (728 lines) + secondary instance
+- **18 targets audited, all clean**
+
 ## v1.9.0 (Jul 24, 2026)
 
 - **Hood Index / hMAG7 (target #17)** — Full audit on Robinhood Chain: 5 contracts (IndexVault, IndexFactory, NavLens, FeeConverterV4, ZapV4). Clean verdict.

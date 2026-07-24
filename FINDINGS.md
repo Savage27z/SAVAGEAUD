@@ -23,6 +23,7 @@ No reportable findings on any target to date. All audits returned clean.
 || 15 | Peeps | Robinhood Chain | $26K | 6 observations (LP vault mapping corruption, router centralization, graduation phase reversal, curve math verified) | 🟢 Clean — solid architecture, sound math |
 || 16 | HoodBets | Robinhood Chain | $803 | 5 observations (resolver centralization, no refund path in factory, nonReentrant missing on buyShares, dust accumulation, owner market params) | 🟢 Clean — two contracts: Chainlink parimutuel (trustless) + Factory YES/NO (centralized by design) |
 || **17** | **Hood Index** | **Robinhood Chain** | **$75** | **6 observations (no external audit, 1% slippage gap, caller-provided routes, dust accumulation, one-time-set risk, 80h staleness window)** | **🟢 Clean — best-designed protocol yet: immutable basket, hard-capped fees, no upgrade, no admin withdrawal** |
+|| **18** | **STEEL** | **Robinhood Chain** | **$911** | **5 observations (owner redirects staker rewards, jackpot from same randomness, auto-subscribe grief risk, carry accumulation, integer dust)** | **🟢 Clean — SLVR.fun fork with veSTEEL staking, auto-subscribe, motherlode, refining** |
 
 ## Process
 
