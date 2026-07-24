@@ -34,6 +34,7 @@ audit/
     ├── sukukfi/         # ✅ Berachain (symlink)
     ├── arcis/           # ✅ Base (symlink)
     ├── sentry/          # ✅ Robinhood Chain (TMAAR applied, Macro-style)
+    ├── minepea/         # ✅ Robinhood Chain (full combined stack applied)
     └── ...              # Next target goes here
 ```
 
@@ -53,6 +54,7 @@ audit/
 | 10 | Arcis Protocol | Base | $120 | Jun 29 | ✅ Complete | 🟢 Clean | Jul 23 |
 | 11 | Windfall Lotto | Polygon | $1.4K | Jul 24 | ✅ Complete | 🟢 Clean | Jul 24 |
 | 12 | Sentry | Robinhood Chain | $31K | Jul 2 | ✅ Complete | 🟢 Clean | Jul 24 |
+| 13 | MinePea | Robinhood Chain | $5.5K | Jul 23 | ✅ Complete | 🟢 Clean | Jul 24 |
 | | **Next target** | TBD | — | — | ⏳ Ready when you are | — | — |
 
 ## Get Started

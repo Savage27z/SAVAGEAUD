@@ -18,6 +18,7 @@ No reportable findings on any target to date. All audits returned clean.
 | 10 | Arcis Protocol | Base | $120 | None | 🟢 Clean |
 | 11 | Windfall Lotto | Polygon | $1.4K | None | 🟢 Clean |
 | 12 | Sentry | Robinhood Chain | $31K | None | 🟢 Clean |
+| 13 | MinePea | Robinhood Chain | $5.5K | None | 🟢 Clean |
 
 ## Process
 

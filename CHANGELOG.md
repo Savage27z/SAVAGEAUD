@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.5.0 (Jul 24, 2026)
+
+- **MinePea (target #13)** — Full audit of all 5 contracts (GridMining, PEAToken, Staking, AutoMiner, Treasury). Clean verdict.
+- **Full combined stack applied** — TMAAR + Open-Kritt multi-agent hunting (6 perspectives across all 5 contracts) + BountyForge triage + deep dive on game theory
+- **10 findings documented** — all low/medium design observations, no exploitable vulnerabilities
+- **Cross-contract analysis** — first target with 5 interdependent contracts; verified CEI, reentrancy, and access control across the full system
+
 ## v1.4.0 (Jul 24, 2026)
 
 - **Combined methodology enforced** — Every target now gets the FULL stack: Macro TMAAR + BountyForge triage + Open-Kritt hunting + EVM replay. No cherry-picking.
