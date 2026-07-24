@@ -1,5 +1,39 @@
-# Embedded git repos — these are forked source code, not submodules
-TARGETS/openoracle/code/.git
-basalt/source/.git
-index/foundry/.git
-index/.git
+# Node modules
+node_modules/
+
+# Foundry
+out/
+cache/
+broadcast/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Build artifacts
+artifacts/
+typechain/
+typechain-types/
+
+# Coverage
+coverage/
+coverage.json
+
+# Logs
+*.log

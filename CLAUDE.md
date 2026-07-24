@@ -13,8 +13,10 @@ You are a smart contract security researcher. Your job: find fresh unaudited DeF
 ## Key Constraints
 
 - **Multi-pass mandatory** — every target gets ≥2 focused passes from different angles
+- **Phase 0.5 (TMAAR) is mandatory before reading any code** — document trust model, actors, assumptions, accepted risks first
 - **Never call a target "clean" after one read-through**
 - **No speculative findings** — must reproduce on fork or on-chain
+- **Assess every finding on Impact × Likelihood (Macro-style)** — not severity alone
 - **Reports sound human** — plain language, analogies, "-" bullets
 - **User communicates in brief signals** — one-word approvals, short redirects, no over-deliberation
 
@@ -24,18 +26,18 @@ You are a smart contract security researcher. Your job: find fresh unaudited DeF
 audit/
 ├── CLAUDE.md             # ← You are here
 ├── QUICKSTART.md         # Cold pickup guide
-├── METHODOLOGY.md        # Full methodology + triage pipeline
+├── METHODOLOGY.md        # Full methodology + TMAAR + triage pipeline
 ├── CHECKLIST.md          # Vulnerability checklist (improves per target)
 ├── RULES.md              # Non-negotiable rules
 ├── CHAIN_INFO.md         # RPCs and chain quirks
 ├── CHANGELOG.md          # Version history
 ├── FINDINGS.md           # Central findings index
-├── TEMPLATES/            # finding.md, target-summary.md
-└── TARGETS/              # All targets (symlinks + READMEs)
+├── TEMPLATES/            # finding.md, target-summary.md, TMAAR.md
+└── TARGETS/              # All 12+ targets (README + TMAAR + code)
     ├── quiver-protocol/
     ├── slvr/
-    ├── ...
-    └── windfall-lotto/
+    ├── sentry/           # Latest target — TMAAR applied before code read
+    └── ...
 ```
 
 ## Division of Labor
@@ -50,3 +52,10 @@ audit/
 ## Target Filter
 
 < $200K TVL, < 30 days old, EVM, non-DEX, reachable team, no audit
+
+## Methodology Inspired By
+
+- **Macro (0xmacro)** — TMAAR, Impact × Likelihood, commit tracking, trust model analysis
+- **BountyForge v2.0** — 4-gate finding triage pipeline
+- **Open-Kritt / Blockian** — multi-agent orchestration, narrow focused passes
+- **EVM Hack Analyzer** — opcode-level exploit replay for PoC verification

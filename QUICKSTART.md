@@ -1,19 +1,19 @@
 # Quickstart — Cold Agent Pickup
 
-You're here to audit small DeFi protocols. This repo is designed so you can pick up where the last session left off. Read these files in order:
+You're here to audit small DeFi protocols. This repo is designed so any agent can pick up where the last session left off. Read these files in order:
 
 ## 1. Start Here
 
 | File | What it tells you |
 |------|-------------------|
-| `METHODOLOGY.md` | How we audit: target selection → recon → reading → hunting → tools → fork → report |
-| `RULES.md` | Non-negotiable: never inflate, never disclose raw Slither, test on copies only |
+| `METHODOLOGY.md` | How we audit: target selection → TMAAR → recon → reading → hunting → tools → fork → report |
+| `RULES.md` | Non-negotiable: TMAAR before code, no speculation, no severity inflation |
 | `CHECKLIST.md` | Every vulnerability class we check on every target — updates as we learn |
 | `CHAIN_INFO.md` | RPCs, explorers, and quirks for chains we work on |
 
 ## 2. Current Status
 
-Check `README.md` for a full target table. Completed targets live under `TARGETS/` or at the root level (`basalt/`, `cleave/`, `obsdn/`, etc.).
+Check `README.md` for a full target table. 12 targets audited (all clean). Completed targets live under `TARGETS/`.
 
 ## 3. Your Workflow
 
@@ -25,17 +25,21 @@ Hunt targets → Present 1 to user → Get greenlight → Audit (multi-pass) →
 
 Every target gets **at least 2 focused passes** with different attack angles:
 
-1. **Phase 0: Recon** — surface map, trust model, external deps
-2. **Phase 1: Read** — Feynman: "why does this line exist?"
-3. **Phase 2: Hunt** — 6-agent checklist (access, reentrancy, math, oracles, upgrades, MEV)
-4. **Phase 3: Tools** — Slither + manual triage
-5. **Phase 4: Fork tests** — integration + edge cases (user does depth)
-6. **Phase 5: Second pass** — fresh angle, different attack vectors
+| Phase | Method | Description |
+|-------|--------|-------------|
+| **0: Recon** | Surface map | Trust model, external deps, entry points |
+| **0.5: TMAAR** | Trust model doc | Actors, assumptions, accepted risks (Macro-inspired). Do this BEFORE reading code |
+| **1: Read** | Feynman | "Why does this line exist?" question every function |
+| **2: Hunt** | 6-agent checklist | Access control, reentrancy, math, oracles, upgrades, MEV |
+| **3: Tools** | Slither + triage | Run static analysis, categorize false positives vs leads |
+| **4: Fork tests** | Integration + edges | Verify on a fork (user does depth on exploit PoCs) |
+| **5: Deep dive** | Second pass | Fresh angle, different attack vectors from first pass |
 
-Never call a target "clean" after one read-through. The user's standard is 4+ audit rounds.
+**Never call a target "clean" after one read-through.** The user's standard is 2+ passes minimum.
 
 ## 4. When You Find Something
 
+- Assess **Impact × Likelihood** (both axes — not just severity)
 - Write a finding using `TEMPLATES/finding.md`
 - Save it in `<target>/findings/`
 - Ask the user to prove it on a fork before reporting
@@ -43,16 +47,18 @@ Never call a target "clean" after one read-through. The user's standard is 4+ au
 ## 5. When a Target Is Clean
 
 - Write a `README.md` for the target
+- Write a `TMAAR.md` for the target (template at `TEMPLATES/TMAAR.md`)
 - Update the main `README.md` target table
 - Update `CHECKLIST.md` with any new insights learned
 - Move on. Don't manufacture findings.
 
 ## 6. Repo Maintenance
 
-- Each target gets: `README.md`, `findings/` (if any), `code/` (if pulled)
+- Each target gets: `README.md`, `TMAAR.md`, code files (if pulled)
 - Update `CHECKLIST.md` with every new vulnerability angle discovered
 - Update `CHAIN_INFO.md` when operating on a new chain
 - Keep `METHODOLOGY.md` current — this is the playbook any agent follows
+- Reference Macro's public audit library (0xmacro.com/library) for similar protocol types
 
 ## 7. User Profile
 

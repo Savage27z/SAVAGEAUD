@@ -1,6 +1,13 @@
 # Changelog
 
-## v1.3.0 (Jul 24, 2026)
+## v1.4.0 (Jul 24, 2026)
+
+- **CLAUDE.md** — Updated with TMAAR mandates, methodology sources section, Macro/Open-Kritt/EVM-Hack-Analyzer as explicit influences
+- **QUICKSTART.md** — Rewritten with Phase 0.5 TMAAR in the workflow table, Macro library reference for pre-audit research
+- **RULES.md** — Expanded from 7 to 11 rules: TMAAR mandatory before code (Rule 8), Impact×Likelihood assessment (Rule 9), commit hash locking (Rule 10), check Macro library first (Rule 11)
+- **FINDINGS.md** — Full rewrite with all 12 targets in a master table, methodology sources documented, clean process flow
+- **.gitignore** — Added for Solidity/Foundry/Node/IDE artifacts
+- **TARGETS/sentry** — Removed empty extra files (extra_0.sol, extra_1.sol)
 
 - **Sentry Launch Factory (target #12)** — Full audit on Robinhood Chain. Clean verdict. TMAAR applied live (Macro-style). On-chain verification of owner, treasury, proxy admin.
 - **TMAAR demonstrated in live audit** — Phase 0.5 applied to Sentry before code reading. Documented actors, trust levels, assumptions, and accepted risks.
