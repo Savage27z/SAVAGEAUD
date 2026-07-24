@@ -41,7 +41,7 @@ audit/
 ## Current Status
 
 | # | Target | Chain | TVL | Listed | Status | Verdict | Date |
-|---|--------|-------|-----|--------|--------|---------|------|
+|---|---|---|---|---|---|---|---|
 | 1 | Quiver Protocol | Robinhood Chain | $3.1K | Jul 21 | ✅ Complete | 🟢 Informational only | Jul 21 |
 | 2 | SLVR GridLottery | Robinhood Chain | — | — | ✅ Complete | 🟢 Clean | Jul 22 |
 | 3 | The Index | Robinhood Chain | — | — | ✅ Complete | 🟢 Clean | Jul 22 |
@@ -55,6 +55,9 @@ audit/
 | 11 | Windfall Lotto | Polygon | $1.4K | Jul 24 | ✅ Complete | 🟢 Clean | Jul 24 |
 | 12 | Sentry | Robinhood Chain | $31K | Jul 2 | ✅ Complete | 🟢 Clean | Jul 24 |
 | 13 | MinePea | Robinhood Chain | $5.5K | Jul 23 | ✅ Complete | 🟢 Clean | Jul 24 |
+| 14 | Ravenhood | Robinhood Chain | — | Jul 23 | ✅ Complete | 🟢 Clean | Jul 24 |
+| 15 | Peeps | Robinhood Chain | $26K | Jul 23 | ✅ Complete | 🟢 Clean | Jul 24 |
+| **16** | **HoodBets** | **Robinhood Chain** | **$803** | **Jul 3** | **✅ Complete** | **🟢 Clean** | **Jul 24** |
 | | **Next target** | TBD | — | — | ⏳ Ready when you are | — | — |
 
 ## Get Started

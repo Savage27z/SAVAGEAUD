@@ -20,7 +20,8 @@ No reportable findings on any target to date. All audits returned clean.
 | 12 | Sentry | Robinhood Chain | $31K | None | 🟢 Clean |
 | 13 | MinePea | Robinhood Chain | $5.5K | 12 observations (TWAP buyback price limit, quiverCallback re-entry, executor centralization, rounding dust) | 🟢 Clean — deep second pass confirmed |
 | 14 | Ravenhood | Robinhood Chain | $0 (treasury $56K) | 8 observations (owner separation, no on-chain buyback, burn slippage, reward drain risk) | 🟢 Clean — standard patterns, well-structured |
-| 15 | Peeps | Robinhood Chain | $26K | 6 observations (LP vault mapping corruption, router centralization, graduation phase reversal, curve math verified) | 🟢 Clean — solid architecture, sound math |
+|| 15 | Peeps | Robinhood Chain | $26K | 6 observations (LP vault mapping corruption, router centralization, graduation phase reversal, curve math verified) | 🟢 Clean — solid architecture, sound math |
+|| 16 | HoodBets | Robinhood Chain | $803 | 5 observations (resolver centralization, no refund path in factory, nonReentrant missing on buyShares, dust accumulation, owner market params) | 🟢 Clean — two contracts: Chainlink parimutuel (trustless) + Factory YES/NO (centralized by design) |
 
 ## Process
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.8.0 (Jul 24, 2026)
+
+- **HoodBets (target #16)** — Full audit on Robinhood Chain: 2 contracts (HoodBets Chainlink-parimutuel + HoodBetsFactory YES/NO shares). Clean verdict.
+- **5 observations documented** — Factory resolver centralization (single EOA decides outcomes), no refund path if resolver ghosts, buyShares lacks nonReentrant, integer-division dust, owner-controlled market params
+- **Two different trust models analyzed** — Chainlink version is trustless and well-designed; Factory version is centralized by design
+- **Contract sources saved** — HoodBets.sol (302 lines) + HoodBetsFactory.sol (655 lines) with full TMAAR
+
 ## v1.7.0 (Jul 24, 2026)
 
 - **Peeps (target #15)** — Full audit on Robinhood Chain: PeepsCurveFactory, PeepsBondingCurve, PeepsLaunchToken, PeepsLPFeeVault, PeepsCurveMath. Clean verdict.
