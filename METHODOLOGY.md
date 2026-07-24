@@ -215,6 +215,32 @@ Examples (from BountyForge + our experience):
 - **Rounding direction** — deposit DOWN, withdraw DOWN = 1 wei max but must quantify (discovered: Quiver)
 - **Staged randomness fallback** — if VRF times out, does the fallback source weaken security? (discovered: SLVR)
 
+## Tool Integrations
+
+### EVM Hack Analyzer
+
+**Repo:** `sanbir/evm-hack-analyzer` — https://github.com/sanbir/evm-hack-analyzer
+
+A fully static, in-browser EVM exploit debugger. Fork chain state, replay any transaction opcode-by-opcode, step through with source mapping, annotate vulnerabilities, and share PoCs via ZIP or IPFS. No backend required.
+
+**Uses in our workflow:**
+
+1. **Study historical exploits** — Before auditing a new protocol type, search for similar exploits and replay them in the analyzer. Understand *exactly* how the attack worked before you start reading target code. This feeds directly into the "What Changed" method — you'll recognize anti-patterns faster.
+
+2. **Validate PoC findings** — During Phase 4 (fork testing), if you identify a potential exploit path, replay it through the analyzer. The opcode-level trace confirms whether your mental model of the attack is correct.
+
+3. **Create shareable PoC artifacts** (user's domain) — Export annotated exploit traces as ZIP or IPFS pins. Teams get a self-contained replay that works without RPC or Etherscan keys.
+
+**Requirements:**
+- Archive RPC URL (Infura, Alchemy, QuickNode — must serve `eth_getBalance`/`getCode`/`getStorageAt`)
+- Etherscan V2 API key (one key works for all supported chains)
+- Local setup: `git clone && npm install && npm run dev`
+
+**Ecosystem:**
+- evm-hack-registry: Structured hack database
+- evm-hack-poc: Community PoC archive
+- crypto.training/hacks: Public browsable mirror
+
 ## Walking Away
 Not every target produces a finding. After a full multi-pass analysis with nothing exploitable, say so and move on. Never inflate severity.
 
@@ -222,3 +248,4 @@ Not every target produces a finding. After a full multi-pass analysis with nothi
 - Open-Kritt orchestration engine: https://github.com/Kritt-ai/open-kritt
 - Blockian (Immunefi #18): https://immunefi.com/profile/Blockian/
 - BountyForge v2.0 (finding triage, disclosed report learning): https://github.com/Gabson0x/bountyforge/releases/tag/v2.0.0
+- EVM Hack Analyzer (opcode-level exploit replay & PoC sharing): https://github.com/sanbir/evm-hack-analyzer
