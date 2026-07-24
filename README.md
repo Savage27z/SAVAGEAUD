@@ -58,6 +58,7 @@ audit/
 | 14 | Ravenhood | Robinhood Chain | — | Jul 23 | ✅ Complete | 🟢 Clean | Jul 24 |
 | 15 | Peeps | Robinhood Chain | $26K | Jul 23 | ✅ Complete | 🟢 Clean | Jul 24 |
 | **16** | **HoodBets** | **Robinhood Chain** | **$803** | **Jul 3** | **✅ Complete** | **🟢 Clean** | **Jul 24** |
+| **17** | **Hood Index** | **Robinhood Chain** | **$75** | **Jul 17** | **✅ Complete** | **🟢 Clean** | **Jul 24** |
 | | **Next target** | TBD | — | — | ⏳ Ready when you are | — | — |
 
 ## Get Started

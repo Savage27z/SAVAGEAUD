@@ -22,6 +22,7 @@ No reportable findings on any target to date. All audits returned clean.
 | 14 | Ravenhood | Robinhood Chain | $0 (treasury $56K) | 8 observations (owner separation, no on-chain buyback, burn slippage, reward drain risk) | 🟢 Clean — standard patterns, well-structured |
 || 15 | Peeps | Robinhood Chain | $26K | 6 observations (LP vault mapping corruption, router centralization, graduation phase reversal, curve math verified) | 🟢 Clean — solid architecture, sound math |
 || 16 | HoodBets | Robinhood Chain | $803 | 5 observations (resolver centralization, no refund path in factory, nonReentrant missing on buyShares, dust accumulation, owner market params) | 🟢 Clean — two contracts: Chainlink parimutuel (trustless) + Factory YES/NO (centralized by design) |
+|| **17** | **Hood Index** | **Robinhood Chain** | **$75** | **6 observations (no external audit, 1% slippage gap, caller-provided routes, dust accumulation, one-time-set risk, 80h staleness window)** | **🟢 Clean — best-designed protocol yet: immutable basket, hard-capped fees, no upgrade, no admin withdrawal** |
 
 ## Process
 

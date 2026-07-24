@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.9.0 (Jul 24, 2026)
+
+- **Hood Index / hMAG7 (target #17)** — Full audit on Robinhood Chain: 5 contracts (IndexVault, IndexFactory, NavLens, FeeConverterV4, ZapV4). Clean verdict.
+- **Best-designed protocol yet** — Immutable basket, hard-capped fees (compile-time constants), no upgradeability, no pause, no admin withdrawal function
+- **6 observations** — No external audit (unit tests only), FeeConverter 1% slippage gap on Chainlink floor, ZapV4 caller-provided routes, dust accumulation from floor-division redeem, one-time-set bootstrap risk, 80h Chainlink staleness window
+- **5 contract sources saved + full TMAAR**
+- **17 targets audited, all clean**
+
 ## v1.8.0 (Jul 24, 2026)
 
 - **HoodBets (target #16)** — Full audit on Robinhood Chain: 2 contracts (HoodBets Chainlink-parimutuel + HoodBetsFactory YES/NO shares). Clean verdict.
