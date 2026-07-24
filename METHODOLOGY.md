@@ -317,6 +317,21 @@ A fully static, in-browser EVM exploit debugger. Fork chain state, replay any tr
 ## Walking Away
 Not every target produces a finding. After a full multi-pass analysis with nothing exploitable, say so and move on. Never inflate severity.
 
+## Combined Methodology — Every Layer Applied
+
+Every target gets the full stack. These aren't optional extras — they're all mandatory:
+
+1. **Macro TMAAR** — Trust model before code reading
+2. **Macro Impact × Likelihood** — Two-axis finding assessment
+3. **Macro commit tracking** — Lock audited + final commit hashes
+4. **BountyForge 4-gate triage** — Reality → Impact → Dedup → Quality
+5. **BountyForge "What Changed"** — Read similar disclosed reports before starting
+6. **BountyForge anti-pattern library** — Live CHECKLIST.md
+7. **Open-Kritt multi-agent** — 6 independent perspectives per target
+8. **Open-Kritt narrow passes** — Focused "find X in Y" not "find all bugs"
+9. **Open-Kritt brute-force entry points** — Map all entry points × bug classes
+10. **EVM Hack Analyzer** — Opcode-level PoC replay
+
 ## Repo References
 - Open-Kritt orchestration engine: https://github.com/Kritt-ai/open-kritt
 - Blockian (Immunefi #18): https://immunefi.com/profile/Blockian/

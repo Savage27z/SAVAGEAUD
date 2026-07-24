@@ -29,8 +29,10 @@ When a finding is confirmed (fork-proven or on-chain verified):
 
 ## Methodology Sources
 
-This repo's methodology draws from:
-- **Macro (0xmacro)** — TMAAR, Impact×Likelihood, commit tracking, trust model analysis
-- **BountyForge v2.0** — 4-gate finding triage (Reality → Impact → Dedup → Quality)
-- **Open-Kritt / Blockian** — Multi-agent orchestration, narrow focused passes
-- **EVM Hack Analyzer** — Opcode-level exploit replay for PoC verification
+This repo's combined methodology draws from ALL of the following — every target gets every layer:
+
+- **Macro (0xmacro)** — TMAAR trust model, Impact×Likelihood matrices, commit tracking, public audit library (130+ reports)
+- **BountyForge v2.0** — 4-gate finding triage (Reality → Impact → Dedup → Quality), "What Changed" disclosed-report learning, anti-pattern library
+- **Open-Kritt** — Multi-agent orchestration engine, narrow focused passes, brute-force entry points × bug classes
+- **Blockian (Immunefi #18)** — Anchored deduplication, relative ranking, repeats for enumeration
+- **EVM Hack Analyzer** — Opcode-level exploit replay, historical hack study, PoC export

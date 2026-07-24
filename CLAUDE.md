@@ -53,9 +53,21 @@ audit/
 
 < $200K TVL, < 30 days old, EVM, non-DEX, reachable team, no audit
 
-## Methodology Inspired By
+## Methodology — Full Combined Stack
 
-- **Macro (0xmacro)** — TMAAR, Impact × Likelihood, commit tracking, trust model analysis
-- **BountyForge v2.0** — 4-gate finding triage pipeline
-- **Open-Kritt / Blockian** — multi-agent orchestration, narrow focused passes
-- **EVM Hack Analyzer** — opcode-level exploit replay for PoC verification
+**Every target gets the ENTIRE combined methodology, not just one piece.** These aren't alternatives — they're layers that all apply:
+
+| Layer | Source | What It Adds |
+|-------|--------|-------------|
+| **TMAAR** | Macro (0xmacro) | Trust model, actors, assumptions, accepted risks — before reading code |
+| **Impact × Likelihood** | Macro (0xmacro) | Two-axis finding assessment, not severity alone |
+| **Commit tracking** | Macro (0xmacro) | Lock audited commit + final commit for every target |
+| **4-gate triage** | BountyForge v2.0 | Reality → Impact → Dedup → Quality before any finding goes out |
+| **What Changed method** | BountyForge v2.0 | Read disclosed reports for similar protocols before starting |
+| **Anti-pattern library** | BountyForge v2.0 | Live CHECKLIST.md that grows per target |
+| **Multi-agent hunting** | Open-Kritt / Blockian | Run 6 independent agent perspectives on every target |
+| **Narrow focused passes** | Open-Kritt / Blockian | "Find reentrancy in deposit flow" not "find all bugs" |
+| **Brute-force entry points** | Open-Kritt / Blockian | Map every entry point × every bug class |
+| **EVM replay** | EVM Hack Analyzer | Opcode-level exploit traces for PoC validation |
+
+**No shortcuts.** Every target gets all of these applied.

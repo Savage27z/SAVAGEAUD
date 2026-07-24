@@ -21,21 +21,23 @@ Check `README.md` for a full target table. 12 targets audited (all clean). Compl
 Hunt targets → Present 1 to user → Get greenlight → Audit (multi-pass) → Report → Update repo
 ```
 
-### Multi-Pass is Mandatory
+### Multi-Pass is Mandatory — Full Combined Stack
 
-Every target gets **at least 2 focused passes** with different attack angles:
+Every target gets the **entire methodology stack**, not a subset. Think of it as layers that all apply:
 
-| Phase | Method | Description |
-|-------|--------|-------------|
-| **0: Recon** | Surface map | Trust model, external deps, entry points |
-| **0.5: TMAAR** | Trust model doc | Actors, assumptions, accepted risks (Macro-inspired). Do this BEFORE reading code |
-| **1: Read** | Feynman | "Why does this line exist?" question every function |
-| **2: Hunt** | 6-agent checklist | Access control, reentrancy, math, oracles, upgrades, MEV |
-| **3: Tools** | Slither + triage | Run static analysis, categorize false positives vs leads |
-| **4: Fork tests** | Integration + edges | Verify on a fork (user does depth on exploit PoCs) |
-| **5: Deep dive** | Second pass | Fresh angle, different attack vectors from first pass |
+| Phase | Layer | What You Do |
+|-------|-------|-------------|
+| **Pre-audit** | What Changed | Read 2-3 disclosed reports for similar protocols first |
+| **Phase 0: Recon** | Surface map | Trust model, external deps, entry points |
+| **Phase 0.5: TMAAR** | Macro methodology | Actors, trust levels, assumptions, accepted risks. BEFORE reading code |
+| **Phase 1: Read** | Feynman | "Why does this line exist?" question every function |
+| **Phase 2: Hunt** | Open-Kritt multi-agent | Run 6 independent perspectives: access, reentrancy, math, oracles, upgrades, MEV |
+| **Phase 3: Tools** | Slither + triage | Static analysis, categorize false positives vs leads |
+| **Phase 3b: BountyForge** | 4-gate triage | Every potential finding through Reality → Impact → Dedup → Quality |
+| **Phase 4: Fork** | EVM Hack Analyzer | Opcode-level replay for PoC validation. Fork tests for integration |
+| **Phase 5: Deep dive** | Brute-force angles | Map entry points × bug classes, second pass from completely different angle |
 
-**Never call a target "clean" after one read-through.** The user's standard is 2+ passes minimum.
+**No cherry-picking. Every target gets all layers.** Never call a target "clean" after one read-through.
 
 ## 4. When You Find Something
 

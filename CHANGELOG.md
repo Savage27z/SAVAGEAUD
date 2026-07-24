@@ -2,7 +2,8 @@
 
 ## v1.4.0 (Jul 24, 2026)
 
-- **CLAUDE.md** — Updated with TMAAR mandates, methodology sources section, Macro/Open-Kritt/EVM-Hack-Analyzer as explicit influences
+- **Combined methodology enforced** — Every target now gets the FULL stack: Macro TMAAR + BountyForge triage + Open-Kritt hunting + EVM replay. No cherry-picking.
+- **CLAUDE.md** — Updated with combined methodology table, TMAAR mandates, all 5 source methodologies listed
 - **QUICKSTART.md** — Rewritten with Phase 0.5 TMAAR in the workflow table, Macro library reference for pre-audit research
 - **RULES.md** — Expanded from 7 to 11 rules: TMAAR mandatory before code (Rule 8), Impact×Likelihood assessment (Rule 9), commit hash locking (Rule 10), check Macro library first (Rule 11)
 - **FINDINGS.md** — Full rewrite with all 12 targets in a master table, methodology sources documented, clean process flow
