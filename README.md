@@ -60,7 +60,8 @@ audit/
 | **16** | **HoodBets** | **Robinhood Chain** | **$803** | **Jul 3** | **✅ Complete** | **🟢 Clean** | **Jul 24** |
 | **17** | **Hood Index** | **Robinhood Chain** | **$75** | **Jul 17** | **✅ Complete** | **🟢 Clean** | **Jul 24** |
 | **18** | **STEEL** | **Robinhood Chain** | **$911** | **Jul 24** | **✅ Complete** | **🟢 Clean** | **Jul 24** |
-| | **Next target** | TBD | — | — | ⏳ Ready when you are | — | — |
+|| 19 | **DefiLords** | **Arbitrum** | **$2.3K** | **Jun 17** | **✅ Complete** | **🟢 Clean — 4 ERC-4626 vaults, V1→V2 fixes proactive** | **Jul 24** |
+|| | **Next target** | TBD | — | — | ⏳ Ready when you are | — | — |
 
 ## Get Started
 

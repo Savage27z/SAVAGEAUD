@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.11.0 (Jul 24, 2026)
+
+- **DefiLords (target #19)** — Full audit on Arbitrum: 4 ERC-4626 USDC vaults (GrowthVaultV5, FlowVaultBalanced, FlowHybridVault V2, FlowHybridVault V1). Clean verdict.
+- **6 observations** — V1 Hybrid vault buggy (known, retired), single EOA owner (no timelock), keeper rebalance centerTick (adapter guards mitigate), full-position liquidation on any withdrawal, getTVL() called on every deposit, defense-in-depth allowance revoke
+- **V1→V2 diff analysis** — Identified 6 fixes: yield-reserve-aware deployIdle, correct harvest fee ordering, revert instead of assert, min reserve floor, migrateAdapter(), allowance revoke
+- **TMAAR documented** — Trust model, actors, assumptions, accepted risks
+- **4 vault sources saved** — GrowthVaultV5 (313 lines), FlowVaultBalanced (311), FlowHybridV2 (620), FlowHybridV1 (491)
+- **19 targets audited, all clean**
+
 ## v1.10.0 (Jul 24, 2026)
 
 - **STEEL (target #18)** — Full audit on Robinhood Chain: SteelMineV2 (SLVR.fun fork with veSTEEL staking, auto-subscribe, motherlode, refining). Clean verdict.
