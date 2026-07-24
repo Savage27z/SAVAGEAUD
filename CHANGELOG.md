@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.6.0 (Jul 24, 2026)
+
+- **Ravenhood (target #14)** — Full audit on Robinhood Chain: RVH token, RavenhoodVault, RVHStakingPool. Clean verdict.
+- **8 observations documented** — Vault owner ≠ DAO wallet (two trust anchors), no on-chain buyback automation (off-chain only), `claimBurn()` no slippage protection, `emergencyRewardWithdraw()` centralization risk, RVH ownership renounced, staking pool unused at launch
+- **On-chain verification** — Confirmed owner addresses, nftId (17757), total supply (100M), staking state (~0 staked), token name/symbol
+- **CHECKLIST.md** — Ravenhood entry added with all 8 anti-patterns
+
 ## v1.5.1 (Jul 24, 2026)
 
 - **MinePea deep second pass** — Focused re-read of all 5 contracts with different attack angles: re-entry trace through `quiverCallback`, TWAP economic bounds analysis (one-directional deviation check, `MIN_SQRT_PRICE+1`), feeCollector re-entry vector via raw `.call`, AutoMiner rounding dust trap, `_resolveTopMiner` gas bounds analysis
