@@ -26,7 +26,60 @@ Any agent reading this for the first time should do the following:
 - Vet team via X/Twitter (followers, posting frequency, responsiveness)
 - Present options to user before diving into code
 
-### 2. Contract Analysis
+### 2. TMAAR — Trust Model, Assumptions & Accepted Risks (BEFORE code reading)
+
+> Inspired by Macro (0xmacro) audit methodology. Understanding who/what you trust is the highest-ROI step before reading a single line of code.
+
+Before touching the source, document the trust model in `TARGETS/<name>/TMAAR.md`:
+
+#### Actors & Trust Level
+
+| Actor | Trust Level | Can Do | Mitigation if Compromised |
+|-------|-------------|--------|---------------------------|
+| Protocol owner/admin | High / Medium / None | Upgrade, pause, withdraw | Timelock? Multisig? |
+| Users | None | Deposit, withdraw, trade | — |
+| Vault manager | High / Medium / None | Allocate funds | Can they steal? |
+| Oracle/resolver | High (must be correct) | Settle outcomes | Dispute period? Fallback? |
+| Relayer/bot | Medium / None | Submit messages, trigger actions | Can they front-run? Grief? |
+| Bridge (LZ, CCIP) | High | Relay cross-chain messages | Pause mechanism? |
+
+#### Key Assumptions
+
+List every assumption the protocol makes. Be explicit — these are things that MUST hold for the protocol to be secure:
+- Oracle always returns correct prices within X seconds
+- Bridge is honest (no message forgery)
+- At least one honest relayer exists
+- EIP-712 signature verification is correct
+- L1 sequencer is online within X minutes
+
+#### Accepted Risks
+
+What does the protocol acknowledge as out-of-scope?
+- User runs arbitrary/unaudited scripts (if plugin system)
+- MEV / sandwich attacks on public mempool
+- Gas griefing via front-running
+- Owner upgrades parameters within documented bounds
+
+#### ✅ TMAAR Quality Check
+- [ ] Every external dependency has an assumed trust level
+- [ ] Every "we assume X" should have a "what if X fails?" answer
+- [ ] Owner/admin power is enumerated — not just "can upgrade"
+- [ ] Accepted risks are explicit, not buried in docs
+
+### 3. Commit Tracking & Scope Definition
+
+Before reviewing a target, lock in what you're checking:
+
+- **Repo:** `github.com/org/project`
+- **Audited commit:** `<commit_hash>` (from chain explorer verification)
+- **Final commit (after fixes):** `<commit_hash>` (update after team responds)
+- **Contracts in scope:** Full list with SHA256 hashes
+- **Explicitly excluded:** Deployment scripts, off-chain infrastructure, frontend, SDK, relayer code
+- **Chains covered:** Primary chain only? Cross-chain?
+
+**Why this matters (from Macro):** Without a locked commit hash, you can't say "this bug exists at commit X" — and the team can't prove they fixed it.
+
+### 4. Contract Analysis
 - Always pull **verified source from chain explorer** (not GitHub — verify bytecode match)
 - Read with these questions:
   - Who can move the money? What gates it?
@@ -34,7 +87,7 @@ Any agent reading this for the first time should do the following:
   - Can a stranger trigger something only the team should?
 - Check standard seams: access control, reentrancy, oracles, rounding, upgrades, external calls, MEV
 
-### 3. Static Analysis
+### 5. Static Analysis
 - Run Slither on every target
 - Categorize findings: false positives vs leads to investigate
 - Never submit raw Slither output as findings
@@ -81,25 +134,45 @@ Raw Finding → Gate 0 (Reality) → Gate 1 (Impact) → Gate 2 (Dedup) → Gate
 
 **The Impact Litmus Test:**
 
-> "An attacker can **\_\_\_\_\_** , resulting in **\_\_\_\_\_**."
+> "An attacker can **______** , resulting in **______** ."
 
 - **PASS:** "An attacker can steal all user deposits by calling `redeem()` with a crafted shares value, resulting in loss of $73K in protocol TVL."
 - **FAIL:** "potentially access funds", "theoretically could", "could be used in a chain" (build the chain first)
 
-**Impact Tiers:**
+**Impact Tiers (Macro-inspired):**
 
-| Tier | Impact | Examples for Smart Contracts | Severity |
-|------|--------|------------------------------|----------|
-| T0 | Critical | Drain all funds, mint unlimited tokens, brick the contract permanently | Critical |
-| T1 | High | Drain specific user funds, steal all fees, grief all withdrawals | High |
-| T2 | Medium | Drain dust/small amounts, grief specific users, temporary DoS | Medium |
-| T3 | Low | Informational rounding, event spam, non-exploitable edge case | Low |
-| T4 | None | Missing events, gas optimization, style issues | **DO NOT REPORT** |
+| Severity | Criteria | Examples | Action |
+|----------|----------|----------|--------|
+| Critical | Funds **will** be lost or permanently locked | Drain all TVL, mint unlimited tokens, brick contract | Must fix |
+| High | Very bad — funds/assets at serious risk | Drain specific users, steal all fees, grief all withdrawals | Must fix |
+| Medium | Severe impact but not existential | Drain dust, grief specific users, temporary DoS | Should fix |
+| Low | Small risk, optional fix | Non-exploitable edge case, informational rounding | Optional |
+| Code Quality | No security risk, improves DX | Inconsistent error handling, naming, conventions | Note |
+| Gas Optimization | Meaningful gas savings | Redundant reads, loops, storage patterns | Note |
+| Informational | Minor observation | Comment improvement, unused imports | Note |
 
 **Common inflation to reject:**
 - "Owner can steal" ⮕ design choice unless there's a trust-minimization angle (RULES.md #6)
 - "Reentrancy" without a concrete fund-movement path ⮕ not a finding
 - "Centralization risk" without exploitability ⮕ informational at best
+
+**Impact × Likelihood Matrix (Macro-style):**
+
+Every finding should be assessed on TWO axes, not just severity:
+
+| Impact ↓ / Likelihood → | Low | Medium | High |
+|-------------------------|-----|--------|------|
+| **Critical** | High | Critical | Critical |
+| **High** | Medium | High | Critical |
+| **Medium** | Medium | Medium | High |
+| **Low** | Low | Low | Medium |
+
+**Likelihood criteria:**
+- **Low** — Requires specific unlikely conditions, multiple assumptions, or extended time horizon
+- **Medium** — Standard exploit conditions (public mempool, typical user behavior)
+- **High** — Trivially exploitable with no prerequisites
+
+Document both axes in every finding.
 
 #### Gate 2: Deduplication Check
 
@@ -248,4 +321,6 @@ Not every target produces a finding. After a full multi-pass analysis with nothi
 - Open-Kritt orchestration engine: https://github.com/Kritt-ai/open-kritt
 - Blockian (Immunefi #18): https://immunefi.com/profile/Blockian/
 - BountyForge v2.0 (finding triage, disclosed report learning): https://github.com/Gabson0x/bountyforge/releases/tag/v2.0.0
-- EVM Hack Analyzer (opcode-level exploit replay & PoC sharing): https://github.com/sanbir/evm-hack-analyzer
+|- EVM Hack Analyzer (opcode-level exploit replay & PoC sharing): https://github.com/sanbir/evm-hack-analyzer
+|- **Macro (0xmacro)** — Elite boutique audit firm. Public audit library (130+ reports) with TMAAR methodology, Impact×Likelihood matrices, and detailed finding writeups: https://0xmacro.com/library
+|- **Macro blog — audit methodology lessons:** https://0xmacro.com/blog/how-to-prep-for-an-audit/

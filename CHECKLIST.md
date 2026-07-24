@@ -92,6 +92,27 @@ Check every target against this list. Update as new vulnerability angles are dis
 - [ ] Recoverable funds — stuck tokens rescue path
 - [ ] **No-owner / fully permissionless** — verify game theory is sound without admin oversight
 
+### Trust Model (TMAAR) — Macro-inspired
+- [ ] **Actors enumerated** — every role (owner, user, vault manager, resolver, relayer, bridge) documented with trust level
+- [ ] **Assumptions explicit** — every "we assume X" has a "what if X fails?" answer
+- [ ] **Accepted risks documented** — what the protocol says is out of scope (not assumed, said)
+- [ ] **Owner power enumerated** — what exactly can owner do? Timelock? Multisig? Single key?
+- [ ] **Dependency trust** — every external dependency (bridge, oracle, relayer) has documented failure mode
+
+### Bridge / Cross-Chain — Macro-inspired
+- [ ] **Source verification** — bridged tokens verify origin chain and contract (prevent fake token injection — see Sapience C-4)
+- [ ] **CREATE3 salt uniqueness** — deterministic addresses include source token address in salt
+- [ ] **Bridge pause mechanism** — can bridge be paused if remote chain has issues?
+- [ ] **Replay protection** — cross-chain messages unique per chain, can't be replayed
+- [ ] **Settlement finality** — does bridge wait for sufficient confirmations?
+
+### Signatures & EIP-712 — Macro-inspired
+- [ ] **Domain separator uniqueness** — does domain separator include contract address and chain ID? (prevents replay across wallets/chains — see Compound H-1)
+- [ ] **Dynamic params hashed** — EIP-712 requires `keccak256` hashing of dynamic types before encoding (see Compound M-1)
+- [ ] **Session key revocation** — can session keys be revoked on-chain before expiry? (see Sapience M-2)
+- [ ] **Nonce management** — sequential vs random nonces. Can collisions prevent user from making multiple txs? (see Sapience M-3)
+- [ ] **msg.value in signature** — is ETH amount part of the signed message? If not, can attackers grief with 1 wei? (see Compound M-2)
+
 ## 📝 Added per Target
 
 | Target | New insights / checklist items added |
@@ -105,3 +126,7 @@ Check every target against this list. Update as new vulnerability angles are dis
 | OBSDN | Single-EOA sequencer key risk, sequencer role separation, off-chain matching trust model, multi-collateral pricing, async settlement in perp DEX |
 | openOracle | Permissionless oracle game theory, settlement-by-absence, self-dispute economics, no-owner architecture, callback gas grief protection |
 | SukukFi | Already Code4rena audited — no new checklist items from solo review |
+| Macro Library (Sapience-1) | Payout proportional to wager share (not 1:1), settlement check before mint, withdrawal overflow guard, bridge CREATE3 salt origin check |
+| Macro Library (Sapience-1) | Session key on-chain revocation, permissionsHash enforcement, random nonces over sequential |
+| Macro Library (Compound-1) | EIP-712 domain separator per-wallet, dynamic type hashing in structHash, msg.value signature inclusion |
+| Macro Library (Silicon-2) | Staker reward distribution correctness, NFT staking state consistency, marketplace listing integrity |

@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.2.0 (Jul 24, 2026)
+
+- **Macro integration** — Studied 130+ Macro audit reports. Extracted and integrated their methodology into our repo
+- **TMAAR** — New Phase 0.5: Trust Model, Assumptions & Accepted Risks. Mandatory before reading any code. Comes with template at `TEMPLATES/TMAAR.md`
+- **Commit tracking** — Every target now records audited + final commit hashes and excluded components
+- **Impact × Likelihood Matrix** — Every finding assessed on both axes, not severity alone. Added to finding triage (Gate 1)
+- **Expanded severity tiers** — Moved to Macro's 7-tier system (Critical through Informational) with clear action items per tier
+- **Updated finding template** — Added root cause classification, Addressed/Won't Do statuses, Impact×Likelihood table, team response field
+- **Updated target summary template** — Added TMAAR section, commit tracking, exclusions, Phase 0.5 in passes table
+- **CHECKLIST.md** — Added 4 new sections: Trust Model (TMAAR), Bridge/Cross-Chain, Signatures & EIP-712, plus Macro-sourced entries in the per-target table
+- **Repo references** — Added Macro library and blog to METHODOLOGY.md references
+- **Macro context** — Saved as persistent memory for future sessions
+
 ## v1.1.0 (Jul 24, 2026)
 
 - **CLAUDE.md** — Project-level agent context file for instant bootstrapping
