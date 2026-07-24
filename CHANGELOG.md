@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.5.1 (Jul 24, 2026)
+
+- **MinePea deep second pass** — Focused re-read of all 5 contracts with different attack angles: re-entry trace through `quiverCallback`, TWAP economic bounds analysis (one-directional deviation check, `MIN_SQRT_PRICE+1`), feeCollector re-entry vector via raw `.call`, AutoMiner rounding dust trap, `_resolveTopMiner` gas bounds analysis
+- **Finding #7 upgraded (Medium → High/Medium)** — Treasury buyback `sqrtPriceLimitX96 = MIN_SQRT_PRICE + 1` = no effective price cap; one-directional deviation check only blocks overpriced buys; at scale, manipulator can force buyback at inflated PEA price
+- **Finding #5 analysis deepened** — `quiverCallback` lack of `nonReentrant` + `_safeTransferETH` raw `.call` to feeCollector = concrete re-entry vector, though current state ordering prevents exploitation
+- **2 new findings added** (#11: feeCollector re-entry vector, #12: AutoMiner rounding dust trap)
+- **CHECKLIST.md** — 3 new anti-patterns added: one-directional price deviation check, raw ETH `.call` in callbacks, prepaid rounding dust
+- **FINDINGS.md** — MinePea row updated with 12 observations count
+
 ## v1.5.0 (Jul 24, 2026)
 
 - **MinePea (target #13)** — Full audit of all 5 contracts (GridMining, PEAToken, Staking, AutoMiner, Treasury). Clean verdict.

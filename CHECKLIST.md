@@ -23,6 +23,7 @@ Check every target against this list. Update as new vulnerability angles are dis
 - [ ] First-depositor inflation (seed to dead address?)
 - [ ] Donation attacks — can PPS be inflated without minting shares?
 - [ ] Fee-on-transfer / rebasing token compatibility
+- [ ] **Prepaid rounding dust** — when user deposits are divided across rounds/blocks via integer division, is the rounding surplus recoverable by the user? (See MinePea AutoMiner — dust trapped when all rounds execute and `stop()` doesn't refund)
 - [ ] Division by zero guards
 - [ ] Integer overflow (pre-0.8 Solidity)
 - [ ] Share ratio manipulation — can the P/N ratio be skewed?
@@ -32,7 +33,9 @@ Check every target against this list. Update as new vulnerability angles are dis
 - [ ] Oracle manipulation (flash loans + spot price)
 - [ ] Stale price data
 - [ ] TWAP manipulation feasibility
-- [ ] Oracle fallback — what happens if the oracle reverts?
+- [ ] **Price deviation checks** — are BOTH directions protected? (one-directional check = vulnerability, see MinePea Treasury)
+- [ ] **Swap price limit** — is there a `sqrtPriceLimit` on swaps? `MIN_SQRT_PRICE + 1` = no effective limit
+- [ ] **Permissionless price-sensitive ops** — can anyone trigger operations that depend on oracle/price data?
 - [ ] **Pin/window mechanisms** — time-bounded operations verified on-chain (call with boundary timestamps to confirm revert behavior)
 - [ ] **Historical price fallback** — does the oracle support `priceAt(timestamp)` for accurate historical data?
 - [ ] **Permissionless oracle game theory** — can a reporter manipulate settlement windows? Can dispute economics be gamed?
@@ -49,6 +52,7 @@ Check every target against this list. Update as new vulnerability angles are dis
 - [ ] Gas exhaustion via external calls
 - [ ] Returndata bomb protection
 - [ ] SafeERC20 used for token transfers
+- [ ] **Raw ETH `.call` in callback functions** — if the callback isn't `nonReentrant`, a `.call{value: X}("")` inside it lets the recipient re-enter the contract before state finalization (see MinePea GridMining `quiverCallback` → `_fulfillRandomness` → `_safeTransferETH(feeCollector, ...)`)
 - [ ] Callback ignored on failure — does settlement depend on callback outcome?
 
 ### MEV / Front-running
@@ -131,4 +135,4 @@ Check every target against this list. Update as new vulnerability angles are dis
 | Macro Library (Compound-1) | EIP-712 domain separator per-wallet, dynamic type hashing in structHash, msg.value signature inclusion |
 | Macro Library (Silicon-2) | Staker reward distribution correctness, NFT staking state consistency, marketplace listing integrity |
 | Sentry | Launchpad factory — proxy upgrade path (TransparentUpgradeableProxy + separate ProxyAdmin as contract), LP permanent lock (no withdraw/transfer), TsunamiPoolManager trust for initial pricing, fee routing split (65/35), try/catch pool creation safety, reentrancy guard on all external functions |
-| MinePea | Full-stack gamified mining — Pyth VRF integration, 60s round game loop, cross-contract mint-before-settlement-flag fragility, AutoMiner executor centralization (Random/All strategies), short TWAP window on Treasury buybacks, CEI pattern verified across all 5 contracts |
+|| MinePea | Full-stack gamified mining — Pyth VRF integration, 60s round game loop, cross-contract mint-before-settlement-flag fragility, AutoMiner executor centralization (Random/All strategies), short 60s TWAP on Treasury buybacks with no swap price limit (`MIN_SQRT_PRICE+1`), one-directional TWAP deviation check (only blocks overpriced buys), quiverCallback re-entry vector via feeCollector raw `.call`, AutoMiner rounding dust trap in stop(), CEI pattern verified across all 5 contracts |

@@ -44,9 +44,9 @@ Full TMAAR in `TMAAR.md`. Key actors:
 | 1: Read | Feynman — all 5 contracts | ✅ ~38K (GridMining) + 8K (PEA) + 18K (Staking) + 25K (AutoMiner) + 10K (Treasury) |
 | 2: Hunt | Open-Kritt multi-agent (6 perspectives) | ✅ Access, VRF, reentrancy, math, timing, oracles |
 | 3: Tools | Slither | ⏭️ Skipped (no compileable Foundry project) |
-| 3b: Triage | BountyForge 4-gate | ✅ Every finding through Reality → Impact → Dedup → Quality |
-| 4: Fork | On-chain verification | ✅ RPC calls confirmed contract state |
-| 5: Deep dive | Second pass — different angles | ✅ Cross-contract analysis, game theory angles |
+|| 3b: Triage | BountyForge 4-gate | ✅ Every finding through Reality → Impact → Dedup → Quality |
+|| 4: Fork | On-chain verification | ✅ RPC calls confirmed contract state |
+|| **5: Deep Second Pass** | **Focused re-read** | ✅ **Re-entry trace, TWAP economic bounds, feeCollector re-entry, rounding dust, harvest fee game theory, `_resolveTopMiner` gas bounds** |
 
 ## Analysis Summary
 
@@ -66,13 +66,27 @@ The following are design observations and fragility points — **none are exploi
 | 2 | GridMining | `totalUnclaimed -= minedPEA` could revert on accounting drift, bricking `claimPEA()` | High | Very Low | 🟢 |
 | 3 | GridMining | Coordinator rotation mid-pending VRF request stalls rounds for 1h | Medium | Low | 🟢 |
 | 4 | GridMining | Treasury revert during settlement consumes non-refundable VRF fee, stuck round | Medium | Low | 🟢 |
-| 5 | GridMining | `quiverCallback` lacks `nonReentrant` (defense-in-depth) | Medium | Very Low | 🟢 |
+| 5 | GridMining | `quiverCallback` lacks `nonReentrant` — during settlement, `_safeTransferETH(feeCollector, ...)` raw `.call` can re-enter GridMining before `_startNextRound()` runs; state ordering makes current exploitation infeasible but pattern is fragile (see Notes) | Medium | Very Low | 🟢 |
 | 6 | AutoMiner | Executor controls tile selection for Random/All strategies — users trust single address for fairness | Medium | High | 🟡 |
-| 7 | Treasury | TWAP ~1min window can be manipulated; permissionless `executeBuyback()` has no effective price limit | Medium | Medium | 🟡 |
+| 7 | Treasury | TWAP ~60s window manipulable; `sqrtPriceLimitX96 = MIN_SQRT_PRICE + 1` = **no effective price cap** on buyback swap; deviation check only blocks when PEA is *cheaper* than TWAP (not when it's more expensive); buyback at inflated price possible as TVL grows | **High** | **Medium** | 🟡 |
 | 8 | PEAToken | `removeLimits()` is permanent single-owner action — no timelock, no recovery | Low | Medium | 🟢 |
 | 9 | Staking | Interaction-before-effects for new depositors (blocked by `nonReentrant` + trusted token) | Low | Low | 🟢 |
 | 10 | AutoMiner | `_maskToBlocks` invariant coupling — fragile if strategy logic changes | Low | Low | 🟢 |
+| 11 | GridMining | `feeCollector` ETH transfer in `_fulfillRandomness` is re-entry vector — `_safeTransferETH` uses raw `.call`, and `quiverCallback` is NOT `nonReentrant`; currently safe because `round.settled=true` is set before transfer but fragile | Medium | Very Low | 🟢 |
+| 12 | AutoMiner | `stop()` refunds nothing when all rounds executed — integer division rounding dust in `_calculateAmountPerBlock` is permanently trapped in contract | Low | High | 🟢 |
+
+## Notes from Deep Second Pass
+
+A focused second read with different attack angles revealed **2 new observations** and **upgraded 1 finding**:
+
+- **Finding #5 upgraded:** The `quiverCallback` lack of `nonReentrant` is more significant than a defense-in-depth gap — the raw `.call` to `feeCollector` during settlement opens a concrete re-entry vector. Current state ordering (fees sent after `round.settled=true`) prevents exploitation, but the pattern is fragile and depends on correct ordering across future refactors.
+
+- **Finding #7 upgraded (Medium → High/Medium):** The TWAP buyback vulnerability is worse than initially assessed. `sqrtPriceLimitX96 = MIN_SQRT_PRICE + 1` means **no price protection** on the V4 swap itself — all protection relies on a one-directional deviation check that only blocks when PEA is *cheaper* than expected. At scale, a manipulator could push PEA price up and have the Treasury buy at the inflated price with no effective cap. At current $5.5K TVL this isn't economically viable, but it's a ticking vulnerability for growth.
+
+- **Finding #12 (New):** Integer division rounding dust from `_calculateAmountPerBlock` is permanently trapped in the `AutoMiner` contract when all rounds execute — `stop()` refunds nothing if `remainingRounds == 0`.
 
 ## Verdict
 
-**🟢 Clean.** MinePea is well-architected with cautious patterns throughout. No exploitable vulnerabilities found. The two notable design observations — AutoMiner executor centralization and short TWAP window on buybacks — are architectural choices common at this scale. All 5 contracts use CEI ordering correctly, fees are immutably hardcoded, VRF integration is sound, and no upgrade paths exist for attackers to exploit.
+**🟢 Clean.** MinePea is well-architected with cautious patterns throughout. No exploitable vulnerabilities found. The most notable finding is the Treasury buyback using `MIN_SQRT_PRICE + 1` as price limit — at current $5.5K TVL it's not economically viable to exploit, but at scale a manipulator could force the protocol to buy PEA at inflated prices with no effective cap. Other observations (AutoMiner executor centralization, `quiverCallback` lacking `nonReentrant`, rounding dust trapping) are design fragilities, not exploits.
+
+All 5 contracts use CEI ordering correctly, fees are immutably hardcoded, VRF integration is sound, and no upgrade paths exist for attackers to exploit. The deep second pass (different attack angles, focused entry point mapping) confirmed no missed vectors.
