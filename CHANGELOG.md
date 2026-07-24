@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.0 (Jul 24, 2026)
+
+- **Sentry Launch Factory (target #12)** — Full audit on Robinhood Chain. Clean verdict. TMAAR applied live (Macro-style). On-chain verification of owner, treasury, proxy admin.
+- **TMAAR demonstrated in live audit** — Phase 0.5 applied to Sentry before code reading. Documented actors, trust levels, assumptions, and accepted risks.
+- **Impact × Likelihood used during analysis** — No findings on Sentry, but the matrix is now baked into the triage process.
+- **Macro methodology now operational** — Not just documentation. Every new target gets TMAAR + Impact×Likelihood + commit tracking applied during the audit.
+
 ## v1.2.0 (Jul 24, 2026)
 
 - **Macro integration** — Studied 130+ Macro audit reports. Extracted and integrated their methodology into our repo

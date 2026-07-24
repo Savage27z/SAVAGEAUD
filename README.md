@@ -33,6 +33,7 @@ audit/
     ├── obsdn/           # ✅ Monad (symlink)
     ├── sukukfi/         # ✅ Berachain (symlink)
     ├── arcis/           # ✅ Base (symlink)
+    ├── sentry/          # ✅ Robinhood Chain (TMAAR applied, Macro-style)
     └── ...              # Next target goes here
 ```
 
@@ -51,6 +52,8 @@ audit/
 | 9 | openOracle | Base | $3.5K | — | ✅ Complete | 🟢 Clean | Jul 24 |
 | 10 | Arcis Protocol | Base | $120 | Jun 29 | ✅ Complete | 🟢 Clean | Jul 23 |
 | 11 | Windfall Lotto | Polygon | $1.4K | Jul 24 | ✅ Complete | 🟢 Clean | Jul 24 |
+| 12 | Sentry | Robinhood Chain | $31K | Jul 2 | ✅ Complete | 🟢 Clean | Jul 24 |
+| | **Next target** | TBD | — | — | ⏳ Ready when you are | — | — |
 
 ## Get Started
 

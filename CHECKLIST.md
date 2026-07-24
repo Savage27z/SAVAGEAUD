@@ -130,3 +130,4 @@ Check every target against this list. Update as new vulnerability angles are dis
 | Macro Library (Sapience-1) | Session key on-chain revocation, permissionsHash enforcement, random nonces over sequential |
 | Macro Library (Compound-1) | EIP-712 domain separator per-wallet, dynamic type hashing in structHash, msg.value signature inclusion |
 | Macro Library (Silicon-2) | Staker reward distribution correctness, NFT staking state consistency, marketplace listing integrity |
+| Sentry | Launchpad factory — proxy upgrade path (TransparentUpgradeableProxy + separate ProxyAdmin as contract), LP permanent lock (no withdraw/transfer), TsunamiPoolManager trust for initial pricing, fee routing split (65/35), try/catch pool creation safety, reentrancy guard on all external functions |
