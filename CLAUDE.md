@@ -32,6 +32,16 @@ When you find a bug, **deepen the attack** — chain it, find more victims, lowe
 - **Reports sound human** — plain language, analogies, "-" bullets
 - **User communicates in brief signals** — one-word approvals, short redirects, no over-deliberation
 
+## Gap-Hunter Methodology (from Pashov Audit Group v3)
+
+After the standard passes, run **3 gap-hunter passes** targeting bugs at the seams between lenses:
+
+1. **Flow Gap** — execution × periphery × first-principles: bugs that need cross-lens reasoning (e.g., clean trace + fee-on-transfer token = balance mismatch)
+2. **Trust Gap** — access control × economics × asymmetry: privileged actor + economic primitive = user exploitation
+3. **Numerical Gap** — precision × invariant × boundary: rounding that breaks invariants only at input extremes
+
+See `TEMPLATES/gap-hunter-scan.md` for the full scan protocol.
+
 ## Repo Structure
 
 ```
