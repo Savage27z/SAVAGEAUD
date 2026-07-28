@@ -42,3 +42,14 @@ trace: call sequence — internal step → periphery interaction → end state
 violated_principle: protocol guarantee the end state contradicts
 proof: concrete trace showing the seam
 ```
+
+---
+
+## Pass 2: Trust Gap (access control × economics × asymmetry)
+
+### Seam 1 — Access × Economics
+Correct access guard + correct formula — but permitted actor can systematically extract value.
+
+- [ ] onlyKeeper / onlyRole function with sandwich-able parameters (amountOutMin = 0, no slippage protection)
+- [ ] Privileged actor whose action has a front-run-able economic effect
+- [ ] Role that can trigger a function with MEV-able inputs
