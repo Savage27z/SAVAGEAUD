@@ -53,3 +53,10 @@ Correct access guard + correct formula — but permitted actor can systematicall
 - [ ] onlyKeeper / onlyRole function with sandwich-able parameters (amountOutMin = 0, no slippage protection)
 - [ ] Privileged actor whose action has a front-run-able economic effect
 - [ ] Role that can trigger a function with MEV-able inputs
+
+### Seam 2 — Economics × Asymmetry
+Formula whose result differs by caller class — difference is exploitable.
+
+- [ ] Deposit uses spot price, withdraw uses TWAP (or any paired formula mismatch)
+- [ ] Fee rates differ by user class without arbitrage protection
+- [ ] Same operation priced differently depending on entry path
