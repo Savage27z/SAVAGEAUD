@@ -80,3 +80,14 @@ seam: access×economics / economics×asymmetry / access×asymmetry / three-way
 actor: who can perform the exploit (role / user class / paired-function caller)
 proof: concrete trace — authorization step, economic step, asymmetric outcome
 ```
+
+---
+
+## Pass 3: Numerical Gap (precision × invariant × boundary)
+
+### Seam 1 — Precision × Invariant
+Invariant holds under exact arithmetic but breaks under integer rounding.
+
+- [ ] totalShares == sum(userShares) — rounding loss accumulates over N operations
+- [ ] Two formulas should produce equal results but use different rounding directions
+- [ ] N-segment arithmetic: per-segment constraints hold, monolithic invariant breaks
