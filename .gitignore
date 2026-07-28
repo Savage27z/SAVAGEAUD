@@ -39,3 +39,7 @@ coverage.json
 *.log
 commit_evm_cortex.sh
 commit_methodology_1.sh
+
+# Build scripts
+*.sh
+!commit.sh
