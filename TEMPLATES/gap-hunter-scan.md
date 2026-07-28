@@ -15,3 +15,10 @@ A control path that is internally correct but whose downstream periphery call re
 - [ ] Flow depends on periphery returning specific structure (bool, length, decimals) that non-standard contracts may not
 - [ ] Delta-check: received = balance_after - balance_before followed by >= amount — reverts on fee-on-transfer
 - [ ] Callbacks/hooks moving control mid-flow — post-callback code assumes pre-callback state
+
+### Seam 2 — Periphery × First-Principles
+External interaction safe in isolation but defeats protocol stated purpose when chained.
+
+- [ ] safeTransferFrom to token that violates protocol guarantee (rebasing, blacklist, double-entry)
+- [ ] User-controllable identifier (externalId, nonce) keying refund/state map without occupancy check
+- [ ] Cross-chain message handler iterating over user-controlled length — bricking delivery
