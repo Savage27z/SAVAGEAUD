@@ -10,3 +10,8 @@ Run after standard multi-agent passes. Each gap-hunter pass targets bugs at the 
 
 ### Seam 1 — Execution × Periphery
 A control path that is internally correct but whose downstream periphery call returns something that derails the trace.
+
+- [ ] Trace computes value BEFORE periphery call, uses it AFTER (fee-on-transfer, rebasing, sync state)
+- [ ] Flow depends on periphery returning specific structure (bool, length, decimals) that non-standard contracts may not
+- [ ] Delta-check: received = balance_after - balance_before followed by >= amount — reverts on fee-on-transfer
+- [ ] Callbacks/hooks moving control mid-flow — post-callback code assumes pre-callback state
