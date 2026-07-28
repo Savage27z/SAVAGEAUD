@@ -42,6 +42,8 @@ After the standard passes, run **3 gap-hunter passes** targeting bugs at the sea
 
 See `TEMPLATES/gap-hunter-scan.md` for the full scan protocol.
 
+**Gap-hunter passes are complementary** to the 6-agent Open-Kritt passes, not a replacement. Run all 9 (6 standard + 3 gap-hunter) on every target.
+
 ## Repo Structure
 
 ```
