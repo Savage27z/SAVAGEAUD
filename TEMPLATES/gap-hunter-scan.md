@@ -29,3 +29,16 @@ Execution path completes without reverting but end-state contradicts protocol in
 - [ ] Multi-step operation where steps are individually correct but combined end-state breaks semantics
 - [ ] Position update triggers funding settlement using new size against old rate (or vice versa)
 - [ ] Shared state written by X, read as ground truth by Y — attacker bridges contracts to convert phantom state to real claims
+
+### Seam 4 — Three-Way
+All three at once.
+
+- [ ] A control path interacts with periphery → periphery return triggers code branch → end state violates protocol purpose
+
+### Output
+```
+seam: execution×periphery / periphery×first-principles / execution×first-principles / three-way
+trace: call sequence — internal step → periphery interaction → end state
+violated_principle: protocol guarantee the end state contradicts
+proof: concrete trace showing the seam
+```
