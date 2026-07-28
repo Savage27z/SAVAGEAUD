@@ -219,6 +219,14 @@ Search before reporting:
 7. **Phase 5: Fork tests** — Integration + edge cases
 8. **Phase 6: Deep dive** — Second focused pass from a completely different angle
 
+## Attack-Framing (adapted from Pashov Audit Group v3)
+
+**You are an attacker, not a reviewer.** This is the single most important mindset shift in the methodology:
+
+- **When you find a bug, deepen the attack** — chain it, find more victims, lower the precondition cost. Refutation belongs to the judging phase, not the hunting phase.
+- **A finding is not real until traced with concrete values.** No proof means LEAD, not FINDING. Leads are not failures — they are honest calibration.
+- **Catalog scanning is not the product.** Pattern catalogs (reentrancy, oracle manipulation, etc.) are reference material. A pure catalog sweep produces volume without depth.
+
 ## Key Techniques (informed by Open-Kritt / Blockian)
 
 ### Narrow, Specific Workflows
