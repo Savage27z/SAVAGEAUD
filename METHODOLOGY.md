@@ -249,6 +249,61 @@ What you're hunting:
 - User-controllable identifiers keying a refund/state map without occupancy checks
 - Cross-chain message handlers iterating over user-controlled lengths — bricking delivery
 
+### Pass 2: Trust Gap
+
+**Seams:** access control × economics × asymmetry
+
+What you're hunting:
+- **Seam 1 — access × economics:** Function with correct access guard and correct economic formula — but the permitted actor can systematically extract value (e.g., `onlyKeeper` rebalance with `amountOutMin = 0` — keeper sandwiches themselves)
+- **Seam 2 — economics × asymmetry:** A formula whose result differs by caller class — and the difference is exploitable (e.g., deposit uses spot, withdraw uses TWAP = deposit cheap, withdraw expensive)
+- **Seam 3 — access × asymmetry:** A privileged actor whose action creates asymmetry between users (e.g., `setFeeRecipient` redirects accrued fees instead of crediting old recipient first)
+- **Seam 4 — three-way:** All three at once
+
+**Look for:**
+- Modifiers allowing a role, where the role's only action calls a function with sandwich-able params
+- Paired functions where one uses spot price and the other uses averaged price
+- Admin setters that affect pending/in-flight value distribution
+- Fee accrual crediting "current" recipients where the set of recipients can be changed retroactively
+- Hooks where the recipient is settable but past accruals don't checkpoint
+
+### Pass 3: Numerical Gap
+
+**Seams:** precision × invariant × boundary
+
+What you're hunting:
+- **Seam 1 — precision × invariant:** An invariant that holds under exact arithmetic but breaks under integer rounding (e.g., `totalShares == sum(userShares)` drifts silently over N deposits)
+- **Seam 2 — boundary × precision:** A formula whose precision behavior changes at input extremes (e.g., `fee = (amount * rate) / SCALE` — at `amount = SCALE/rate - 1`, truncates to zero = free service)
+- **Seam 3 — boundary × invariant:** An invariant enforced in the body but skipped on early-return or zero-input fast paths
+- **Seam 4 — three-way:** Edge-case input → precision loss → broken invariant
+
+**Look for:**
+- Two formulas that should produce equal results but rely on different rounding directions
+- An accumulator incremented by truncated quantity, later compared to un-truncated total
+- `if (x > 0)` immediately followed by division by `x` that produces zero anyway
+- `min`/`max` between values of different scales
+- N-segment arithmetic where per-segment constraints hold but the monolithic invariant breaks
+- Per-position caps in one unit checked against values computed in a different scale
+- A function that approves `out + fee` but consumes `out - fee`, leaving `2·fee` residual allowance per call
+
+### Gap-Hunter Output Format
+
+Every gap-hunter finding must specify:
+```
+seam: which lenses combine (e.g., execution×periphery / access×economics / precision×invariant)
+trace: the call sequence — internal step → interaction → end state
+violated_principle: the protocol guarantee that the end state contradicts (flow/trust gaps)
+proof: concrete numbers showing the seam (numerical gaps)
+```
+
+### vs. Standard Multi-Agent Hunting
+
+| Feature | Standard Multi-Agent | Gap-Hunter |
+|---------|---------------------|------------|
+| Viewpoint | 6 independent perspectives | Cross-lens seams |
+| What it catches | Bugs within a single lens | Bugs BETWEEN lenses |
+| Coverage | Reentrancy, access, math, etc. | Flow interactions, trust asymmetries, numerical seams |
+| Blind spot | Can't see cross-lens interactions | Can't see single-lens depth |
+
 ## Key Techniques (informed by Open-Kritt / Blockian)
 
 ### Senior Auditor's Mental Toolkit
