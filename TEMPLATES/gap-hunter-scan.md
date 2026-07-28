@@ -105,3 +105,15 @@ Invariant enforced in body but skipped on early-return or zero-input fast paths.
 - [ ] Zero-amount call bypasses invariant update, leaving stale state
 - [ ] Guard exempting edge cases from invariant-preserving code
 - [ ] Function approves out + fee but consumes out - fee — residual allowance accumulates
+
+### Seam 4 — Three-Way
+Edge-case input → precision loss → broken invariant.
+
+- [ ] Small collateral causes liquidationBonus to round to zero → position permanently un-liquidatable
+- [ ] Per-position cap in one unit checked against value in different scale
+
+### Output
+```
+seam: precision×invariant / boundary×precision / boundary×invariant / three-way
+proof: concrete numbers — trigger input, intermediate values, violated property
+```
