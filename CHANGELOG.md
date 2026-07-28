@@ -118,3 +118,4 @@
 - **Senior Auditor SOP** — Feynman Socratic Inversion mental toolkit now mandatory on every function read
 - **Gap-hunter scan template** — New TEMPLATES/gap-hunter-scan.md with full seam checklists for all 3 passes
 - **Methodology table expanded** — 4 new layers in combined stack: attack-framing, Senior Auditor SOP, gap-hunter, fuzz gen
+- **Fizz fuzz generation** — Echidna and Medusa stateful fuzz suite generation available from evm-cortex skills
