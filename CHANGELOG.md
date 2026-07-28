@@ -4,7 +4,8 @@
 
 - **evm-cortex integration** — Cloned ccashwell/evm-cortex (50 agents, 94 skills, 19 hooks) into workspace
 
-- **Pashov Audit Group v3** — Vendored attack-framing methodology from pashov/skills: agents are attackers not reviewers## v1.11.0 (Jul 24, 2026)
+- **Pashov Audit Group v3** — Vendored attack-framing methodology from pashov/skills: agents are attackers not reviewers#
+- **Gap-hunter passes** — 3 cross-lens seam scans added to multi-pass workflow: flow gap, trust gap, numerical gap# v1.11.0 (Jul 24, 2026)
 
 - **DefiLords (target #19)** — Full audit on Arbitrum: 4 ERC-4626 USDC vaults (GrowthVaultV5, FlowVaultBalanced, FlowHybridVault V2, FlowHybridVault V1). Clean verdict.
 - **6 observations** — V1 Hybrid vault buggy (known, retired), single EOA owner (no timelock), keeper rebalance centerTick (adapter guards mitigate), full-position liquidation on any withdrawal, getTVL() called on every deposit, defense-in-depth allowance revoke
