@@ -91,3 +91,10 @@ Invariant holds under exact arithmetic but breaks under integer rounding.
 - [ ] totalShares == sum(userShares) — rounding loss accumulates over N operations
 - [ ] Two formulas should produce equal results but use different rounding directions
 - [ ] N-segment arithmetic: per-segment constraints hold, monolithic invariant breaks
+
+### Seam 2 — Boundary × Precision
+Division/multiplication correct for normal inputs but produces zero/max at edges.
+
+- [ ] fee = (amount * rate) / SCALE — at amount = SCALE/rate - 1, truncates to zero
+- [ ] if (x > 0) immediately followed by division by x that produces zero anyway
+- [ ] min/max between values of different scales
