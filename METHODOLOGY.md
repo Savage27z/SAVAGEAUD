@@ -211,11 +211,13 @@ Search before reporting:
 **One pass is NOT an audit.** Every target gets multiple independent passes:
 
 1. **Phase 0: Recon** — Threat model, surface map, trust model, external deps
-2. **Phase 1: Read** — Feynman approach: question WHY every line exists
-3. **Phase 2: Hunt** — Run through 6-agent checklist systematically
-4. **Phase 3: Tools** — Slither + manual triage
-5. **Phase 4: Fork tests** — Integration + edge cases
-6. **Phase 5: Deep dive** — Second focused pass on different attack angles
+2. **Phase 0.5: TMAAR** — Trust model, actors, assumptions, accepted risks (mandatory before code)
+3. **Phase 1: Read** — Feynman approach: question WHY every line exists
+4. **Phase 2: Hunt** — Run through 6-agent checklist systematically
+5. **Phase 3: Gap-Hunter Passes** — 3 cross-lens seam scans (see below)
+6. **Phase 4: Tools** — Slither + manual triage
+7. **Phase 5: Fork tests** — Integration + edge cases
+8. **Phase 6: Deep dive** — Second focused pass from a completely different angle
 
 ## Key Techniques (informed by Open-Kritt / Blockian)
 
