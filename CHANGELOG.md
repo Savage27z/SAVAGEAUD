@@ -114,3 +114,5 @@
 - Multi-pass methodology from solo-contract-hunting skill
 - TEMPLATES/ with finding.md and target-summary.md
 - Full cold-pickup documentation (QUICKSTART.md)
+
+- **Senior Auditor SOP** — Feynman Socratic Inversion mental toolkit now mandatory on every function read
