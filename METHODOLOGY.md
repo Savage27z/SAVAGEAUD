@@ -229,6 +229,40 @@ Search before reporting:
 
 ## Key Techniques (informed by Open-Kritt / Blockian)
 
+### Senior Auditor's Mental Toolkit
+
+Three mandatory tools applied continuously during every code read:
+
+**1. Feynman Test (FIRST — use before anything else)**
+
+When you open any new function or contract, stop and ask: "Can I explain what this does to someone who doesn't know Solidity?" Try it in plain words. The places where your explanation gets fuzzy — where you reach for Solidity jargon instead of plain meaning — are where you're papering over an assumption. That's where bugs hide.
+
+*Example: you read `_handleFeeTransfer(zrc20, fee)` and your explanation comes out as "it transfers the fee." That's not Feynman. Feynman is: "it picks up the protocol's commission off the user's payment and moves it to the treasury wallet." Now keep going: what if the payment is in ETH and the function uses an ERC20 method? Your plain-English explanation breaks. Bug.*
+
+**2. Socratic Questioning**
+
+For every line of code, ask: why is this here? What does it assume? What happens if the assumption breaks? Don't accept "because that's how it's written" as an answer. Drill until you reach the implicit belief the code rests on — usually 2-3 "whys" deep.
+
+**3. Inversion**
+
+Every clean path gets a backward pass. After you understand what the code IS supposed to do, ask: how would I make it NOT do that? Read every check and ask "what value slips past it?" Read every state update and ask "what state am I in just before this?"
+
+### When to Reach for Which Tool
+
+- Opening any new function or contract → **Feynman** (always — before anything else)
+- Trying to understand a line you don't yet → **Socratic**
+- Something looks too clean → **Inversion**
+- You reached a "bug" conclusion → Deepen the attack (chain it, find more victims, lower the precondition cost — do NOT refute it)
+
+### Markers Protocol
+
+When running these tools, emit markers in your output:
+- `[Feynman: <name>]` — plain-English explanation
+- `[Socratic: <file>:<line> — why?]` — line-level drill
+- `[Inversion: <function>]` — 3 concrete attacker moves
+
+These aren't optional. They're how the orchestrator verifies depth, not surface scanning.
+
 ### Narrow, Specific Workflows
 The narrower and more specific a pass is, the better it performs. Instead of "find all vulnerabilities," run focused passes:
 - "Find reentrancy paths in the deposit flow"
