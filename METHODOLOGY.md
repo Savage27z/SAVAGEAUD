@@ -466,3 +466,4 @@ Every target gets the full stack. These aren't optional extras — they're all m
 |- **Macro blog — audit methodology lessons:** https://0xmacro.com/blog/how-to-prep-for-an-audit/
 - **evm-cortex** — 50 agents 94 skills 19 hooks for Solidity by Uniswap Senior Engineer: https://github.com/ccashwell/evm-cortex
 - **fizz** — Automated Echidna and Medusa fuzz suite generation: https://github.com/pashov/skills/tree/main/fizz
+- **Pashov Audit Group** — Original source for attack-framing gap-hunter and Senior Auditor SOP: https://github.com/pashov/skills
