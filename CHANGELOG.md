@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.12.0 (Jul 28, 2026)
+
+- **evm-cortex integration** — Cloned ccashwell/evm-cortex (50 agents, 94 skills, 19 hooks) into workspace
 ## v1.11.0 (Jul 24, 2026)
 
 - **DefiLords (target #19)** — Full audit on Arbitrum: 4 ERC-4626 USDC vaults (GrowthVaultV5, FlowVaultBalanced, FlowHybridVault V2, FlowHybridVault V1). Clean verdict.
