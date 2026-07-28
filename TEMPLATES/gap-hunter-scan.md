@@ -22,3 +22,10 @@ External interaction safe in isolation but defeats protocol stated purpose when 
 - [ ] safeTransferFrom to token that violates protocol guarantee (rebasing, blacklist, double-entry)
 - [ ] User-controllable identifier (externalId, nonce) keying refund/state map without occupancy check
 - [ ] Cross-chain message handler iterating over user-controlled length — bricking delivery
+
+### Seam 3 — Execution × First-Principles
+Execution path completes without reverting but end-state contradicts protocol intent.
+
+- [ ] Multi-step operation where steps are individually correct but combined end-state breaks semantics
+- [ ] Position update triggers funding settlement using new size against old rate (or vice versa)
+- [ ] Shared state written by X, read as ground truth by Y — attacker bridges contracts to convert phantom state to real claims
