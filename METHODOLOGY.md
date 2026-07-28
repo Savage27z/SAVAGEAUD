@@ -435,6 +435,10 @@ A fully static, in-browser EVM exploit debugger. Fork chain state, replay any tr
 - evm-hack-poc: Community PoC archive
 - crypto.training/hacks: Public browsable mirror
 
+## Using evm-cortex Skills
+
+The evm-cortex repo is cloned at `/root/.hermes/workspace/evm-cortex/`. To use its skills (fizz, xray-pre-audit, pashov-audit-pipeline) in a session, reference them by their path. The security skills directory has 15 attack-vector-specific files under `skills/`.
+
 ## Walking Away
 Not every target produces a finding. After a full multi-pass analysis with nothing exploitable, say so and move on. Never inflate severity.
 
