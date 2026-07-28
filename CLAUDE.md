@@ -96,4 +96,6 @@ audit/
 | **Feynman/Socratic/Inversion** | Pashov Audit Group (evm-cortex) | Mandatory mental toolkit for every function read |
 | **Fuzz suite generation** | Pashov Audit Group (fizz) | Echidna/Medusa/Foundry stateful fuzz harnesses |
 
+**Fizz** — when targeting high-value protocols, run `fizz` (skill in evm-cortex) to generate Echidna/Medusa fuzz suites.
+
 **No shortcuts.** Every target gets all of these applied.
