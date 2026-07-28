@@ -98,3 +98,10 @@ Division/multiplication correct for normal inputs but produces zero/max at edges
 - [ ] fee = (amount * rate) / SCALE — at amount = SCALE/rate - 1, truncates to zero
 - [ ] if (x > 0) immediately followed by division by x that produces zero anyway
 - [ ] min/max between values of different scales
+
+### Seam 3 — Boundary × Invariant
+Invariant enforced in body but skipped on early-return or zero-input fast paths.
+
+- [ ] Zero-amount call bypasses invariant update, leaving stale state
+- [ ] Guard exempting edge cases from invariant-preserving code
+- [ ] Function approves out + fee but consumes out - fee — residual allowance accumulates
