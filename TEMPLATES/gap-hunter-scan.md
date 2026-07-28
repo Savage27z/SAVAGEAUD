@@ -60,3 +60,10 @@ Formula whose result differs by caller class — difference is exploitable.
 - [ ] Deposit uses spot price, withdraw uses TWAP (or any paired formula mismatch)
 - [ ] Fee rates differ by user class without arbitrage protection
 - [ ] Same operation priced differently depending on entry path
+
+### Seam 3 — Access × Asymmetry
+Privileged actor creates asymmetry between users.
+
+- [ ] Admin setter that alters destination of in-flight economic value (setFeeRecipient redirecting unclaimed fees)
+- [ ] Parameter change that retroactively affects pending operations
+- [ ] Hooks/rewards where recipient is settable but past accruals do not checkpoint
