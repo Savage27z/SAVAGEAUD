@@ -91,5 +91,9 @@ audit/
 | **Narrow focused passes** | Open-Kritt / Blockian | "Find reentrancy in deposit flow" not "find all bugs" |
 | **Brute-force entry points** | Open-Kritt / Blockian | Map every entry point × every bug class |
 | **EVM replay** | EVM Hack Analyzer | Opcode-level exploit traces for PoC validation |
+| **Attack-framing** | Pashov Audit Group (evm-cortex) | Agents framed as attackers, not reviewers — deepen don't refute |
+| **Gap-hunter seams** | Pashov Audit Group (evm-cortex) | 3 cross-lens passes for bugs between specialties |
+| **Feynman/Socratic/Inversion** | Pashov Audit Group (evm-cortex) | Mandatory mental toolkit for every function read |
+| **Fuzz suite generation** | Pashov Audit Group (fizz) | Echidna/Medusa/Foundry stateful fuzz harnesses |
 
 **No shortcuts.** Every target gets all of these applied.
