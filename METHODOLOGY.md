@@ -227,6 +227,28 @@ Search before reporting:
 - **A finding is not real until traced with concrete values.** No proof means LEAD, not FINDING. Leads are not failures — they are honest calibration.
 - **Catalog scanning is not the product.** Pattern catalogs (reentrancy, oracle manipulation, etc.) are reference material. A pure catalog sweep produces volume without depth.
 
+## Gap-Hunter Methodology (from Pashov Audit Group v3)
+
+After the standard multi-agent passes, run **3 gap-hunter passes** targeting bugs at the seams between lenses. These are bugs NO single-lens scan can find because the exploit only emerges when two or more lenses interact.
+
+### Pass 1: Flow Gap
+
+**Seams:** execution × periphery × first-principles
+
+What you're hunting:
+- **Seam 1 — execution × periphery:** A control path that's internally correct but whose downstream periphery call returns something that derails the trace (e.g., fee-on-transfer token, rebasing, blacklist)
+- **Seam 2 — periphery × first-principles:** An external interaction safe in isolation but that defeats the protocol's stated purpose when chained (e.g., safe `safeTransferFrom` to a rebasing token violates "users always receive at least X")
+- **Seam 3 — execution × first-principles:** An execution path that completes without reverting but whose end-state contradicts protocol intent (e.g., `loan.repaid == true` but `loan.collateralLocked == true`)
+- **Seam 4 — three-way:** All three at once
+
+**Look for:**
+- A trace that computes a value BEFORE a periphery call and uses it AFTER
+- Multi-step operations where steps are individually correct but combined end-state breaks semantics
+- Callbacks/hooks that move control mid-flow, and post-callback code assumes pre-callback state
+- Delta-check patterns (`received = balance_after - balance_before`) followed by `>= amount` — reverts on fee-on-transfer even on intended flows
+- User-controllable identifiers keying a refund/state map without occupancy checks
+- Cross-chain message handlers iterating over user-controlled lengths — bricking delivery
+
 ## Key Techniques (informed by Open-Kritt / Blockian)
 
 ### Senior Auditor's Mental Toolkit
