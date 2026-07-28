@@ -67,3 +67,16 @@ Privileged actor creates asymmetry between users.
 - [ ] Admin setter that alters destination of in-flight economic value (setFeeRecipient redirecting unclaimed fees)
 - [ ] Parameter change that retroactively affects pending operations
 - [ ] Hooks/rewards where recipient is settable but past accruals do not checkpoint
+
+### Seam 4 — Three-Way
+All three at once.
+
+- [ ] Privileged actor uses asymmetric economic primitive at expense of specific user class
+- [ ] Owner setOracle + borrow uses TWAP / liquidate uses spot — owner front-runs oracle change to liquidate borrowers
+
+### Output
+```
+seam: access×economics / economics×asymmetry / access×asymmetry / three-way
+actor: who can perform the exploit (role / user class / paired-function caller)
+proof: concrete trace — authorization step, economic step, asymmetric outcome
+```
