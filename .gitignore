@@ -37,3 +37,5 @@ coverage.json
 
 # Logs
 *.log
+commit_evm_cortex.sh
+commit_methodology_1.sh
