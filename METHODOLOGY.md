@@ -452,6 +452,7 @@ Every target gets the full stack. These aren't optional extras — they're all m
 8. **Open-Kritt narrow passes** — Focused "find X in Y" not "find all bugs"
 9. **Open-Kritt brute-force entry points** — Map all entry points × bug classes
 10. **EVM Hack Analyzer** — Opcode-level PoC replay
+11. **Pashov attack-framing** — Agents are attackers, not reviewers — deepen dont refute
 
 ## Repo References
 - Open-Kritt orchestration engine: https://github.com/Kritt-ai/open-kritt
