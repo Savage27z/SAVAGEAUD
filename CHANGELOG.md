@@ -120,3 +120,4 @@
 - **Methodology table expanded** — 4 new layers in combined stack: attack-framing, Senior Auditor SOP, gap-hunter, fuzz gen
 - **Fizz fuzz generation** — Echidna and Medusa stateful fuzz suite generation available from evm-cortex skills
 - **20 targets audited all clean** — K613 on Monad was target 20, 36K TVL
+- **Target filter updated** — Pivoting to bigger bounties: Immunefi and HackenProof targets with 500K+ TVL
