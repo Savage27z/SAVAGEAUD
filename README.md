@@ -89,3 +89,5 @@ cat CHECKLIST.md
 - **All targets live under TARGETS/:** root-level dirs have symlinks there
 - **Reporting:** User handles disclosure. You prepare the report.
 - **Nothing reportable = say so.** Never inflate severity.
+- **evm-cortex** — Pashov Audit Group v3 methodology integrated: attack-framing, gap-hunter passes, Senior Auditor SOP. See METHODOLOGY.md
+
