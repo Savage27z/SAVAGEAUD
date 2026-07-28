@@ -455,6 +455,7 @@ Every target gets the full stack. These aren't optional extras — they're all m
 11. **Pashov attack-framing** — Agents are attackers, not reviewers — deepen dont refute
 12. **Pashov Senior Auditor SOP** — Feynman to Socratic to Inversion on every function read
 13. **Pashov gap-hunter seams** — 3 cross-lens passes: flow, trust, numerical
+14. **Pashov fizz** — Echidna and Medusa stateful fuzz suite generation for high-value targets
 
 ## Repo References
 - Open-Kritt orchestration engine: https://github.com/Kritt-ai/open-kritt
