@@ -116,3 +116,4 @@
 - Full cold-pickup documentation (QUICKSTART.md)
 
 - **Senior Auditor SOP** — Feynman Socratic Inversion mental toolkit now mandatory on every function read
+- **Gap-hunter scan template** — New TEMPLATES/gap-hunter-scan.md with full seam checklists for all 3 passes
