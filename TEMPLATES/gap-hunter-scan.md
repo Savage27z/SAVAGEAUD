@@ -1,6 +1,6 @@
 # Gap-Hunter Scan
 
-Run after standard multi-agent passes. Each gap-hunter pass targets bugs at the SEAMS between lenses — bugs no single-lens scan can find.
+Run after standard multi-agent (Open-Kritt) passes. Each gap-hunter pass targets bugs at the SEAMS between lenses — bugs no single-lens scan can find.
 
 **Relationship to Open-Kritt:** Run the 6 Open-Kritt multi-agent passes first. These 3 gap-hunter passes run AFTER and look only for cross-lens bugs. A bug visible through one lens belongs in the Open-Kritt passes.
 
