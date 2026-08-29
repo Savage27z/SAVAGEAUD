@@ -1,91 +1,90 @@
-# VETRO — Audit Summary
+# VETRO — Audit Summary (Deep Pass)
 
 **Target:** VETRO — CDP / pegged-asset issuance (VUSD, vetBTC) on Ethereum mainnet
 **Date:** 2026-08-29
-**Auditor workflow:** TMAAR → deployed-code verification → multi-pass hunt
-**Deployed commit:** main @ 3c063a0394 (repo pushed 2026-08-18), Sourcify exact_match confirmed
-**Audited commit (QS, Feb-Mar 2026):** b0507cb — Hemi-chain VUSD only
+**Passes:** TMAAR → deployed-code verification → multi-pass hunt → **deep pass (vaults/strategies/roles)**
 
-## Verdict: 🟡 Clean of critical/high — observations documented
+## Verdict: 🟡 Clean of critical/high — 2 operational findings + observations
 
-## Scope covered
+## Deep-pass scope (what the first pass missed)
 
-- **Deployed vs audited drift verified**: 1,436 insertions / 774 deletions + 4 new files
-  (YieldManager, ChainlinkFeedAdapter, DerivedPriceFeedAdapter, FixedPriceFeedAdapter)
-- **On-chain verification**: all 15 contracts live on Ethereum, Sourcify exact_match,
-  repo main == deployed bytecode (hash-verified)
-- **QS fixes re-checked in deployed code**:
-  - HV-1 (orphaned yield) → FIXED: `distribute()` computes `_remaining = (periodFinish - lastUpdateTime) * rewardRate` ✅
-  - HV-2 (stale conversion in StakingVault) → FIXED: `_pullYield()` before preview in `_requestRedeem`/`_requestWithdraw` ✅
-  - HV-3 (AMO supply invariant) → FIXED: burn is gateway-gated, `burnFromAMO` enforces amoSupply ✅
-  - HV-4 (oracle tolerance) → reworked with peg-band (see O1)
-- **Roles verified on-chain**: SAFE multisig is owner; YieldManager has UMM (both treasuries) + DISTRIBUTOR (both YDs); keeper EOA 0x7b6027... has KEEPER_ROLE + instant-redeem whitelist on VUSD
+- **WhitelistedYieldVault (Yearn V3-style)**: all 6 collateral vaults share impl `0xf98f32...`,
+  ERC-1967 proxies, only the Treasury is whitelisted for deposit/withdraw
+- **Strategies identified per vault** (Vesper framework):
+  - USDT → MorphoVaultV2 (`0xdf9a...`), LagoonV06 (`0x4089...`, debt=0)
+  - USDC → MorphoVaultV2 (`0x3ec3...`, 344K debt) + 2 idle ERC4626Vaults + idle Lagoon
+  - frxUSD → MorphoVaultV2 (`0x3ec3...`, 77K debt)
+  - WBTC → ERC4626Vault (`0x61ce...`, 24,250 debt)
+  - cbBTC → MorphoVaultV2 (`0x3ec3...`, 5.8K debt), hemiBTC → idle
+- **Withdrawal path simulated on-chain** (eth_call as Treasury):
+  - Morpho vault `withdraw(1)` → OK (maxWithdraw=0 is a Morpho quirk the strategy
+    works around with convertToAssets — NOT a hard revert; verified)
+  - WhitelistedYieldVault `withdraw(1000)` → OK
+- **Roles re-verified**: Safe = owner/governor everywhere; keeper EOA `0x7b6027...`
+  has KEEPER+MAINTAINER (VUSD Treasury), DISTRIBUTOR (both YDs), but **NO roles on
+  VETBTC Treasury**; YieldManager has UMM (both) + DISTRIBUTOR (both)
 
-## Live state (2026-08-29)
+## Findings (deep pass)
 
-- VUSD totalSupply 543.8K, reserve 548.8K, amoSupply 10, mintLimit 100M
-- vetBTC supply 588.6K (0.588 BTC), reserve 588.5K
-- VUSD StakingVault: 72.9K sVUSD supply, 74.2K assets, 7d cooldown, 7.96K in cooldown
-- VETBTC StakingVault: 39.3K sVETBTC, 1d cooldown
-- YieldDistributor: active drip both stacks (rate/finish set)
-- Whitelisted: VUSD [USDT, USDC, frxUSD]; VETBTC [WBTC, cbBTC, hemiBTC]
-- Fees: mintFee/redeemFee all 0; pegBand 3bps (USDT/USDC), 0 (others)
-- Vaults: Yearn V3-style (WhitelistedYieldVault + 2 strategies each), only Treasury whitelisted
+### F1 — VETBTC automated yield loop is dead (operator misconfiguration) — 🟡 Medium ops
+The VETBTC Treasury has **no KEEPER_ROLE holder** (keeper EOA: False, Safe: False,
+YieldManager: False). `YieldManager.harvestAndDistribute` reverts for everyone
+(verified via simulation). Yet the VETBTC YieldDistributor receives `distribute()`
+calls **directly from the keeper EOA** (`0x7b6027...`, tx `0x6baf...` selector
+`0x91c05b0b` = distribute(uint256)) — the keeper is **manually funding vetBTC staker
+yield out-of-band**, bypassing the intended harvest→mint→distribute chain.
+Impact: vetBTC yield distribution depends on manual keeper action; treasury excess
+for vetBTC is never harvested through the designed path. The VUSD stack works
+correctly (keeper CAN trigger YM_VUSD.harvestAndDistribute — verified OK).
 
-## Findings
+### F2 — Vault share-price reporting is frozen (no keeper/maintainer on vaults) — 🟡 Low-Medium ops
+All six WhitelistedYieldVaults have **zero keeper/maintainer set** (`isKeeper`/`isMaintainer`
+False for keeper EOA AND Safe; `report()`, `reportEarning()`, `reportLoss()` all revert
+as a random caller). The vaults' `totalDebt` is therefore **stale**: on-chain gap vs
+strategy `tvl()` — USDT 6.4 USDT, USDC 29.2 USDT, frxUSD 3.37e18, WBTC 20 wei. The
+Treasury's `reserve()`/`withdrawable()` read this stale book value, so the protocol
+**undervalues its collateral** and the intended report-based yield accrual never fires.
+Not exploitable today (undervaluation is conservative), but the accounting rails are
+not operating as designed.
 
-### O1 — Peg-band pricing asymmetry (HV-4 rework) — 🟡 Informational
-`Gateway._calculatePeggedTokenOutput/_calculateTokenOutput` par-price within `pegBand`
-(floor=1−band, ceiling=1+band), adjust by oracle outside. `_effectivePegBand` zeroes a
-band ≥ tolerance (post-fix, bd0fcfb64e). Direction check: mint uses floor only, redeem
-uses ceiling only → protocol extracts the depeg premium in both directions within
-tolerance. Live pegBand 3bps / tolerance 100bps. Sound, but the accepted band is
-asymmetric by design (documented HV-4 family).
+### F3 — Book value vs deliverable liquidity on the redemption path — 🟡 Low (latent)
+`Treasury.withdrawable()` = token balance + `vault.convertToAssets(shares)` — book
+value. The vault holds almost everything in strategies (USDT vaultLiquid 17K wei of
+127K; WBTC 50 wei of 24,250). Withdrawal only works if the Morpho market / Lagoon
+can actually deliver. Today the sims pass, but the team's own `MockYieldVaultRealistic`
+models the exact failure ("convertToAssets(shares) exceeds what withdraw() can
+deliver") — if Morpho liquidity dries up (withdrawal caps, curate pause) or a Lagoon
+strategy is funded (async-redeem only), user redemptions would revert while
+`previewRedeem`/`maxWithdraw` show full book value. ATOMA-class seam.
 
-### O2 — FixedPriceFeedAdapter for WBTC = permanent price blindness — 🟡 Informational
-WBTC oracle is the new FixedPriceFeedAdapter (returns 1.0 WBTC/BTC forever, `updatedAt =
-block.timestamp` always). The Treasury's staleness check and tolerance check can NEVER
-trigger for WBTC. If WBTC depegs from BTC (custody event), the reserve silently
-overstates collateral and mint/redeem continue at par. Code comment documents intent
-("WBTC is 1:1 by construction") — but the deployed system has zero monitoring signal.
+### F4 — Cross-token oracle coupling DoS on harvest — 🟡 Low (from first pass, retained)
+`Treasury.reserve()` (→ `harvest` → `YieldManager.harvestAndDistribute`) reverts if
+ANY whitelisted token's oracle is stale or out of tolerance. One bad feed (frxUSD/USD
+24h heartbeat; HEMIBTC/BTC 18-dec feed) freezes yield distribution for the entire stack.
 
-### O3 — First-depositor captures orphaned yield after vault empties — 🟡 Low
-`StakingVault._pullYield()` skips when `totalSupply()==0`. If all shares are redeemed,
-yield keeps dripping into the YieldDistributor. The first new depositor mints at 1:1
-(supply 0 → totalAssets 0), then the NEXT interaction pulls ALL accumulated pending
-yield into the vault, inflating their share price to capture the full orphaned pool.
-The dev comment acknowledges the skip ("prevent orphan yield... diluting users canceling
-withdrawals") but the consequence is a first-depositor windfall of any yield accrued
-while empty. Not reachable today (72.9K supply), but a real economic seam in the
-empty→refill transition.
+## First-pass observations retained (Informational)
 
-### O4 — Cross-token oracle coupling: one stale feed DoSs whole-system harvest — 🟡 Low
-`Treasury.reserve()` (used by `harvest` → `YieldManager.harvestAndDistribute`) iterates
-ALL whitelisted tokens and reverts if ANY oracle is stale or out of tolerance. A single
-feed (e.g. frxUSD/USD 24h heartbeat, stalePeriod 25h; or HEMIBTC/BTC 18-dec feed) going
-stale freezes excess harvesting and yield distribution for the entire stack — even when
-the other tokens are perfectly healthy. Fail-closed by design, but the coupling means
-one weak feed = whole-system yield stall.
+- O1 peg-band pricing asymmetry (HV-4 rework) — par within band, oracle-adjusted outside; sound
+- O2 WBTC FixedPriceFeedAdapter = permanent price blindness + never-stale (by design, documented)
+- O3 empty-vault first-depositor captures orphaned pending yield (low likelihood)
+- O5 Gateway withdrawalDelay = 120s (bank-run mitigation cosmetic; StakingVault 7d cooldown is real)
+- O6 Keeper EOA single-key control of yield timing + pause toggles (VUSD stack)
 
-### O5 — Gateway withdrawal delay = 120 seconds — 🟡 Informational
-Deployed `withdrawalDelay` is 2 minutes (config `2*60`), delay ENABLED. The QS
-bank-run mitigation (HV-7 acknowledged) is effectively absent on the VUSD→collateral
-redemption path — a depeg would let holders exit at par within 2 minutes. StakingVault
-cooldown (7d) is the real protection; Gateway delay is cosmetic.
+## Negative results (verified clean)
 
-### O6 — Keeper EOA centralization — 🟡 Informational
-KEEPER_ROLE on both treasuries is a single EOA (0x7b6027... on VUSD, verified). Keeper
-can pull/push vault funds, toggle deposit/withdraw active, swap non-whitelisted tokens,
-and trigger harvest/distribute timing. Single-key control of yield timing + pause toggles.
-Standard keeper model; worth noting for the trust model.
+- No reentrancy across harvest→deposit→distribute (nonReentrant everywhere)
+- No rounding exploit in mint/redeem previews (Ceil inputs / Floor outputs)
+- No fee-on-transfer bypass (delta check in `_executeDeposit`)
+- No AMO supply underflow (gateway-only burn + invariant)
+- No stale-price bypass in derived feed (min of both feeds' updatedAt)
+- No instant-redeem bypass via locked+wallet split (Case 2 whitelist-gated)
+- Withdrawal path actually delivers (simulated on-chain) — maxWithdraw=0 not exploitable
+- Vault proxies only allow Treasury; no donation/first-depositor vector on yield vaults
 
-## What was NOT found (negative results)
-
-- No reentrancy across the harvest→deposit→distribute chain (nonReentrant on all paths)
-- No rounding exploit in mint/redeem previews (Ceil on inputs, Floor on outputs, verified)
-- No fee-on-transfer bypass (`_executeDeposit` delta check)
-- No AMO supply underflow (gateway-only burn + amoSupply invariant enforced)
-- No stale-price bypass in the derived feed (uses min of both feeds' updatedAt)
-- No instant-redeem bypass via locked+wallet split (Case 2 requires whitelist for excess)
-- Vault proxies only allow Treasury (whitelist verified); no donation/first-depositor
-  vector on the yield vaults (deposit is whitelist-gated)
+## Bottom line
+The deployed code is genuinely well-hardened and the QS fixes are correctly applied.
+The deep pass found the real issues are **operational**: the vetBTC keeper role was
+never granted (F1), and the vault reporting roles were never set (F2). Neither is a
+fund-loss exploit, but both mean parts of the system are running on manual rails —
+the kind of thing a team would want to know, and exactly what the audit-gap framing
+(never-audited YieldManager + adapters + upgrades) was hunting for.
