@@ -24,38 +24,59 @@
   has KEEPER+MAINTAINER (VUSD Treasury), DISTRIBUTOR (both YDs), but **NO roles on
   VETBTC Treasury**; YieldManager has UMM (both) + DISTRIBUTOR (both)
 
-## Findings (deep pass)
+## Findings (deep pass) — RE-VERIFIED 2026-08-30 (all claims checked on-chain)
 
 ### F1 — VETBTC automated yield loop is dead (operator misconfiguration) — 🟡 Medium ops
-The VETBTC Treasury has **no KEEPER_ROLE holder** (keeper EOA: False, Safe: False,
-YieldManager: False). `YieldManager.harvestAndDistribute` reverts for everyone
-(verified via simulation). Yet the VETBTC YieldDistributor receives `distribute()`
-calls **directly from the keeper EOA** (`0x7b6027...`, tx `0x6baf...` selector
-`0x91c05b0b` = distribute(uint256)) — the keeper is **manually funding vetBTC staker
-yield out-of-band**, bypassing the intended harvest→mint→distribute chain.
-Impact: vetBTC yield distribution depends on manual keeper action; treasury excess
-for vetBTC is never harvested through the designed path. The VUSD stack works
-correctly (keeper CAN trigger YM_VUSD.harvestAndDistribute — verified OK).
+**VERIFIED.** Role matrix (eth_call on `hasRole`, latest block 25,864,311):
+- Keeper EOA `0x7b6027ba861a99ffbfafb19b44934ce9b042fbef` (EOA, no code):
+  VUSD Treasury KEEPER=**True** MAINTAINER=**True**; VETBTC Treasury KEEPER=**False**
+- Safe `0x6649Ddb5...`: VETBTC Treasury KEEPER=False (ADMIN=True — Safe is the real
+  admin; OPERATIONS.md table claiming `0xE173b056...` as on-chain admin is STALE,
+  that address is an EOA with zero code and only KEEPER on VUSD)
+- YieldManagers: VETBTC Treasury KEEPER=False for both
+- `YieldManager.harvestAndDistribute(USDT,0)` simulated as keeper EOA:
+  **YM_VETBTC → reverts** (no KEEPER on VETBTC Treasury → `AccessControlUnauthorizedAccount`);
+  **YM_VUSD → OK** (keeper holds KEEPER there). Correct selector `0x32062d30`
+  (round-1 zero-arg selector was wrong — this supersedes it).
+- Yet VETBTC YieldDistributor receives **22 `distribute()` calls directly from the
+  keeper EOA** (all `status: ok`), latest tx `0x6bafd3b44a9eb062...` block 25,841,340 —
+  receipt shows vetBTC `Transfer` + `YieldDistributed` (`0x43d542a8...`). The keeper
+  holds DISTRIBUTOR_ROLE on both YDs directly, so they can bypass the YieldManager.
+Impact: vetBTC yield is manually funded out-of-band by the keeper (their own vetBTC),
+not harvested treasury excess; the designed harvest→mint→distribute chain is dead on
+the vetBTC side. VUSD stack works correctly (verified OK).
 
 ### F2 — Vault share-price reporting is frozen (no keeper/maintainer on vaults) — 🟡 Low-Medium ops
-All six WhitelistedYieldVaults have **zero keeper/maintainer set** (`isKeeper`/`isMaintainer`
-False for keeper EOA AND Safe; `report()`, `reportEarning()`, `reportLoss()` all revert
-as a random caller). The vaults' `totalDebt` is therefore **stale**: on-chain gap vs
-strategy `tvl()` — USDT 6.4 USDT, USDC 29.2 USDT, frxUSD 3.37e18, WBTC 20 wei. The
-Treasury's `reserve()`/`withdrawable()` read this stale book value, so the protocol
-**undervalues its collateral** and the intended report-based yield accrual never fires.
-Not exploitable today (undervaluation is conservative), but the accounting rails are
-not operating as designed.
+**VERIFIED.** All six WhitelistedYieldVaults: `isKeeper`/`isMaintainer` = **False**
+for keeper EOA AND Safe (checked both the OZ `hasRole`-style and the vault's own
+`isKeeper`/`isMaintainer`). `reportEarning(0,0,0)` as keeper EOA → **reverts on all 6**;
+`reportLoss(1)` → reverts (note: `reportLoss(0)` returns OK — zero is a no-op that
+skips the role check; nonzero reverts). `totalDebt` is stale vs strategy `tvl()`:
+- USDT: totalDebt 127,297,212,249 vs tvl 127,303,905,471 → gap **6.69 USDT**
+- USDC: 344,198,675,379 vs 344,229,362,206 → gap **30.69 USDT**
+- frxUSD: 77.3029e18 vs 77.3065e18 → gap **3.54 frxUSD**
+- WBTC: 24,250,202 vs 24,250,223 → gap **21 wei**
+- cbBTC: 5,880,714 vs 5,895,562 → gap **0.000148 cbBTC** (14,848 units)
+The Treasury's `reserve()`/`withdrawable()` read this stale book value, so the
+protocol **undervalues its collateral** (conservative, not exploitable) and the
+intended report-based yield accrual never fires on any vault.
 
 ### F3 — Book value vs deliverable liquidity on the redemption path — 🟡 Low (latent)
-`Treasury.withdrawable()` = token balance + `vault.convertToAssets(shares)` — book
-value. The vault holds almost everything in strategies (USDT vaultLiquid 17K wei of
-127K; WBTC 50 wei of 24,250). Withdrawal only works if the Morpho market / Lagoon
-can actually deliver. Today the sims pass, but the team's own `MockYieldVaultRealistic`
-models the exact failure ("convertToAssets(shares) exceeds what withdraw() can
-deliver") — if Morpho liquidity dries up (withdrawal caps, curate pause) or a Lagoon
-strategy is funded (async-redeem only), user redemptions would revert while
-`previewRedeem`/`maxWithdraw` show full book value. ATOMA-class seam.
+**VERIFIED with corrected units.** `Treasury.withdrawable()` = token balance +
+`vault.convertToAssets(shares)` = book value. USDT vault: liquid token balance
+**17.2 USDT** (17,198,382 wei) of book **127,314 USDT**; WBTC vault: **50 wei**
+liquid of 24,250 wei book. Morpho Vault V2 receipt token `0x23f5e9c35820f4bab695ac1f19c203cc3f8e1e11`
+holds strategy shares worth 127,303,913,135 USDT and reports **`maxWithdraw(strategy)=0`
+AND `maxRedeem(strategy)=0`** — the strategy's code comment ("Morpho Vault V2 return 0
+for maxWithdraw() so using convertToAssets() instead") is confirmed accurate.
+Withdrawal simulation (eth_call as Treasury, correct `withdraw(uint256,address,address)`):
+withdraw(1), withdraw(1,000), withdraw(100,000), and withdraw(maxWithdraw=127,314,410,630)
+**all OK today** — the strategy's convertToAssets workaround covers the Morpho quirk,
+so this is NOT a live revert. It is a latent ATOMA-class seam: if Morpho liquidity
+dries up (withdrawal caps, curate pause, vault shutdown) or a Lagoon strategy is
+funded (async-redeem only), user redemptions would revert while
+`previewRedeem`/`maxWithdraw` still show full book value. The team's own
+`MockYieldVaultRealistic` models exactly this failure.
 
 ### F4 — Cross-token oracle coupling DoS on harvest — 🟡 Low (from first pass, retained)
 `Treasury.reserve()` (→ `harvest` → `YieldManager.harvestAndDistribute`) reverts if
