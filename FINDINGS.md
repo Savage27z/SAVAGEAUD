@@ -25,6 +25,10 @@ No reportable findings on any target to date. All audits returned clean.
 || **17** | **Hood Index** | **Robinhood Chain** | **$75** | **6 observations (no external audit, 1% slippage gap, caller-provided routes, dust accumulation, one-time-set risk, 80h staleness window)** | **🟢 Clean — best-designed protocol yet: immutable basket, hard-capped fees, no upgrade, no admin withdrawal** |
 ||| **18** | **STEEL** | **Robinhood Chain** | **$911** | **5 observations (owner redirects staker rewards, jackpot from same randomness, auto-subscribe grief risk, carry accumulation, integer dust)** | **🟢 Clean — SLVR.fun fork with veSTEEL staking, auto-subscribe, motherlode, refining** |
 || 19 | DefiLords | Arbitrum | $2.3K | 6 observations (V1 bugs known-to-team, single EOA owner, keeper rebalance, full withdraw liquidation, getTVL on every deposit, defense-in-depth allowance revoke) | 🟢 Clean — well-structured ERC-4626 vaults, V1→V2 fixes show proactive bug-finding |
+| 20 | K613 | Monad | $36K | 5 contracts (Aave fork + staking) | 🟢 Clean |
+| 21 | ATOMA | Arbitrum | $64.7K | 7 observations (off-chain NAV, capitalWithdraw reserve gap, operator EOA) | 🟡 Informational |
+| 22 | Sherwood | Robinhood Chain | $28.8K | M1 fee-bypass (vault, off-scope), referral + Alchemy key (pre-reported), funded E2E deposit/withdraw tested clean | 🟡 First Medium (vault M1) — app surface clean |
+| 23 | VETRO | Ethereum | $595K | 6 observations (peg-band asymmetry, WBTC fixed-feed blindness, empty-vault yield capture, cross-token oracle coupling, 120s delay, keeper EOA) | 🟡 Informational — audit-gap target, deployed code drifted past QS audit |
 
 ## Process
 
