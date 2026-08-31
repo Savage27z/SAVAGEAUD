@@ -43,3 +43,12 @@ commit_methodology_1.sh
 # Build scripts
 *.sh
 !commit.sh
+
+# Secrets — NEVER commit
+*.key
+TARGETS/sherwood/chrome-profile/
+# Sherwood scripts with embedded PK material — never commit
+TARGETS/sherwood/signer.py
+TARGETS/sherwood/altkeys.py
+TARGETS/sherwood/cand_test.py
+TARGETS/sherwood/found_sweep.py
