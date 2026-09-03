@@ -1,5 +1,30 @@
 # Changelog
 
+## v1.13.0 (Sep 3, 2026)
+
+- **Exploit-wave study (Aug 20 – Sep 3)** — Postmortems: Provenance state-divergence
+  admin bypass (82 markers/~$500K), Cosmos EVM balance-sync cluster (MANTRA/TAC/
+  KiiChain/Nesa +2, nominal ~$70M, realized ~$5.7M, fix-existed-3-months disclosure
+  failure), Moonwell MAMO oracle pump ($8.7–9.1M, supply-cap bypass via direct
+  transfer), Coldcard RNG fallback (~2,055 BTC/$130M hardware).
+- **Pattern trace** — `POSTMORTEMS/pattern-trace-2026-09.md`: 8 exploit classes mapped
+  to protocol families + detection methods; 14 wave-derived checks added to
+  CHECKLIST.md.
+- **backed.is ($BACKED, target #28)** — RHC reserve-backed token: 4/4 contracts read
+  (token, StockVault, router, fee hook) + empirical fork verification (3% tax lands
+  exactly; redeem == preview to the unit). 🟢 Clean-with-notes, 6 observations; ~19x
+  floor premium noted.
+- **Astro (target #29)** — RHC crash game: black-box depth (function surface via
+  bytecode ∩ 4byte, live calldata recovery, fork state-machine probes). All reachable
+  paths hardened; settlement validation untestable without source (secret seed chain);
+  game observed stalled 7h30m. ⏸ Inconclusive.
+- **Coinbarrel (target #30)** — RHC launchpad V5: Phase 0.5 on-chain verification —
+  six UUPS proxies under one EOA, feeRouter/impairment impls drift from docs (Aug 30),
+  launcher upgraded Sep 3, hook pre-terminal-handoff. ⏸ Blocked (impls unverified, no
+  public source).
+- **Lesson logged**: the late-Aug RHC/Base micro-wave largely ships unverified source
+  (unlike the July batch); verification-first target selection now mandatory.
+
 ## v1.12.0 (Jul 28, 2026)
 
 - **evm-cortex integration** — Cloned ccashwell/evm-cortex (50 agents, 94 skills, 19 hooks) into workspace

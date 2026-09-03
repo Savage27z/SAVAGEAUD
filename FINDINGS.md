@@ -1,6 +1,7 @@
 # Findings Index
 
-No reportable findings on any target to date. All audits returned clean.
+No critical-grade reportable findings to date. Informational/Medium observations on
+several targets; disclosure status per target (user handles outreach).
 
 ## All Targets
 
@@ -29,6 +30,13 @@ No reportable findings on any target to date. All audits returned clean.
 | 21 | ATOMA | Arbitrum | $64.7K | 7 observations (off-chain NAV, capitalWithdraw reserve gap, operator EOA) | 🟡 Informational |
 | 22 | Sherwood | Robinhood Chain | $28.8K | M1 fee-bypass (vault, off-scope), referral + Alchemy key (pre-reported), funded E2E deposit/withdraw tested clean | 🟡 First Medium (vault M1) — app surface clean |
 | 23 | VETRO | Ethereum | $595K | 6 observations (peg-band asymmetry, WBTC fixed-feed blindness, empty-vault yield capture, cross-token oracle coupling, 120s delay, keeper EOA) | 🟡 Informational — audit-gap target, deployed code drifted past QS audit |
+| 24 | Flex | Ethereum | ~$300K debt | F1/F2 depositor exit freeze (idle = 0 both markets, burn-shares-pay-later via cold auction) | 🟡 Informational |
+| 25 | AZverse AssetVault | Arbitrum | — | Governance verified solid (Safe 3/4 + timelocks); EOA operator/validator trust anchor | 🟡 Informational |
+| 26 | MonkeyBet / RaiseController | Robinhood Chain | — | Reserve accounting sound; EOA-vs-multisig docs mismatch | 🟡 Informational |
+| 27 | Orchard | Robinhood Chain | — | Timing seam verified clean | 🟡 Informational |
+| 28 | backed.is ($BACKED) | Robinhood Chain | ~$52K reserve | 6 observations (addStock retroactively reshapes redeem basket + single EOA, instant fee→10%, maxSpendPerBuy default uncapped [live 0.5 ETH], minOut=0, hook ETH-only scope, O(n) redemption) | 🟢 Clean-with-notes — empirically verified on fork (tax lands, redeem exact); ~19x floor premium noted (economic) |
+| 29 | Astro (crash game) | Robinhood Chain | $85K | Black-box depth only: state machine hardened; settlement/winners validation UNVERIFIED (secret seed chain, source closed); game stalled 7h30m | ⏸ Inconclusive — source not public |
+| 30 | Coinbarrel (launchpad V5) | Robinhood Chain | $61K | Phase 0.5 only: 6 UUPS proxies under ONE EOA, 2 impls drift from docs (Aug 30), launcher upgraded Sep 3, hook pre-terminal-handoff | ⏸ Blocked — implementations unverified, no public source |
 
 ## Process
 
