@@ -18,11 +18,13 @@ Labs postmortem (Aug 28), GHSA-7g4w-cg88-2cq2.
 | MANTRA | Aug 20 | 720.9M OM | ~$3.6M | two wallets: 600M from burn addr + 120.9M genesis multisig; halt 14 min after 2nd drain; 94.7% hit one exchange; no recovery |
 | TAC | Aug 22 | 2.986B TAC (~28% supply) | ~$7.5M | bonded-token pool; bridged to BNB in **95 seconds**; halt 4h12m later |
 | KiiChain | Aug 22 | 148.3M KII | ~$9.7M nominal | **18 repeats vs 18 targets**; 54.4% frozen by halt, 45.6% bridged to BSC; only ~$1.6M realized |
-| Nesa + 2 undisclosed | same week | — | — | Cosmos Labs postmortem: **six networks exploited** ecosystem-wide |
+| Nesa | Aug 24-ish | ~$50M NES nominal | ~$60K realized | bought ~$250K NES (funded via Monero), inflated balance ~200x, bridged back to ETH; liquidity vanished, extreme slippage ate the position |
+| +2 undisclosed | Aug 20–25 | — | — | Cosmos Labs: **six networks exploited** ecosystem-wide |
 
-Loss sums: BlockSec ~$14.8M (three disclosed chains); rekt-news nominal sum ~$20.8M.
-Values are pre-exploit spot — realized take was far lower (KiiChain sold 64.6M KII for
-~$1.6M after the price collapse).
+Loss sums: BlockSec ~$14.8M (three disclosed chains); rekt-news nominal sum ~$20.8M for
+the first three; with Nesa the nominal total crosses ~$70M. **Realized total across all
+six chains ≈ $5.72M converted** (crypto.news) — the single biggest pattern of this
+wave: nominal ≠ realizable when you're dumping into your own collapsed liquidity.
 
 ## The bug (plain English)
 
@@ -48,15 +50,18 @@ inherits vesting status on arrival and can over-delegate.
 
 | Date | Event |
 |---|---|
-| May 13–15 | Cosmos Labs PR #1176 "harden statedb balance…" — fix merged to main |
+| Apr 25 | Reported via Cosmos Labs bug bounty |
+| May 13–15 | PR #1176 "harden statedb balance…" — fix merged to main, **silently**; operators not told which vuln it addressed; Cosmos Labs initially judged production funds safe |
 | Jul 27 | Berardinelli publishes full write-up "Printing Infinite Money on the Cosmos Blockchain" (had reported via HackerOne) |
+| Early Aug | Independent researchers confirm the bug affects **ALL** Cosmos EVM chains; Cosmos Labs obscures fix to hinder reverse engineering |
 | Aug 13 | Backport to release branches finally begins (PR #1254) |
-| Aug 19 | v0.7.2 ships — notes only "important security fixes," recommends "coordinated upgrade" — **no CVE, no advisory, no severity** |
-| Aug 20 07:16 | Public PR on Push Chain's fork of cosmos/evm describes vuln + exploit path (~12h before first attack) |
-| Aug 20 19:04 | MANTRA hit |
-| Aug 22 | TAC + KiiChain hit (TAC exploit 19:46:37) |
-| Aug 24 | Cosmos Labs first acknowledges an "ongoing security incident" |
-| Aug 25 | Cosmos Labs advises chains below v0.6.2/v0.7.2 to **halt** — 6 days after shipping the "fixed" release |
+| Aug 19 19:01 ET | v0.6.2/v0.7.2 ship — notes only "important security fixes" — **no CVE, no advisory, no severity** |
+| Aug 20 03:16 ET | Public PR on Push Chain's fork of cosmos/evm (credited to audit firm Hacken) describes vuln + exploit path — its version table omitted the v0.6.2/v0.7.2 releases from ~8h earlier |
+| Aug 20 15:06 ET (~19:06 UTC) | **First attack** (MANTRA) — ~20h after the "fixed" release, ~12h after the public PR |
+| Aug 20 19:13 ET | MANTRA halts |
+| Aug 22 | TAC + KiiChain hit; Cosmos Labs recommends vulnerable networks halt — **after** the chains were hit |
+| Aug 24 | Bitvavo suspends NES; Cosmos Labs first public acknowledgment |
+| Aug 25 | Cosmos Labs advises chains < v0.6.2/v0.7.2 to **halt** — 6 days after shipping the patched releases |
 | Aug 28 | Postmortem: six networks exploited; CEX accounts frozen; no recovery figures |
 
 Cosmos Labs' initial assessment "wrongly concluded the vulnerability did not threaten
@@ -94,6 +99,13 @@ Cosmos Labs learned TAC was also hit. By then the TAC bridge-out had already hap
 5. **Validator records lied**: TAC's chain still showed 2.986B TAC as bonded while the
    backing pool held zero. On-chain "supply" invariants that read ledger state instead
    of actual module balances will miss the hole.
+6. **Monitoring blind spots are attack surface**: MANTRA's burn address and a dormant
+   genesis multisig drained with **no automated warning for ~4 hours** — monitors treat
+   "immovable" addresses as unwatched. Watch the addresses that "can't" move.
+7. **Nominal ≠ realizable**: Nesa inflated ~$50M nominal and netted ~$60K; KiiChain
+   $9.7M nominal → ~$1.6M; whole six-chain wave realized ~$5.72M. Attacker profit is
+   bounded by exit liquidity, not by the size of the accounting error. (Still a
+   critical bug — just don't multiply nominal by price when assessing actual harm.)
 
 ## Sources
 - https://rekt.news/mantra-rekt / https://rekt.news/tac-rekt / https://rekt.news/kiichain-rekt

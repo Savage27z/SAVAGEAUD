@@ -117,6 +117,34 @@ Check every target against this list. Update as new vulnerability angles are dis
 - [ ] **Nonce management** — sequential vs random nonces. Can collisions prevent user from making multiple txs? (see Sapience M-3)
 - [ ] **msg.value in signature** — is ETH amount part of the signed message? If not, can attackers grief with 1 wei? (see Compound M-2)
 
+### Recurring Patterns from the Aug–Sep 2026 Exploit Wave
+*(See POSTMORTEMS/pattern-trace-2026-09.md for full mapping + sources)*
+
+**Authz / state (Provenance, Term)**
+- [ ] **Default-state authz** — for every access predicate, test with a fresh/empty account: predicate MUST be false when the caller has done nothing (Provenance: `0 == 0` self-admin; "hold 100% of supply" where supply = 0)
+- [ ] **Stale/informational fields in guards** — any storage field not updated on ALL lifecycle paths (non-fixed markers, cached supply) must never gate authz; read the live source of truth instead
+- [ ] **Quorum/participation denominator** — measured against the right total (active/wrapped vs total shares); can the entire electorate be cornered cheaply? (Term: ~0.5 ETH = 90% voting power)
+
+**Balance mirrors & sync (Cosmos EVM cluster)**
+- [ ] **Two sources of truth** — where a balance/supply is mirrored (bank↔EVM, wrapper↔underlying, locked↔spendable), audit the SYNC arithmetic: unguarded subtraction = underflow to 2²⁵⁶; overflow transfers redistribute real balances
+- [ ] **Mirror invariant** — mirror == authoritative after every state-changing op, including delegate/lock/stake/transfer-in paths; test sync with boundary deltas (1 wei over/under)
+- [ ] **Address-assumes-status** — can a precomputed future address be converted into a privileged account type (vesting) before the contract exists there?
+
+**Lending params (Moonwell, Tectonic)**
+- [ ] **Caps count every balance-arriving path** — direct ERC-20 transfer to the market/token contract bypasses deposit-path caps but still counts as collateral (Moonwell: 53.4M MAMO transferred in, not supplied)
+- [ ] **CF sized to depth, not price** — collateral factor × real DEX depth: would $2M move price 40x? (then CF must be tiny); cross-check vs feed deviation bounds
+- [ ] **Exchange-rate self-debt** — can one actor's borrows inflate the numerator of the token they post as collateral (Compound-v2 family rate = (cash+borrows−reserves)/supply)?
+- [ ] **Whole-market single-call exits** — per-market cash caps on `borrowMax()`-style sweeps
+
+**Verifier/quorum logic (KelpDAO, AFX, Harmony)**
+- [ ] **Single-verifier trust** — 1-of-1 DVN/relayer/watcher = single point of failure; dispute windows are useless vs compromised signers
+- [ ] **Quorum counts enabled signers** — empty/nil signer bitmaps and all-zero aggregate sigs must be rejected (Harmony); threshold met by few hot keys = key risk, not contract risk
+- [ ] **Dedup keys bound to signed data** — receipt spent-markers must derive from fields covered by the signature, not unauthenticated fields (Harmony cross-shard replay)
+
+**Entropy / infra (Coldcard)**
+- [ ] **No entropy fallback** — security-critical randomness must fail closed, never route to a PRNG (Coldcard: `#ifndef` on a macro defined-as-0)
+- [ ] **Dependency module versions** — pin + verify shared/upstream module versions and advisory status (Cosmos EVM: fix on main May 13 ≠ fixed in prod; silent backport + vague notes = countdown)
+
 ## 📝 Added per Target
 
 | Target | New insights / checklist items added |
