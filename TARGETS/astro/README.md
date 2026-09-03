@@ -43,6 +43,29 @@
 5. BankrollVault LP: deposit/withdraw/HWM accounting — impersonate LP + owner paths
 6. Owner powers: setBetLimits to 0 / huge; setPaused mid-round (funds stuck?); pause→refund semantics
 
+## Phase 2 fork results (anvil fork of RHC; eth_call simulations)
+**State machine is well-hardened on every path we could reach:**
+- Re-finalize a finalized round (round 4103, real calldata replay) → revert custom `0xac831504` code 2 (already-finalized/wrong-state fires BEFORE seed/winners checks — also means winner-list validation is unreachable on old rounds)
+- Finalize with mutated seed → same code 2 (state gate first)
+- commitRound() while current round unfinalized → `0xac831504` code 5 (rollover blocked)
+- lockSalt wrong state → code 2; closeBetting as owner in non-betting state → empty revert (phase-gated)
+- **emergencyForceCancel is NOT owner-callable** → separate role via AccessController (role separation ✓); <7d cancel blocked
+- placeBet validation order observed: amount checks (zero → `0x5688ffb3`) before phase/other checks (valid amount in stale round → `0x6b23d0f6`)
+- Admin setters + commitRound: `0x82b42900` Unauthorized for outsiders ✓
+
+**Testing constraints discovered (why we stopped here):**
+- Winner-list validation (the interesting surface) REQUIRES finalizing a round whose seed check passes → needs the operator's secret hash-chain seed → **impossible without source**. Seed check sits behind the state gate, so old/replayed rounds can't reach winners processing.
+- No open-betting window exists to test bet edges: the game has been **stalled since 2026-09-03 14:47 UTC (7h30m+)** — round 4104 committed at block 53,502,820, never closed/finalized; zero game txs in 257K+ blocks since. Round 4104 has **0 players** (no funds at risk). placeBet on the stale round reverts (`0x6b23d0f6`).
+- RHC public RPC is not archival → can't fork to the last open-betting window (block 53,502,580 fails: "metadata is not found").
+
+## Verdict at black-box depth
+🟡 **No vulnerability found on any reachable path** (authz, state machine, replay protection, amount gates, role separation all hold). **Settlement/winners validation + bankroll/HWM math remain UNVERIFIED** — only reachable with source or decompilation. Live liveness issue observed: game stalled 7h30m+ (operator bot down), round 4104 orphaned but empty.
+
+## Deeper options
+- **Decompile** (heimdall-rs on CrashGame + BankrollVault bytecode) → pseudo-source for settlement/winners/bankroll logic; no outreach. Recommended if continuing.
+- **Source from team** (option B) — full method.
+- Stop: document as inconclusive-on-settlement, no reportable finding.
+
 ## Actors observed on-chain (from tx history, block ~53,502,xxx)
 - `0x36D75c31aa1f44e26303462fbe84de7529b713ea` — round operator (calls Commit Round, Lock Salt, Close Betting, Finalize Round)
 - `0x557CD0e7d5a7ccc843792e00254e0bd097e52d12` — player(s), calls Place Bet
