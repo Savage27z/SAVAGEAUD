@@ -85,3 +85,32 @@ unless a leg is fully drained. Long-term gas creep for redeemers. Owner-controll
   registry `0x71a120…` ownerOf(feature 2) → router — read, not audited).
 - The 7 stock tokens' own contracts (assumed standard tokenized equities).
 - Off-chain: keeper bot behavior, frontend, web (stackaudit: thin headers).
+
+## Empirical verification (anvil fork of RHC, 2026-09-03) — addresses the "too clean?" challenge
+Ran the live flows, not just read them:
+1. **Buy 1 ETH via BackedRouter → tax provably lands.** Vault ETH balance rose from
+   0.01085 → 0.04085 ETH = exactly +0.03 ETH = 3% of the buy. No double-charge, no
+   misroute. (Fee hook charges once, on the correct side, for buys.)
+2. **Redeem 1 BACKED → exact.** Burned exactly 1e18; paid ethOut 4.11e7 wei =
+   0.95 × (1e18/ts) × post-buy vault balance (fee basis matches preview); ALL 7 stock
+   legs delivered in-kind with balances matching `previewRedeem` to the unit
+   (e.g. stock[0] +89,886,187,604, stock[6] +83,127,945,624 — zero skips, zero
+   rounding drift). preview == actual on the tested path.
+3. **Ordering/CEI hold under execution** — burn-before-payout, no reentrancy observed.
+
+What the execution test surfaced that static reading missed (economic layer, not a
+contract bug):
+- **BACKED trades far above floor**: marginal buy ≈ 2,412 BACKED / 0.001 ETH ≈
+  $0.00104/token → ~**19x the stock-reserve floor** (stackaudit saw 2.4x on Jul 25).
+  Pool ≈ 52 ETH + 126M BACKED (~$130K ETH side); 1 ETH ≈ 2% impact. The 4% round-trip
+  (3% hook + 1% pool) makes floor-arb expensive → premium can persist. Token holders
+  carry real mark-to-market risk vs the floor; the vault itself is pool-independent.
+- Sell-direction fee (afterSwap path) not separately isolated (thin pool → slippage
+  swamps the fee measurement). Same verbatim Index pattern as the buy side.
+
+**Bottom line after execution testing:** no contract-level theft/rug/accounting bug
+found by read OR by running the flows. Residual risk = owner trust (F1/F2), keeper
+config (F3/F4), un-audited externals (Rialto contracts, 7 stock tokens), and the
+market-layer premium/depth fragility above. Verdict stands as 🟢 clean-with-notes;
+nothing disclosure-grade, but the single-EOA `addStock`/fee powers are the part I'd
+push the team to timelock.
