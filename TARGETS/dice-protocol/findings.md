@@ -21,6 +21,33 @@ liability should be escrowed per-request or excluded from the withdrawable balan
 *Fix: track `refundableFees` separately from `withdrawableFees`; or escrow each
 request's fee until reveal/refund.*
 
+**✅ FORK-CONFIRMED (2026-09-03):** on an anvil fork of RHC — attacker created a stuck
+request (seq 313, mined past the 6-block delay), admin `withdrawFees` drained the full
+accrued pool (0.006354 ETH, tx status 0x1, accrued → 0), then the requester's
+`refundRequest(313)` **reverted (status 0x0)**. Refund bricked exactly as read.
+
+## F5 (🟡 Medium, NEW — fork-attack phase) — request+refund cycles burn provider sequences at ~zero cost → capacity grief / oracle DoS
+`requestHelper` increments `providerInfo.sequenceNumber` per request and **refund never
+restores it** — it only clears the request and returns the fee. So an attacker can loop:
+`requestV2` (pay exact fee) → wait `refundDelayBlocks` (6 L1 ≈ 72s) → `refundRequest`
+(fee returned) → repeat. Each cycle permanently consumes one provider sequence number
+at net cost ≈ **gas only** (the fee comes back). Effects:
+- The provider's finite hash chain (registered via `registerFor`/constructor) is burned
+  ahead of schedule → re-registration needed sooner (admin-only).
+- If burned to `endSequenceNumber`, every legitimate `requestV2` reverts
+  `OutOfRandomness` → **the oracle is DOWN for all consumers** until the admin notices
+  and re-registers. Repeatable harassment; dependent games/apps wedge.
+- Refunds don't require the provider to do anything — no counterparty, fully
+  unilateral attack.
+**✅ FORK-CONFIRMED:** 8 sequences (304–312) requested and refunded — all refunds
+status 0x1, provider `sequenceNumber` kept climbing (never rolled back). Then 400 more
+requests burned without friction (chain length > 713 on the fork; exact end not
+reached, so full-exhaustion DoS is a matter of chain length × ~2 cheap txs per burn).
+*Fix: on refund of an unrevealed request, decrement/restore the provider sequence
+number (or refund only if the provider can still serve; better: make refunds restore
+capacity by re-issuing the sequence or refunding from a per-request escrow and rolling
+back `sequenceNumber` when the request was never revealed).*
+
 ## F2 (🟡 Low) — gasLimit=0 callback path: single attempt, no retry, request cleared first
 When a request has `gasLimit10k == 0` (requester passed gasLimit 0 and the provider's
 defaultGasLimit is also 0), `revealWithCallback` takes the else-branch:

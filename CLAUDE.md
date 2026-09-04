@@ -25,6 +25,11 @@ When you find a bug, **deepen the attack** — chain it, find more victims, lowe
 ## Key Constraints
 
 - **Multi-pass mandatory** — every target gets ≥2 focused passes from different angles
+- **FORK-ATTACK PHASE mandatory (user rule, Sep 2026)** — before any "clean" verdict, run an
+  anvil fork and ATTEMPT attacks: impersonate owner/admin/keeper/provider, malformed
+  calldata, replay, reentrancy, grief/DoS loops (e.g. burn provider chain sequences then
+  refund), refund/withdraw races. Findings = attacks that succeed or partially succeed.
+  Static reading alone never yields a clean verdict.
 - **Phase 0.5 (TMAAR) is mandatory before reading any code** — document trust model, actors, assumptions, accepted risks first
 - **Never call a target "clean" after one read-through**
 - **No speculative findings** — must reproduce on fork or on-chain
