@@ -1,7 +1,7 @@
 # SHERWOOD — Privacy Mixer + Shielded DEX (Robinhood Chain)
 
-**Status:** 🟡 1 Medium finding (fee bypass) + observations — no fund-drain exploit
-**Date:** 2026-08-05
+**Status:** 🔴 M1 (fee bypass, source-based) + 🔴 NEW 2026-09-04: **deployed bytecode ≠ verified source** (see `SOURCE_DRIFT_20260904.md`) — the live vault's code is NOT the code that was audited; third-party proofs rejected by a drifted extDataHash check. M1 unconfirmed against deployed bytecode.
+**Date:** 2026-08-05 (updated 2026-09-04)
 **Source:** Blockscout-verified — SherwoodVault `0xf54013b8BE8fdFcF0CD1fD727c803F16c2450736` (live, 4.2 ETH + $525 USDG ≈ $9K TVL), impl-less immutable
 **Repo:** sherwood-exchange/sherwood (⚠️ STALE — repo has a newer compliance circuit; deployed is the older transaction2 design)
 
