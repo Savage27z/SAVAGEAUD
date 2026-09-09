@@ -62,7 +62,7 @@ audit/
 | **18** | **STEEL** | **Robinhood Chain** | **$911** | **Jul 24** | **✅ Complete** | **🟢 Clean** | **Jul 24** |
 || 19 | **DefiLords** | **Arbitrum** | **$2.3K** | **Jun 17** | **✅ Complete** | **🟢 Clean — 4 ERC-4626 vaults, V1→V2 fixes proactive** | **Jul 24** |
 | 31 | Moocon (no-loss lottery) | Solana | $14K | Jul 2026 | ⏸ In progress | 🟡 TMAAR done — recon via BPF string extraction, no source/IDL published | Sep 9 |
-| 32 | Run Money (ClubPool) | Base | $3K | ~93 epochs live | ✅ Complete | 🔴 F01 (Medium, **Confirmed on fork** — attacker earned ~100x victim's bonus) | Sep 9 |
+| 32 | Run Money (ClubPool) | Base | $3K | ~93 epochs live | ✅ Complete | 🔴 F01 (Medium, Confirmed — attacker earned ~100x victim's bonus) + F02 (High, Confirmed — no-attacker-needed accounting corruption) | Sep 9 |
 || | **Next target** | TBD | — | — | ⏳ Ready when you are | — | — |
 
 ## Get Started

@@ -3,7 +3,7 @@
 **Chain:** Base (8453)
 **Chain Explorer:** https://basescan.org/address/0x1089db83561d4c9b68350e1c292279817ac6c8da
 **Date:** September 9, 2026
-**Status:** 🔴 Findings (1 confirmed — fork-proven against the real deployed contract)
+**Status:** 🔴 Findings (2 confirmed — both fork-proven against the real deployed contract)
 
 **Audited commit:** verified source as deployed, compiler `v0.8.26+commit.8a97fa7a`, pulled via
 Etherscan V2 unified API (`chainid=8453`) directly from the chain explorer — no separate GitHub
@@ -42,6 +42,8 @@ See [TMAAR.md](TMAAR.md).
 - Reporter is honest about real-world activity (accepted, off-chain, no dispute path)
 - An athlete's stake at compliance-marking time fairly represents their epoch participation —
   **false, this is F01**
+- The value subtracted when un-marking compliance matches what was originally added — **false,
+  this is F02**, and unlike F01 it requires no attacker at all
 
 ### Accepted Risks
 - Single trusted reporter role, no on-chain verification possible (inherent to the product)
@@ -56,8 +58,12 @@ See [TMAAR.md](TMAAR.md).
 ## Analysis Summary
 - Single, small (345-line), readable contract — full read completed in one pass
 - Staked principal is never at risk — always Aave-custodied and withdrawable via `unstake()`
-- The yield-redistribution mechanism (the actual product) has a real logic bug: bonus-share
-  weight is a live, freely-mutable balance sampled once with no lockup or time-weighting (F01)
+- The yield-redistribution mechanism (the actual product) has TWO real logic bugs in the same
+  ~30 lines of `recordActivity()`: bonus-share weight is a live, freely-mutable balance sampled
+  once with no lockup or time-weighting (F01, needs a deliberately-timed attacker); and the
+  non-compliant branch subtracts the wrong value entirely, corrupting shared accounting from
+  completely ordinary usage with no attacker required (F02, arguably more dangerous since it's
+  higher-likelihood and can brick claims for every compliant athlete in an epoch at once)
 - Two admin-trust observations (O1, O2) noted but not elevated to findings per RULES.md #6
 - Verified live on-chain: 93 epochs elapsed, 7-day epoch length, ~$2,088 USDC + 0.35 ETH
   currently staked — real, ongoing money, so F01 has been theoretically exploitable across many
@@ -72,7 +78,7 @@ See [TMAAR.md](TMAAR.md).
 | 1: Read | Full code read (Feynman questioning) — entire contract, single pass | ✅ |
 | 2: Hunt | Access control / reentrancy / math / oracle-trust checklist run | ✅ |
 | 3: Tools | Slither | ⏭️ skipped this session — small enough for a confident manual read, flag for follow-up |
-| 4: Fork tests | Foundry fork PoC for F01 | ✅ — confirmed against the real deployed contract on a Base fork |
+| 4: Fork tests | Foundry fork PoC for F01 and F02 | ✅ — both confirmed against the real deployed contract on a Base fork |
 | 5: Deep dive | Second pass, different angle (gap-hunter: Trust Gap seam) | ✅ — F01 IS the Trust Gap finding (access-control-correct `recordActivity`, economically exploitable weight) |
 
 ## Findings
@@ -80,8 +86,9 @@ See [TMAAR.md](TMAAR.md).
 | # | Finding | Severity | Impact | Likelihood | Status |
 |---|---------|----------|--------|------------|--------|
 | F01 | Unprotected stake snapshot in `recordActivity`/`claimBonus` lets any athlete inflate their bonus-pool share via a temporary stake | Medium | Medium | High | **Confirmed** — fork PoC: attacker earned ~100x victim's bonus |
+| F02 | `recordActivity`'s non-compliant branch subtracts an athlete's CURRENT stake instead of their frozen snapshot, corrupting the shared pool total from ordinary usage — no attacker needed | High | High | High | **Confirmed** — fork PoC, 2 variants: bricks other athletes' `claimBonus`, or permanently locks compliance status |
 
-Full writeup: [findings/F01-flash-stake-bonus-inflation.md](findings/F01-flash-stake-bonus-inflation.md)
+Full writeups: [findings/F01-flash-stake-bonus-inflation.md](findings/F01-flash-stake-bonus-inflation.md), [findings/F02-stale-stake-underflow.md](findings/F02-stale-stake-underflow.md)
 
 ## Team Status (as of 2026-09-09)
 Likely dormant, not abandoned-with-no-funds-at-risk. Evidence:
@@ -105,11 +112,14 @@ disclosure via email even without high confidence of a response — RULES.md #4 
 publicly while open) still applies regardless of whether the team responds.
 
 ## Verdict
-Not clean. F01 is a real, **fork-confirmed** logic bug in the core value-distribution mechanism
-— no front-running or flash-loan sophistication required, exploitable by any athlete against
-every other athlete's bonus share, and the contract has been live long enough (93 weekly
-epochs) that it's worth checking whether it's already been exploited, not just fixing going
-forward. Staked principal itself is never at risk (always Aave-withdrawable) — this is a
-yield-redistribution integrity bug, not a fund-drain. Ready for RULES.md #5-compliant private
+Not clean. Two real, **fork-confirmed** logic bugs, both in `recordActivity()`'s ~30 lines of
+snapshot handling. F01 needs a deliberately-timed attacker (Medium). F02 needs nobody at all —
+it fires from a completely ordinary sequence (stake more, later have a bad week) and can brick
+`claimBonus` for every compliant athlete in an epoch at once, or permanently lock someone's
+compliance status regardless of reality (High). Staked principal itself is never at risk
+(always Aave-withdrawable) — both are yield-redistribution integrity/availability bugs, not
+fund-drains. The contract has been live long enough (93 weekly epochs) that it's worth checking
+whether either has already fired in practice. Ready for RULES.md #5-compliant private
 disclosure whenever 𝖲𝖠𝖵𝖠𝖦𝖤 wants to send it — team contact is `runmoney.app` /
-`x.com/runmoney_app`, no public bug-bounty page found yet.
+`x.com/runmoney_app` / `info@runmoney.app`, no public bug-bounty page found yet. Worth
+disclosing F01 and F02 together in one report since they share the same root code.

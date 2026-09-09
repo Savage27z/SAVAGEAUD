@@ -22,6 +22,15 @@
    - *What if it fails?* **This is F01.** Stake is freely mutable right up to and immediately
      after the snapshot instant, with no lockup, no minimum holding period, and no re-validation
      — confirmed false. This assumption is the direct root cause of F01.
+2b. **The value removed from `totalDepositByCompliant` when un-marking compliance matches what
+   was actually added when marking it.**
+   - *What if it fails?* **This is F02.** `recordActivity`'s non-compliant branch subtracts the
+     athlete's CURRENT live stake, not the frozen `epochAthleteStake` snapshot that was actually
+     added — confirmed false, and confirmed on-fork to either zero the shared pool total
+     (bricking every other compliant athlete's `claimBonus`) or underflow-revert (permanently
+     locking that athlete's compliance status for the rest of the epoch). Unlike F01, this needs
+     no attacker at all — it fires from an athlete simply staking more after being marked
+     compliant, then later being marked non-compliant.
 3. **Aave V3 `supply()`/`withdraw()` round-trip within a short window (even the same
    transaction) without penalty or restriction.** Standard Aave V3 behavior, not gated by any
    cooldown — this is what makes F01 practically free to execute (any capital source works,
