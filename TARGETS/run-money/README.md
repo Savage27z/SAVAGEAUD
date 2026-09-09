@@ -83,6 +83,27 @@ See [TMAAR.md](TMAAR.md).
 
 Full writeup: [findings/F01-flash-stake-bonus-inflation.md](findings/F01-flash-stake-bonus-inflation.md)
 
+## Team Status (as of 2026-09-09)
+Likely dormant, not abandoned-with-no-funds-at-risk. Evidence:
+- Twitter (`@runmoney_app`) silent since June 2026; last substantive post (Jun 11) disclosed a
+  "misconfigured database migration that deleted key information to verify activities using the
+  Strava API" — a real backend incident, not just inactivity
+- `runmoney.app`'s own live TVL widget currently shows **$0.00 / ETH Price: $0.00**, despite the
+  contract genuinely holding ~$2,088 USDC + 0.35 ETH — frontend/indexer appears broken or offline
+- **But** `currentEpochStartTime` shows epoch 93 started just 6 days before this review
+  (2026-09-03) — `endEpoch()` is permissionless so this alone doesn't prove team activity, but
+  93 consecutive weekly rollovers with no gaps is at minimum still mechanically functioning
+- Real disclosure channel found: `info@runmoney.app` (mailto, from site footer). No bug-bounty
+  page, no GitHub issues to check (`github.com/Run-Money` 404s)
+- Reputationally real: testimonials from Stani Kulechov (Aave founder) and Lefteris Karapetsas
+  (Rotki) on the homepage — not an anonymous/scam project, more likely small-team burnout or
+  funding lapse after the Strava-integration incident
+
+**Implication for F01:** real user funds are still sitting in a contract with a confirmed bug,
+behind a frontend that can't even show users their own balance right now. Worth attempting
+disclosure via email even without high confidence of a response — RULES.md #4 (never disclose
+publicly while open) still applies regardless of whether the team responds.
+
 ## Verdict
 Not clean. F01 is a real, **fork-confirmed** logic bug in the core value-distribution mechanism
 — no front-running or flash-loan sophistication required, exploitable by any athlete against
