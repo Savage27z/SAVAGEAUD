@@ -99,6 +99,40 @@
 
 ---
 
+## Solana
+
+| Property | Value |
+|----------|-------|
+| RPC | `https://api.mainnet-beta.solana.com` (public, rate-limited — expect 429s, retry with backoff) |
+| Explorer | `https://solscan.io` (note: instruction-name decoding can be WRONG/generic for unverified programs — always cross-check against raw `getTransaction` `logMessages`, not Solscan's guessed labels) |
+| Native Token | SOL |
+| Type | L1, Sealevel runtime (BPF/SBF programs, not EVM) |
+
+### RPC Notes
+- No Etherscan-equivalent verified-source guarantee — most small/new programs are **not**
+  source-verified. Check `solana program show <id>` or Solscan's "Verification" tab first.
+- No Slither/Foundry/anvil equivalent tooling. Local fork testing = `solana-test-validator`
+  with `--clone` of the target program + its state accounts. Not yet used in this repo — first
+  Solana target (Moocon) only reached recon/TMAAR.
+- **No source, no IDL is common and not itself a redflag alone** — but blocks Phase 1 (code
+  read) entirely. Recon workaround that worked well: pull the program's executable data account
+  raw bytes via `getAccountInfo` (owner = `BPFLoaderUpgradeab1e11111111111111111111111`, address
+  = the `programData` field off the program account), then extract printable ASCII runs. Anchor/
+  Borsh compile every instruction name, account name, and `require!()` error string as a literal
+  — this recovers the full instruction/account/error surface without any decompilation. Does
+  NOT recover control flow / line-level logic — that still needs real BPF disassembly (Ghidra +
+  Solana loader, or similar).
+- Anchor IDL, if published, lives at a deterministic PDA
+  (`createWithSeed(findProgramAddress([], programId)[0], "anchor:idl", programId)`) — check this
+  before assuming a program is unreverseable; many DO publish IDL on-chain even without a public
+  repo.
+- `getProgramAccounts` without a `dataSlice`/`filters` can be slow/rate-limited on public RPC for
+  programs with many accounts — fine for Moocon (only 3 accounts owned directly; most state is
+  delegated to MagicBlock's ephemeral rollup program between rounds).
+- Used for: Moocon audit (no-loss lottery on Jupiter Lend, $14K TVL, in progress)
+
+---
+
 ## Berachain
 
 | Property | Value |
