@@ -162,6 +162,34 @@ main contract.
 
 ---
 
+## Abstract (zkSync-family L2)
+
+| Property | Value |
+|----------|-------|
+| Chain ID | 2741 |
+| RPC | `https://api.mainnet.abs.xyz/` |
+| Explorer | `https://abscan.org` |
+| Explorer API | Covered by Etherscan V2 unified API (`chainid=2741`) — same key as other chains |
+| Native Token | ETH |
+| Type | L2, zkSync Era stack (zkEVM, NOT standard EVM bytecode) |
+
+### RPC Notes
+- **Standard Foundry (`forge`/`anvil`, revm-based) CANNOT execute this chain's deployed
+  bytecode on a fork.** Contracts are compiled with `zksolc` to zkEVM bytecode, not
+  `solc`-standard EVM bytecode. Confirmed directly: `vm.createSelectFork` against a real
+  contract, then even a trivial `view` getter call reverts — while the IDENTICAL call via
+  `cast call` against the live RPC succeeds normally. This is a local fork-execution gap, not a
+  real on-chain issue. Needs `foundry-zksync` (a separate zkEVM-aware Foundry build) for actual
+  fork-test PoCs on this chain — not set up as of the death.fun target (Sep 2026), which stayed
+  at "source-confirmed, fork-blocked" for this exact reason.
+- Plain `cast call`, raw `eth_call` JSON-RPC, and `cast storage` all work fine directly against
+  the live RPC — only LOCAL fork execution is broken. Use these for read-only verification.
+- Etherscan V2 unified API works normally for `getsourcecode` (`chainid=2741`) — no
+  Abstract-specific quirk there, same as any other Etherscan-family explorer.
+- Used for: death.fun (Mines-style casino, ~$44K bankroll, F01 signature-replay finding)
+
+---
+
 ## Berachain
 
 | Property | Value |
