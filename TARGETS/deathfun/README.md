@@ -62,6 +62,12 @@ See [TMAAR.md](TMAAR.md).
   inconsistency is the direct root cause of F01
 - No signature-nonce/used-tracking anywhere, compounding F01 into an unlimited-replay bug, not
   just a single-use mismatch
+- **Live UI check (2026-09-10):** played the real app end-to-end with real (tiny) funds —
+  mint membership-equivalent, create a real game, advance a round, cash out successfully. Never
+  found an "increase bet" control anywhere in the flow — the feature doesn't appear exposed to
+  regular players through the current website, even though the contract function is fully public
+  and callable directly. Downgrades F01's practical likelihood from High to Medium without
+  changing its validity — see the finding doc's updated Impact × Likelihood section
 - Verified live on-chain: real $44K bankroll balance, real `messagePrefix`/`gameCounter` values,
   confirmed OLD vs. NEW contract don't share a domain prefix (ruled out one hypothesis instead of
   assuming it)

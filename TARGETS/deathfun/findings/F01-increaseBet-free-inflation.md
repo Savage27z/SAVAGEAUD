@@ -34,10 +34,11 @@ are real either way and the downside if the assumption fails is a direct bankrol
 | Axis | Rating | Rationale |
 |------|--------|-----------|
 | **Impact** | High (conditional on off-chain trust in `betAmount` — explicitly flagged as unverified, not assumed) | If the backend uses on-chain `betAmount`/`BetIncrease` for payout sizing, odds, or limits in any way: direct path to draining the ~$44K bankroll. If not: still a permanently-falsifiable public record and fake on-chain volume, real but lower-stakes |
-| **Likelihood** | High | Requires only ONE legitimate use of the "increase bet" feature ever (to obtain one valid signature) — no cryptographic breakage, no admin-key compromise, just resubmitting the exact same calldata Abstract already accepted once |
+| **Likelihood** | High (code-level) / **downgraded to Medium in current live practice** | Requires only ONE legitimate use of the "increase bet" feature ever (to obtain one valid signature) — no cryptographic breakage, no admin-key compromise, just resubmitting the exact same calldata Abstract already accepted once. **Live-checked directly (2026-09-10):** played the real app end to end (mint→create game→advance→cash out) and never found a UI control that triggers `increaseBet` at all — it does not appear to be exposed to regular players through the current website. Doesn't reduce the bug's validity (it's a public contract function anyone with a wallet/script can call directly, no UI required — see `disclosure/F01-attacker-view.js`), but the realistic "how does an attacker get their first legitimate signature" story is weaker than a heavily-used everyday feature would imply, since the feature doesn't appear to be live in the app right now. |
 
-**Final severity: High** (High × High per METHODOLOGY.md's matrix, under the conditional
-above — flagged honestly as conditional rather than asserted)
+**Final severity: High at the code level, Medium in current practical terms** (per
+METHODOLOGY.md's matrix — Impact High × Likelihood Medium once the UI-reachability caveat is
+priced in; still fully valid via direct contract calls, not requiring the official app at all)
 
 ## Status
 **Confirmed** — reproduced end-to-end on a real zkEVM (foundry-zksync) fork of the actual
@@ -158,8 +159,13 @@ about missing domain separation (not itself exploitable today, but a real gap wo
 the same time).
 
 ## Proof of Concept
-**Run and passing, against the real deployed contract on a zkEVM fork.**
-`TARGETS/deathfun/fork-test/test/F01_IncreaseBetFreeInflationAndReplay.t.sol`. It:
+Two forms, for two audiences:
+- `disclosure/F01-attacker-view.js` — a plain Node script anyone can read without trusting our
+  toolchain. Builds the real message hash and raw calldata for the replay call, purely locally.
+  **Never connects to a provider, never broadcasts anything.** Good for a team skimming the
+  mechanism in 30 seconds.
+- The actual executed proof, below — **run and passing, against the real deployed contract on a
+  zkEVM fork.** `TARGETS/deathfun/fork-test/test/F01_IncreaseBetFreeInflationAndReplay.t.sol`. It:
 1. Forks Abstract mainnet (via `foundry-zksync`'s `--zksync` execution mode)
 2. Uses `vm.store` (fork-local only, mirrors what `deal()` does for token balances) to make a
    test-controlled key an admin, since we don't hold the real admin's private key
