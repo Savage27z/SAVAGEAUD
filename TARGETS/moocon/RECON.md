@@ -111,34 +111,48 @@ keeper key running the entire reveal → undelegate → commit pipeline for ever
   `programs/moocon-vaults/src/{lib.rs, math.rs, merkle.rs, cpi/exchange_rate.rs,
   token_validation.rs, events.rs, state/vault.rs, instructions/{admin,authority,user,payout}/*.rs}`
 
-## Confirmed on-chain fact (not a hypothesis — direct account read)
+## Confirmed on-chain fact (not a hypothesis — direct account read, Anchor-discriminator-verified)
 
-Pulled the 3 accounts currently owned by the program directly (`getProgramAccounts`) and decoded
-raw bytes:
+Pulled the 3 accounts currently owned by the program directly (`getProgramAccounts`), decoded
+raw bytes, and identified the account TYPE by brute-forcing candidate struct names against
+Anchor's discriminator formula (`sha256("account:<Name>")[..8]`) until they matched — this
+confirms account identity with certainty, not guesswork:
 
-- `CAGLvoMYP1XTyLdJzceAWW7coqW7MzQbFFiJ5yKEcHBZ` (80 bytes — matches account index 6 in the
-  `Reveal` tx, i.e. this is the reward/commitment record):
-  - bytes `[8:40]` = `JsvR5eLkPzfJ3TqiumoowRTco1m5qf21V5NCWn9H5UR` — **the program's upgrade
-    authority, byte-for-byte**
+- `CAGLvoMYP1XTyLdJzceAWW7coqW7MzQbFFiJ5yKEcHBZ` (80 bytes) — discriminator matches
+  **`account:State`** exactly. This is the program's single global config/state account (not a
+  per-round reward record as first assumed — corrected from the initial pass).
+  - bytes `[8:40]` = `JsvR5eLkPzfJ3TqiumoowRTco1m5qf21V5NCWn9H5UR` — the program's **upgrade
+    authority**, byte-for-byte. Almost certainly the `State.authority`/admin field (first field
+    after the discriminator is the conventional Anchor layout for an admin pubkey).
   - bytes `[40:72]` = `H9Q6c1RYvoQ64QdQcbnQJFrTEsdH3ojR4jvMxTQFm83L` — the keeper bot wallet
-    that fires `Reveal`/`ProcessUndelegation`/`Commit`
+    that fires `Reveal`/`ProcessUndelegation`/`Commit`. Distinct key from the admin — **not**
+    the same EOA (correcting the earlier draft of this doc, which read the two adjacent 32-byte
+    fields as one match and overstated this as a single identical key. They are two different
+    keys.)
+- `7Cb6CFeh6etzsEY46Wq7LEjFTRmnuYUQa6T1e5ez2STt` / `He8zmi8tVbDJxeH8th8bNH6pdz9k1DksBoVEowcHhw8a`
+  (296 bytes each) — discriminator matches **`account:Vault`**. Two Vault accounts = one per
+  asset (SOL, JupUSD), as expected. Byte `[72:104]` of the first one = `GwnavJALxWXSvS4XXXETsaAgFkuVbrrZpFTsPFf1i8ym` — matches the mint seen in the sampled `Reveal`
+  transaction (almost certainly `p_mint`, the prize/ticket mint for that vault).
 
-So the reward/commitment account's first two pubkey fields (almost certainly `authority` and
-`vrf_authority`/keeper, going by the extracted account-name strings) are: **the same single EOA
-that holds upgrade authority over the entire program**, plus one hot keeper wallet. This is a
-directly-verified fact, not inference from decompilation guesswork — confirmed via raw
-`getAccountInfo` + byte offset match, reproducible by anyone with the addresses above.
+**Corrected finding:** the admin/upgrade-authority key and the keeper/round-execution key are
+**two separate EOAs**, not one identical key as the first draft of this doc claimed — that was
+wrong and has been fixed. What IS still true and still worth flagging: `SetVrfAuthority` is a
+confirmed admin-only instruction (per the extracted instruction list), meaning the admin key can
+almost certainly repoint that second `State` field to any keypair it wants, at any time, with no
+timelock observed on either the program upgrade path or this setter. So while the *current*
+keeper is a distinct key, **ultimate control of "who gets to reveal/commit rounds" still
+collapses to the single admin EOA** — it's one hop away (a `SetVrfAuthority` call) rather than
+already identical. That's a real but smaller claim than the original draft made, and the
+correction matters (RULES.md #3 — never inflate).
 
-**Why this matters against the "verifiable draw" claim (moocon.xyz marketing copy):** a draw is
-only as verifiable as the process no single party controls. Here, one EOA can (a) upgrade the
-program's `reveal`/`consume_randomness`/`commit` logic at any time (no timelock observed), and
-(b) is the on-chain authority recorded directly on the reward/commitment record. Whether that
-authority field literally gates VRF selection or something narrower needs the vault/reward
-account's field layout confirmed (see next steps), but at minimum: **there is no
-trust-minimization between "the team" and "the draw result" here** — full centralization, one
-key, no counterweight. That gap between marketing claim and actual trust model is itself
-Informational-to-Low reportable per this repo's Sherwood precedent (source-drift transparency
-finding) — worth writing up formally once the exact field role is confirmed.
+**Why this still matters against the "verifiable draw" claim (moocon.xyz marketing copy):** a
+draw's verifiability rests on nobody being able to unilaterally control both the code and who
+computes randomness. Here: one EOA can (a) upgrade the program's `reveal`/`consume_randomness`/
+`commit` logic at any time, and (b) reassign the round-authority key via `SetVrfAuthority` at
+any time. Both levers exist, neither is timelocked as far as observed. Whether this rises to a
+formally reportable finding (vs. a documented TMAAR risk) depends on confirming there's truly no
+timelock on `SetVrfAuthority` specifically — worth a targeted decompile of that one instruction
+before writing it up as a finding, rather than the whole program.
 
 ## Attack-surface hypotheses (NOT yet findings — no fork PoC, per RULES.md #2)
 
@@ -146,6 +160,16 @@ These are leads from the Feynman/Inversion pass on the reconstructed surface. Ra
 much they contradict the "verifiable draw" / "no-loss" marketing claims specifically, since
 that's the trust-minimization angle RULES.md #6 asks for before an admin-power observation
 counts as reportable:
+
+**Corroborating check (string-absence, not proof):** re-scanned the full extracted string list
+for any timelock/two-step/deadline vocabulary. Zero hits for `pending`, `propose`, `timelock`,
+`delay`, `two-step`, `cooldown`, `grace` (admin-setter timelock terms) AND zero hits for
+`deadline`, `expire`, `expiry`, `forfeit`, `grace_period`, `permissionless`, `crank`, `timeout`
+(reveal-deadline / permissionless-fallback terms). Idiomatic Anchor code almost always ships a
+distinct `require!()` error string for a timelock or deadline check, so a genuine absence of ALL
+of these across the entire binary is meaningful signal — not conclusive (a check could exist
+using only a generic/reused error), but it lines up with hypotheses #1 and #2 below rather than
+against them.
 
 1. **`SetVrfAuthority` is an admin-only setter with (so far) no timelock/multisig evidence.**
    If the admin can repoint VRF authority to a keypair they control, "verifiable draw" is not
@@ -155,7 +179,9 @@ counts as reportable:
    mutable setter, (c) check whether the "commit-reveal secret seed" path is the actual
    randomness source for winner selection (in which case `SetVrfAuthority` might gate something
    less central) or is central to it.
-2. **Reveal/Commit pipeline has one signer with no observed permissionless fallback.** If the
+2. **Reveal/Commit pipeline has one signer with no observed permissionless fallback**
+   (see string-absence corroboration above — no `deadline`/`crank`/`permissionless`/`timeout`
+   vocabulary found anywhere in the binary). If the
    keeper is the only party who can call `Reveal`/`ConsumeRandomness`/`Commit`, and there's no
    deadline-triggered permissionless path or slashing for a keeper who simply never reveals an
    unfavorable round, this opens a "look-then-abort" grief: request randomness, peek at what it

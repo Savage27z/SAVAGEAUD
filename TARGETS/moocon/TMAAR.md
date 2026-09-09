@@ -8,9 +8,8 @@ source read. Flagged where that limits confidence.
 
 | Actor | Trust Level | What They Can Do | What Happens If Compromised |
 |-------|-------------|-------------------|------------------------------|
-| Upgrade authority (`JsvR5eLkPzfJ3TqiumoowRTco1m5qf21V5NCWn9H5UR`) | **High** | Redeploy the entire program at will (no timelock observed). Confirmed on-chain to also be recorded directly on the reward/commitment account (`authority` field). | Total: can rewrite reveal/consume-randomness/withdraw logic, redirect funds, change any rule |
-| Keeper bot (`H9Q6c1RYvoQ64QdQcbnQJFrTEsdH3ojR4jvMxTQFm83L`) | **High for round integrity** | Sole observed signer for `Reveal` / `ProcessUndelegation` / `Commit` — runs the entire reveal→undelegate→commit cycle every round, ~every 35-55 min | If compromised or just self-interested: could selectively delay/skip unfavorable reveals (needs confirming no deadline/permissionless-fallback exists) |
-| VRF authority (`SetVrfAuthority`-controlled) | **High (must be honest for "verifiable draw" to mean anything)** | Whoever holds this can be the source of round randomness | If it's admin-settable with no pinning/timelock, "verifiable" is marketing, not a property |
+| Admin / upgrade authority (`JsvR5eLkPzfJ3TqiumoowRTco1m5qf21V5NCWn9H5UR`) | **High** | Redeploy the entire program at will (no timelock observed). Confirmed via Anchor-discriminator-verified account read to be the global `State.authority` field (offset 8) — separate from the keeper key. Also the presumed caller of `SetVrfAuthority`, `SetWithdrawFee`, `SetNewActivityPaused`, `UnfreezeCommitment`, etc. | Total: can rewrite reveal/consume-randomness/withdraw logic, and can reassign the keeper/VRF-authority field to any key it wants via `SetVrfAuthority` — one hop from full round control even though it isn't the round-execution key itself today |
+| Keeper bot (`H9Q6c1RYvoQ64QdQcbnQJFrTEsdH3ojR4jvMxTQFm83L`) | **High for round integrity** | Confirmed (Anchor-discriminator-verified account read) to be the second pubkey field on the global `State` account, distinct from admin. Sole observed signer for `Reveal` / `ProcessUndelegation` / `Commit` — runs the entire reveal→undelegate→commit cycle every round, ~every 35-55 min | If compromised or just self-interested: could selectively delay/skip unfavorable reveals (needs confirming no deadline/permissionless-fallback exists). Also fully replaceable by admin at any time via `SetVrfAuthority` — no independent tenure/timelock protecting this role from admin override |
 | Users (depositors) | None | Deposit SOL/JupUSD, withdraw principal, claim yield if winner | — |
 | Jupiter Lend program (external CPI dependency) | High (must behave correctly) | Vault's yield source — all deposited principal is CPI'd into Jupiter's lending market | If Jupiter Lend is paused/exploited/insolvent, vault's underlying yield source breaks — moocon inherits Jupiter's risk surface entirely |
 | MagicBlock Ephemeral Rollup validator/delegation program | High during delegation window | Executes state transitions on delegated reward-result accounts off the base chain, until `ProcessUndelegation`/`Commit` returns authority to Solana L1 | If the rollup validator misbehaves or the commit step doesn't fully re-validate the delta, state could be committed back incorrectly (balance/round inflation) |
@@ -61,8 +60,10 @@ confirmed against any published docs beyond the Twitter thread)
 
 - **Primary trust assumption to attack:** the keeper bot's honesty and promptness in the
   Reveal→Undelegate→Commit cycle, and whether the VRF/round authority is genuinely independent
-  of the team's own upgrade key (it currently is not — same EOA appears on the commitment
-  record).
+  of the team's own upgrade key. Today they're two distinct keys — but the admin key can
+  reassign the keeper/VRF-authority field to itself or anyone else via `SetVrfAuthority`
+  (confirmed to exist as an admin instruction), with no timelock observed. Independence is one
+  transaction away from ending, not structurally guaranteed.
 - **Most powerful attacker:** the upgrade authority itself. It doesn't need to "hack" anything —
   it already holds the keys to both round-authority and the entire program's logic. The
   question worth chasing isn't "can an outsider break in" (classic exploit), it's "does the
@@ -85,6 +86,10 @@ confirmed against any published docs beyond the Twitter thread)
   that the SAME EOA is both upgrade authority and (likely) the round `authority`/VRF role
 - [x] Accepted risks explicit — inferred since no public docs exist beyond the Twitter thread;
   flagged as inferred, not confirmed, where relevant
-- [ ] **Not yet confirmed:** exact field semantics of the 80-byte commitment account (which
-  pubkey is literally `vrf_authority` vs. general `authority`) — next step is decoding against
-  the account-name strings already extracted, or asking the team directly
+- [x] Account identity confirmed via Anchor-discriminator brute-force
+  (`sha256("account:State")`/`sha256("account:Vault")` matched exactly) — the 80-byte account is
+  the global `State`, not a per-round commitment record as first assumed (corrected in RECON.md)
+- [ ] **Not yet confirmed:** exact field NAME for the second `State` pubkey (`vrf_authority` vs.
+  `keeper` vs. something else) — offset/value is confirmed (`H9Q6c1RY...`, the live keeper), only
+  the label is inferred from instruction name `SetVrfAuthority`. Not chasing further without
+  source — doesn't change the risk conclusion either way.
