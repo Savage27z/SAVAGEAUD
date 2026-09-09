@@ -5,10 +5,9 @@
 - [x] I have a concrete exploit path — not speculation
 - [x] I can reproduce this on a fork or via on-chain call — Base fork, straightforward: stake → wait for a `recordActivity(compliant=true)` call (or, for a fork PoC, call it directly since `onlyOwnerOrReporter` can be satisfied by pranking the known reporter/owner) → unstake → claimBonus after `endEpoch()`
 - [x] I have exact line numbers for the vulnerable code
-- [ ] I have tested the happy path AND the exploit path — **NOT YET RUN ON A FORK.** This is a
-  code-level LEAD backed by a full read of the deployed, verified source and live on-chain state
-  (epoch length, current epoch, deposits) — not pattern-matching. Per RULES.md #2, status is
-  **Unverified** until fork-proven. Flagging clearly rather than overclaiming.
+- [x] I have tested the happy path AND the exploit path — **CONFIRMED on a Base mainnet fork
+  against the real deployed contract** (Foundry, `vm.createSelectFork`, block 51065902). See
+  Proof of Concept below for the actual run and output.
 - [x] This is not "owner can steal" (design choice) — this is exploitable by ANY athlete against
   OTHER athletes' bonus share, no elevated privilege needed by the attacker
 - [x] This is not "centralization risk" without exploitability
@@ -30,7 +29,8 @@ Medium (current TVL is small — ~$3K — but the bug class is a direct value-tr
 **Final severity: Medium** (High likelihood × Medium impact per the matrix in METHODOLOGY.md; would escalate to High if TVL grows materially, since nothing about the bug is TVL-capped)
 
 ## Status
-Unverified — code-read + live on-chain state confirmed, no fork PoC executed yet (RULES.md #2: not reportable to the team until proven on a fork)
+**Confirmed** — reproduced end-to-end on a Base mainnet fork against the real, live, deployed
+`ClubPool` contract (not a redeployed copy). RULES.md #2 satisfied.
 
 ## Root Cause Classification
 - [x] Logic / state machine
@@ -111,27 +111,45 @@ person actually being consistent gets diluted by someone gaming a single snapsho
    of bug entirely.
 
 ## Proof of Concept
-Not yet run — sketch for fork verification (Foundry, Base fork), matches the file layout other
-targets in this repo use:
+**Run and passing.** Full Foundry project at `TARGETS/run-money/fork-test/` in this repo
+(`test/F01_FlashStakeBonusInflation.t.sol`, interface at `src/IClubPoolMin.sol`). Forks Base
+mainnet (`vm.createSelectFork`) and interacts with the real, live, deployed `ClubPool` at
+`0x1089Db83561d4c9B68350E1c292279817AC6c8DA` — no redeployment, no source modification.
 
-```solidity
-// Foundry test sketch — fork Base at a recent block, use the real deployed ClubPool
-function testFlashStakeBonusInflation() public {
-    // 1. Two athletes mint memberships & become genuine long-term stakers:
-    //    victim stakes 1,000 USDC for the whole epoch, gets marked compliant normally.
-    // 2. Attacker mints a membership, stakes a small real amount (or none).
-    // 3. Right before (as owner/reporter, prank the known reporter address) calling
-    //    recordActivity(attacker, true, currentEpoch), attacker calls stake(100_000 USDC)
-    //    (funded via a Base USDC whale/deal() on the fork).
-    // 4. Call recordActivity(attacker, true, currentEpoch) — snapshot locks in 100_000.
-    // 5. Attacker immediately calls unstake(100_000) — gets capital back same block.
-    // 6. Warp past epochDuration, call endEpoch() (permissionless).
-    // 7. attacker.claimBonus(epoch) — assert received bonus share ≈
-    //    100_000 / (100_000 + 1_000) of the pool, vastly more than their real
-    //    economic participation (effectively zero real capital-time).
-    // 8. Compare victim's claimBonus() payout — show it's diluted vs. what it would have
-    //    been had the attacker not inflated totalDepositByCompliant.
-}
+Scenario: `victim` stakes 1,000 USDC and holds it for the entire epoch (genuine participation,
+marked compliant honestly). `attacker` stakes only 10 USDC genuinely, but inflates to 100,010
+USDC (a further 100,000 USDC deposit) immediately before `recordActivity(attacker, true, epoch)`
+is called (pranked as the real on-chain `owner()`, who is a valid caller per
+`onlyOwnerOrReporter`), then calls `unstake(100_000e6)` immediately afterward to withdraw the
+inflated capital back out. A later `recordActivity(attacker, true, epoch)` re-confirmation
+(simulating a subsequent Strava sync mid-epoch) is shown to be a silent no-op that does not
+refresh the stale snapshot. Time is then warped to the real `epochDuration` (7 days) so real
+Aave yield accrues, `endEpoch()` is called (permissionless), and both athletes call
+`claimBonus()`.
+
+```
+[PASS] test_F01_AttackerInflatesShareThenWithdraws() (gas: 1715735)
+Logs:
+  Attacker's frozen epochAthleteStake right after recordActivity: 100010000000
+  Attacker's REAL stake after withdrawing: 10000000
+  Victim (1,000 USDC staked the WHOLE epoch) received bonus: 16693
+  Attacker (10 USDC real stake, 100,010 USDC for ~0 blocks) received bonus: 1669500
+  Attacker's share of the bonus pool (bps): 9901
+  Attacker's share of FROZEN WEIGHT (bps), for reference: 9900
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped
+```
+
+**The attacker — who held real capital in the pool for effectively zero duration — walked away
+with ~100x the victim's bonus, despite the victim staking 100x more real capital for the entire
+epoch.** The attacker's payout share (99.01%) tracks their frozen snapshot weight (99.00%)
+almost exactly, confirming the payout is driven purely by the stale snapshot with no regard for
+actual holding duration.
+
+To reproduce:
+```bash
+cd TARGETS/run-money/fork-test
+forge test --match-contract F01_FlashStakeBonusInflation -vvv
 ```
 
 ## Dedup Check

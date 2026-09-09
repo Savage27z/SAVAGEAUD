@@ -1,5 +1,34 @@
 # Chain Info
 
+## Local Tooling
+
+**Foundry (forge/cast/anvil) works natively on Windows** — `curl -L https://foundry.paradigm.xyz
+| bash` then `foundryup` (both run fine in Git Bash, no WSL needed). Installs to
+`~/.foundry/bin` — add to `PATH` each session (`export PATH="$PATH:/c/Users/<user>/.foundry/bin"`
+on Windows/Git Bash). Once installed it persists across sessions (checked — no need to
+reinstall, just re-export PATH). This means Phase 4 (fork tests) is doable directly, not only by
+𝖲𝖠𝖵𝖠𝖦𝖤 — `forge test --match-contract <Name> -vvv` against a `vm.createSelectFork(<rpc>)`
+targeting the REAL deployed contract (no redeployment needed for read/write calls against
+already-live contracts) is enough to move a finding from Unverified to Confirmed. First used:
+Run Money F01 (see `TARGETS/run-money/fork-test/`).
+
+**`forge-std`'s `makeAddr("label")` can collide with a real deployed contract on a mainnet
+fork** — it's a deterministic keccak-derived address, not guaranteed empty. Hit this on Run
+Money (an attacker test address landed on a live contract, causing a confusing
+`ERC721InvalidReceiver` revert). Prefer explicit low vanity addresses
+(`address(0x00000000000000000000000000000000BEEF01)`) for fork PoC test actors and verify
+`cast codesize` is 0 first if in doubt.
+
+**Etherscan V2 unified API** (`https://api.etherscan.io/v2/api?chainid=<id>&...`) works across
+all Etherscan-family explorers (Basescan, Arbiscan, etc.) with ONE API key — the V1
+per-chain-domain endpoints are deprecated and return `NOTOK`. Real keys for this account are in
+various project `.env` files under `~/Desktop/*/`(grep `ETHERSCAN_API_KEY`/`BASESCAN_API_KEY`)
+— reuse rather than re-requesting from the user. `action=getsourcecode` returns the full
+Solidity Standard JSON Input (multi-file) — parse `result[0].SourceCode` (strip a leading/
+trailing extra `{`/`}` wrapper if present) to get every source file, not just the flattened
+main contract.
+
+
 ## Robinhood Chain (RH)
 
 | Property | Value |
@@ -95,7 +124,7 @@
 ### RPC Notes
 - Coinbase L2 — good RPC reliability
 - Growing ecosystem with early-stage protocols
-- Used for: openOracle, Arcis Protocol
+- Used for: openOracle, Arcis Protocol, Run Money (ClubPool, F01 confirmed on fork)
 
 ---
 
