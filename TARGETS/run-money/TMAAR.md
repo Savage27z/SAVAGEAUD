@@ -74,6 +74,7 @@
   directly (not via `mint()`) has it silently absorbed with no corresponding state update and no
   function that ever spends raw `address(this).balance` — permanently stuck if it ever happens.
   Self-inflicted, Informational.
+- **O5 — CEI violation in `mint()`: `_safeMint()` (external callback) fires before `athletes[msg.sender]` is finalized and before the ETH is wrapped/supplied to Aave.** Traced for a profitable angle: a contract reentering `stake()` during the callback DOES get its USDC pulled and supplied to Aave for real (global `totalUsdcDeposited` updates correctly), but the outer `mint()` call finishes afterward and unconditionally overwrites `athletes[msg.sender]` back to a fresh zeroed struct — silently wiping the reentrant stake record. Self-harming only (locks the reentrant caller's own funds, unrecoverable through any function in the contract since `unstake()`/`ownerUnstake()` both check the now-zeroed `stakedAmount`) — no path found to profit at another user's expense. Not elevated to a finding per RULES.md #7, but worth a free hardening note in disclosure: reorder `mint()` to finalize `athletes[msg.sender]` before `_safeMint()`.
 - **O4 — `ownerUnstake()` sends funds to the athlete, not the owner** — reviewed specifically
   because "owner can unstake anyone" sounds alarming; it's actually a forced-withdrawal-to-owner
   *of the athlete's own funds, to the athlete*, not a theft path. Not a finding.

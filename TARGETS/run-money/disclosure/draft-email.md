@@ -31,7 +31,20 @@ actually counted when they joined it. Depending on the numbers, this either:
 - underflows and reverts outright, which permanently locks that member as "compliant" for the
   rest of the week no matter what they actually do afterward.
 
-Neither bug touches staked principal directly — deposits are always withdrawable through your
+One more note for realism: the PoC uses a large inflated stake just to make the ratio obvious in
+a test. Against the pool's actual current size, someone wouldn't need anywhere near that — a
+much smaller amount briefly parked would already dominate the real compliant-stake total, so
+this isn't a whale-only concern.
+
+Separately, unrelated to the two bugs above but noticed while reading: `mint()` calls
+`_safeMint()` (which can trigger a callback into the caller) before finalizing the athlete's
+stake record and before the ETH is wrapped into Aave. If a contract reenters `stake()` during
+that callback, its deposit goes through for real, but `mint()` then overwrites the athlete's
+record back to zero right after, permanently losing track of that stake (no function can
+recover it afterward). This one only hurts whoever triggers it, not other users — just worth
+fixing the order of operations while you're in there.
+
+Neither of the two main bugs touches staked principal directly — deposits are always withdrawable through your
 normal `unstake()` — but both break the actual product (fair, working weekly rewards), and Bug 2
 in particular can happen from completely ordinary use, no bad actor required.
 
