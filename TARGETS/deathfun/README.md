@@ -3,7 +3,7 @@
 **Chain:** Abstract (zkSync-family L2, chain ID 2741)
 **Chain Explorer:** https://abscan.org/address/0x27EDd16eE56958fddCBA08947f12C43DDeC2B20C
 **Date:** September 9, 2026
-**Status:** 🔴 Findings (1, source-confirmed — fork execution blocked by zkEVM/Foundry tooling gap)
+**Status:** 🔴 Findings (1, **confirmed on a real zkEVM fork** of the deployed contract)
 
 **Audited commit:** verified source as deployed, compiler `v0.8.24+commit.e11b9ed9`, `zksolc
 v1.5.13`, pulled via Etherscan V2 unified API (`chainid=2741`)
@@ -75,23 +75,23 @@ See [TMAAR.md](TMAAR.md).
 | 1: Read | Full code read (Feynman questioning) — entire contract, single pass | ✅ |
 | 2: Hunt | Access control / reentrancy / signature / oracle-trust checklist run | ✅ |
 | 3: Tools | Slither | ⏭️ skipped this session |
-| 4: Fork tests | Foundry fork PoC for F01 | ⚠️ **blocked** — Abstract's zksolc-compiled bytecode isn't executable by standard Foundry/revm fork execution (confirmed: even a plain view call reverts on fork while succeeding via live `cast call`). Needs `foundry-zksync`. Test written and ready, not yet run. |
+| 4: Fork tests | Foundry fork PoC for F01 | ✅ — confirmed on a real zkEVM fork. Standard Foundry can't execute Abstract's zksolc-compiled bytecode; built `foundry-zksync` from source (3 local patches for Windows support) plus real Windows `zksolc`/ZKsync-fork-`solc` binaries. Full saga in the finding's "Toolchain notes". |
 | 5: Deep dive | Second pass, different angle (cross-contract replay hypothesis) | ✅ — hypothesis formed, then directly checked and ruled out (not just assumed) via live `messagePrefix()` comparison |
 
 ## Findings
 
 | # | Finding | Severity | Impact | Likelihood | Status |
 |---|---------|----------|--------|------------|--------|
-| F01 | `increaseBet()` missing `msg.value` check + missing signature-replay protection | High (conditional — see writeup) | High | High | Source-confirmed, fork execution blocked (zkEVM tooling gap) |
+| F01 | `increaseBet()` missing `msg.value` check + missing signature-replay protection | High (conditional — see writeup) | High | High | **Confirmed** — fork PoC: 1 wei paid, betAmount inflated to 35 ETH via 7 signature replays |
 
 Full writeup: [findings/F01-increaseBet-free-inflation.md](findings/F01-increaseBet-free-inflation.md)
 
 ## Verdict
-Not clean. F01 is real and unambiguous at the source level — two missing checks in one function,
-confirmed by direct code read against the actual verified deployed bytecode, with the live
-contract holding real, meaningful money ($44K) and active daily volume. The one honest gap is
-execution-level proof: Abstract's zkEVM bytecode isn't runnable by the Foundry tooling available
-in this session, so this stays at "source-confirmed" rather than "fork-confirmed" (contrast with
-Run Money, where standard EVM fork testing worked cleanly). Closing that gap (`foundry-zksync`,
-or a cooperative/authorized test against a testnet deployment) is the natural next step before
-any team disclosure, per RULES.md #2.
+Not clean. F01 is **confirmed end-to-end on a real zkEVM fork** of the actual deployed contract
+— two missing checks in one function, with a live PoC showing 1 wei paid turning into a 35 ETH
+recorded bet via seven replays of one signature. The live contract holds real, meaningful money
+($44K) and active daily volume. Getting fork execution working on Abstract from a Windows
+session required building `foundry-zksync` from source (no official Windows release exists) and
+patching three real upstream bugs — see the finding's "Toolchain notes" section, preserved for
+any future zkSync-family target. Ready for RULES.md #5-compliant private disclosure whenever
+𝖲𝖠𝖵𝖠𝖦𝖤 wants to send it.

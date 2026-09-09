@@ -3,27 +3,23 @@
 ## Reality Gate (Check before writing)
 
 - [x] I have a concrete exploit path — not speculation (exact missing checks, exact lines)
-- [ ] I can reproduce this on a fork or via on-chain call — **BLOCKED, not skipped.** Abstract's
-  deployed bytecode is zksolc-compiled (zkSync-family L2), not standard EVM bytecode. Standard
-  Foundry's fork execution (revm) cannot run it — confirmed: even a plain `gameCounter()` view
-  call reverts under `vm.createSelectFork` against this contract, while the identical call via
-  `cast call` against the live RPC succeeds normally. This needs `foundry-zksync` (a separate
-  zkEVM-aware Foundry build), not set up in this session. The fork-test project (storage-slot
-  math and signature construction verified correct against live on-chain values) is at
-  `TARGETS/deathfun/fork-test/test/F01_IncreaseBetFreeInflationAndReplay.t.sol`, ready to run
-  once that tooling exists.
+- [x] I can reproduce this on a fork or via on-chain call — **CONFIRMED**, executed end-to-end
+  against the real deployed contract on a zkEVM-aware Foundry fork (`foundry-zksync`, built
+  from source — see "Toolchain notes" below for what that took). Full run output in the Proof
+  of Concept section.
 - [x] I have exact line numbers for the vulnerable code
-- [ ] I have tested the happy path AND the exploit path — happy path (createGame/cashOut)
-  confirmed via real historical transactions on Abscan; exploit path blocked as above
+- [x] I have tested the happy path AND the exploit path — both confirmed: happy path
+  (createGame/cashOut) via real historical transactions on Abscan; exploit path via the fork
+  test below
 - [x] This is not "owner can steal" (design choice) — exploitable by any ordinary player, no
   elevated privilege needed, against the shared bankroll
 - [x] This is not "centralization risk" without exploitability
 - [x] I've documented the trust model assumptions this finding relies on (see TMAAR.md)
 
-**Status is honestly downgraded from what the code alone would justify, specifically because
-the fork-execution step could not be completed.** Per RULES.md #2, treating this as a strong,
-source-verified LEAD rather than a Confirmed finding until someone with `foundry-zksync` (or
-the real admin key, for an authorized test) closes the loop.
+**Confirmed end-to-end on a real zkEVM fork of the actual deployed contract.** RULES.md #2
+satisfied. See "Toolchain notes" at the bottom of this doc for what it took to get a working
+zkEVM-aware Foundry build on Windows — kept for future sessions since none of it is
+exploit-specific, it's a real, reusable environment gap this repo hit for the first time here.
 
 ## Title
 `Missing msg.value validation + missing signature-replay protection in increaseBet() allows unlimited free bet-amount inflation from a single admin-signed message`
@@ -44,7 +40,8 @@ are real either way and the downside if the assumption fails is a direct bankrol
 above — flagged honestly as conditional rather than asserted)
 
 ## Status
-**Unverified — code-confirmed, fork-execution blocked by zkEVM tooling gap** (see Reality Gate)
+**Confirmed** — reproduced end-to-end on a real zkEVM (foundry-zksync) fork of the actual
+deployed contract.
 
 ## Root Cause Classification
 - [x] Validation / input sanitization (missing `msg.value == amount` check)
@@ -161,25 +158,42 @@ about missing domain separation (not itself exploitable today, but a real gap wo
 the same time).
 
 ## Proof of Concept
-**Not executed — see Reality Gate above for the honest reason why (zkEVM/Foundry tooling gap,
-not uncertainty in the bug).** Full test written and ready:
+**Run and passing, against the real deployed contract on a zkEVM fork.**
 `TARGETS/deathfun/fork-test/test/F01_IncreaseBetFreeInflationAndReplay.t.sol`. It:
-1. Forks Abstract mainnet
+1. Forks Abstract mainnet (via `foundry-zksync`'s `--zksync` execution mode)
 2. Uses `vm.store` (fork-local only, mirrors what `deal()` does for token balances) to make a
    test-controlled key an admin, since we don't hold the real admin's private key
 3. Signs a real `createGame` message with that test key, creates a 1-wei game
 4. Signs ONE `increaseBet` message for 5 ETH
-5. Calls `increaseBet` with that signature and `msg.value: 0` — **seven times** — asserting
-   `betAmount` grows by the full 5 ETH each time despite zero payment after the first call
+5. Calls `increaseBet` with that signature and `msg.value: 0` — **seven times**
 
-Storage-slot math (`isAdmin` at slot 2, per `gameCounter`/`messagePrefix` at slots 0/1 —
-cross-checked against real live values via `cast storage 0x27EDd16e... 0/1/2`) and the exact
-hash-construction/signing logic were verified correct independent of the execution blocker.
+```
+Ran 1 test for test/F01_IncreaseBetFreeInflationAndReplay.t.sol:F01_IncreaseBetFreeInflationAndReplay
+[PASS] test_F01_FreeInflationViaReplayedSignature() (gas: 993951540)
+Logs:
+  Game created. Real bet paid (wei): 1
+  After 1st increaseBet (paid 0 ETH), recorded betAmount: 5000000000000000001
+  After REPLAYING the same signature (paid 0 ETH again), betAmount: 10000000000000000001
+  After 7 total replays of ONE signature, recorded betAmount (wei): 35000000000000000001
+  Real ETH the player ever paid (wei): 1 (the original createGame bet)
 
-To reproduce once `foundry-zksync` is available:
+  CONFIRMED: a single admin-signed increaseBet message can be replayed
+  an unlimited number of times before its deadline, each time crediting
+  the full `amount` to betAmount with ZERO required ETH - the function
+  never checks msg.value against amount, and never marks a signature used.
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 111.96s (34.53s CPU time)
+```
+
+The player paid **1 wei total** (the original `createGame` bet) and walked away with a recorded
+`betAmount` of **35 ETH** through pure signature replay — seven free credits of 5 ETH each from
+one legitimately-obtained signature.
+
+To reproduce (see Toolchain notes below for the environment this needs):
 ```bash
 cd TARGETS/deathfun/fork-test
-forge test --match-contract F01_IncreaseBetFreeInflationAndReplay -vvv
+ZKSOLC_PATH=/path/to/zksolc.exe forge test --zksync --zk-solc-path /path/to/zksync-solc.exe \
+  --match-contract F01_IncreaseBetFreeInflationAndReplay -vvv
 ```
 
 ## Dedup Check
@@ -201,3 +215,60 @@ Not yet disclosed.
   exactly that pattern, just with the ETH amount fully unconstrained rather than off-by-one-wei
 - Same file's domain-separator item (TMAAR.md Assumption 4) is a related but separate hardening
   gap in the same contract
+
+## Toolchain notes — getting `foundry-zksync` actually running on Windows
+
+This took a genuinely long path; recorded in full so no future session has to rediscover it.
+Standard Foundry cannot fork-execute zkEVM (zksolc-compiled) bytecode at all (see CHAIN_INFO.md
+→ Abstract). What follows is what it actually took to get real fork execution working here:
+
+1. **No official Windows binary for `foundry-zksync`.** Only Linux/macOS releases exist
+   (`matter-labs/foundry-zksync` releases). Had to build from source.
+2. **Building from source hits a real upstream Windows-portability bug.**
+   `crates/zksync/compilers/src/compilers/zksolc/mod.rs` uses `std::os::unix::fs::PermissionsExt`
+   (correctly gated `#[cfg(target_family = "unix")]` on its import) but calls it unconditionally
+   in `set_permissions(&compiler_path, PermissionsExt::from_mode(0o755))` — no matching cfg guard
+   on the call site. Patched: wrapped that call in `#[cfg(target_family = "unix")]` too (a no-op
+   on Windows, which doesn't need chmod-style bits on downloaded binaries anyway).
+3. **A separate, unrelated compile break: `cargo`'s toolchain auto-update mid-build.** The
+   project's `rust-toolchain` file triggers a `rustup update stable` at the START of the very
+   first build. If that update lands while cargo's `target/` cache still has fingerprints from
+   before it, you get bizarre cascading errors (looked like 831 errors in an unrelated crate,
+   `ratatui-core`, all "cannot find type X" — the REAL first error, easy to miss in a long log,
+   was `only metadata stub found for rlib dependency core`). Fix: `cargo clean` once the
+   toolchain has settled, then rebuild clean. Costs the cache, no way around it once corrupted.
+4. **`get_operating_system()` in the same `zksolc/mod.rs` has no Windows case at all** — hard
+   errors `"Unsupported operating system windows"` for anything not linux/macos. This gates
+   the ENTIRE zksolc auto-download/lookup system, called from multiple places
+   (`get_path_for_version`, `compiler_path`, `solc_installed_versions`, etc.). Patched the
+   catch-all arm to fall back to a harmless `LinuxAMD64` default instead of erroring — safe
+   because step 5 below bypasses the auto-download path entirely.
+5. **`ZKSOLC_PATH` env var is documented (in a doc comment) but was never actually implemented**
+   in this revision. Added a real check for it at the top of both `get_path_for_version` AND
+   `compiler_path` (there are TWO separate zksolc-path-resolution entry points; missing either
+   one still breaks) — if set and the file exists, use it directly, skip OS detection and
+   auto-install entirely.
+6. **The real Windows `zksolc` binary DOES exist upstream** — just missing from this Rust
+   project's own OS-detection table. Real releases at `matter-labs/zksolc-bin`, e.g.
+   `zksolc-windows-amd64-gnu-v1.5.15.exe`. Downloaded directly, pointed `ZKSOLC_PATH` at it.
+7. **zksolc requires a special ZKsync-patched fork of `solc`, not vanilla solc.** Vanilla
+   `solc-windows.exe` from `ethereum/solidity` fails with `"Only the ZKsync fork of solc can be
+   used... ZKsync revision parsing: missing line"` when called directly, or a confusing
+   `"The pipe is being closed"` error when invoked through forge's piping layer. The real
+   binary lives at `matter-labs/era-solidity` releases, versioned like `0.8.30-1.0.2` (that
+   `1.0.2` suffix is the ZKsync revision) — e.g. `solc-windows-amd64-0.8.30-1.0.2.exe`. Pass it
+   via `--zk-solc-path`.
+8. **GitHub release-asset downloads kept resetting mid-transfer on this network** (curl
+   `Recv failure: Connection was reset`, different point each time, `--retry` doesn't help
+   since the failure happens mid-transfer not on connection start). Fixed with a manual loop
+   using `curl -C -` (resume) repeated until the file reaches the expected size.
+
+End state, three local patches to `foundry-zksync`'s source plus two extra binaries:
+- Patched `crates/zksync/compilers/src/compilers/zksolc/mod.rs` (3 spots: `#[cfg(unix)]` guard,
+  `get_operating_system()` fallback, `ZKSOLC_PATH` check in both path-resolution functions)
+- `zksolc.exe` (real Windows build, `matter-labs/zksolc-bin` v1.5.15) → set as `ZKSOLC_PATH`
+- `zksync-solc.exe` (real ZKsync-fork solc, `matter-labs/era-solidity` 0.8.30-1.0.2) → passed via
+  `--zk-solc-path`
+
+None of this is exploit-specific — it's a reusable environment fix for any future Abstract (or
+other zkSync-family L2) target that needs real fork execution on Windows.

@@ -1,0 +1,78 @@
+diff --git a/crates/zksync/compilers/src/compilers/zksolc/mod.rs b/crates/zksync/compilers/src/compilers/zksolc/mod.rs
+index 783c412..b4a0e56 100644
+--- a/crates/zksync/compilers/src/compilers/zksolc/mod.rs
++++ b/crates/zksync/compilers/src/compilers/zksolc/mod.rs
+@@ -89,7 +89,14 @@ fn get_operating_system() -> Result<ZkSolcOS> {
+             "aarch64" => Ok(ZkSolcOS::MacARM),
+             _ => Ok(ZkSolcOS::MacAMD),
+         },
+-        _ => Err(SolcError::msg(format!("Unsupported operating system {}", std::env::consts::OS))),
++        // Windows (and any other unlisted OS) has no entry in this upstream enum, even
++        // though a real Windows zksolc binary IS published (zksolc-windows-amd64-gnu).
++        // Rather than hard error every call site that touches this (several are just
++        // "list what's already installed" checks, not actual downloads), fall back to a
++        // harmless default. Any real download attempt is bypassed by the ZKSOLC_PATH env
++        // var check added in get_path_for_version - this fallback just keeps the
++        // "look for an already-installed matching version" bookkeeping from crashing.
++        _ => Ok(ZkSolcOS::LinuxAMD64),
+     }
+ }
+ 
+@@ -326,6 +333,23 @@ pub fn new(path: PathBuf, solc: Option<PathBuf>) -> Result<Self> {
+ 
+     /// Get zksolc path for a given version
+     pub fn get_path_for_version(version: &Version) -> Result<PathBuf> {
++        // Manual override: ZKSOLC_PATH env var, matching the doc comment on this struct
++        // ("By default the zksolc path is configured as follows... 1. ZKSOLC_PATH
++        // environment variable") - this was documented but never actually implemented in
++        // this revision (get_operating_system() has no Windows case, so the OS-detection
++        // path used by find_installed_version/blocking_install always fails there). Added
++        // this real env var check so a manually-downloaded platform binary (e.g. the real
++        // published zksolc-windows-amd64-gnu release, which the OS enum simply never
++        // learned about) can be used directly, skipping OS detection and auto-install
++        // entirely. Not exploit-related - a build/tooling fix to make our own fork-test
++        // PoC runnable on Windows.
++        if let Ok(manual_path) = std::env::var("ZKSOLC_PATH") {
++            let path = PathBuf::from(manual_path);
++            if path.exists() {
++                return Ok(path);
++            }
++        }
++
+         let maybe_zksolc = Self::find_installed_version(version)?;
+ 
+         let path =
+@@ -510,6 +534,19 @@ fn compilers_dir() -> Result<PathBuf> {
+     }
+ 
+     fn compiler_path(version: &Version) -> Result<PathBuf> {
++        // Same ZKSOLC_PATH override as get_path_for_version - this turned out to be the
++        // actual function hit by `forge test --zksync`'s default (no pinned version)
++        // resolution flow, not get_path_for_version. Without this, the OS fallback added
++        // to get_operating_system() makes this construct a *Linux*-named path, which then
++        // gets auto-downloaded (a real Linux ELF) and fails to execute on Windows with
++        // "not a valid Win32 application". Short-circuit straight to our real Windows
++        // binary instead.
++        if let Ok(manual_path) = std::env::var("ZKSOLC_PATH") {
++            let path = PathBuf::from(manual_path);
++            if path.exists() {
++                return Ok(path);
++            }
++        }
+         let os = get_operating_system()?;
+         Ok(Self::compilers_dir()?.join(format!("{}v{}", os.get_zksolc_prefix(), version)))
+     }
+@@ -707,6 +744,13 @@ fn compiler_blocking_install(
+                     SolcError::msg(format!("Failed to write the downloaded {label} file: {e}"))
+                 })?;
+ 
++                // Unix-only: executable permission bits don't exist on Windows the same way -
++                // downloaded binaries are executable there without a chmod-equivalent step.
++                // Upstream bug: the PermissionsExt import above is already correctly gated
++                // #[cfg(target_family = "unix")], but this call site wasn't - patched locally
++                // to match, for a Windows-native build. (Not exploit-related; a plain
++                // cross-platform build fix needed to get our own fork-test tooling running.)
++                #[cfg(target_family = "unix")]
+                 set_permissions(&compiler_path, PermissionsExt::from_mode(0o755)).map_err(|e| {
+                     SolcError::msg(format!("Failed to set {label} permissions: {e}"))
+                 })?;
