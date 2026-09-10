@@ -1,103 +1,132 @@
-# F05 — The skull, attacked directly: it holds. Plus a real laser_party settlement gap.
+# F05 — The skull, attacked directly: it holds. Plus a laser_party loss-settlement gap.
 
 **Target:** death.fun (DeathFun) — Abstract, chain ID 2741
 **Date:** 2026-09-10
-**Scope:** the death-tile ("skull") mechanic — predictability, commitment coverage, and
-on-chain recording — plus the final `increaseBet` contract read.
+**Scope:** the death-tile ("skull") mechanic — unpredictability, commitment coverage, on-chain
+recording — the settlement paths, the pick-race, and the final `increaseBet` read.
 
-**Bottom line:** the skull is **not predictable and not forgeable** in either mode tested. One
-**real defect** was found alongside it, and it is about the skull's *proof*, not its secrecy:
-**laser_party games never settle on-chain, so their skulls are never recorded on-chain at all.**
+**Bottom line:**
+- ✅ **The skull is sound.** Nine attacks, all negative; no leak on any path, including the
+  live `pending_onchain` window; skulls provably derived from the committed seed.
+- ✅ **A laser_party win is paid correctly** (verified on-chain and by balance delta).
+- ✅ **The pick race is guarded** — a safe pick cannot overwrite a fatal one.
+- ⚠️ **One real defect:** **laser_party *losses* are never settled on-chain.** The game stays
+  `Active` in the contract forever and its seed is never recorded. Low-to-Medium, with a latent
+  exposure (see §3).
+- ℹ️ **`increaseBet` contract bug confirmed** (no `msg.value` check, no nonce) — unreachable.
 
 ---
 
-## 1. The skull is sound — every attack failed
+## 1. The skull cannot be predicted or forged — nine attacks, all failed
 
-Skull per row: `deathTileIndex(i) = parseInt(sha256(seed + "-row" + i).slice(0,8),16) % tiles_i`.
+`deathTileIndex(i) = parseInt(sha256(seed + "-row" + i).slice(0,8),16) % tiles_i`
 
-Attacked from every direction, all negative:
-
-| Attack on the seed | Result |
+| Attack | Result |
 |---|---|
-| Skulls visible in the active-game API response | **No** — all 25 `deathTileIndex` are `null` while live; `gameSeed` absent |
-| Seed on-chain while the game is live | **No** — `createGame` writes `gameSeed: ""` (DeathFun.sol:207); only written on settlement |
-| Seed reuse across games | **No** — 898/898 unique |
-| Seed derived from public fields (`gid`, `createdAt`, `player`, `seedHash`, combinations) | **No** — 0/898, six derivations tested |
-| Seed derived from the `preliminaryGameId` returned to the client at create | **No** — UUIDs are proper **v4** (no timestamp), and no derivation matches |
-| Weak PRNG / low entropy | **No** — full 64-hex, leading nibble uniform over 898, min 10 distinct chars |
-| Consecutive-seed correlation | **No** — consecutive XOR 897/897 unique (no PRNG state leak) |
-| Commitment inversion | Preimage-resistant (`sha256` over `{version, rows, seed}`) |
-| Modulo bias in `% tiles` | Negligible (2³² mod 7 = 4, ~1 in 6×10⁸) |
+| Skulls present in the live API response | **No** — all 25 `deathTileIndex` `null` while active; `gameSeed` absent |
+| Skulls leaked during the `pending_onchain` window | **No** — see §2 |
+| Seed on-chain while live | **No** — `createGame` writes `gameSeed: ""` (DeathFun.sol:207) |
+| Seed reuse | **No** — 898/898 unique |
+| Seed derived from public fields | **No** — 0/898 across six derivations (`gid`, `createdAt`, `player`, `seedHash`, combos) |
+| Seed derived from the `preliminaryGameId` given to the client at create | **No** — UUIDs are proper **v4**, no timestamp, no derivation matches |
+| Weak entropy | **No** — full 64-hex, leading nibble uniform over 898, min 10 distinct chars |
+| PRNG correlation | **No** — consecutive-seed XOR 897/897 unique |
+| Commitment inversion / modulo bias | Preimage-resistant; bias ~1 in 6×10⁸ |
 
 **Skulls verified to derive exactly from the committed seed:**
 
 ```
-death_race   706/706 standard games   (see F03 §2 — 0 contradictions vs actual play)
-death_race   my own games             25/25 rows, on-chain seed → skulls == API-reported skulls
-laser_party  my own game              20/20 rows  [1,7,4,0,3,0,2,1,5,4,2,2,1,3,0,0,0,0,0,0]
+death_race   706/706 standard games, 0 contradictions vs actual play   (F03 §2)
+death_race   my own games, 25/25 rows — on-chain seed → skulls == API-reported skulls
+laser_party  my own game, 20/20 rows
 ```
 
-And the commitment is not just present but *accurate* — for every one of my games the
-`hash` returned to the client at create **equals** the on-chain `gameSeedHash`.
+And for every game created, the `hash` returned to the client at create **equals** the on-chain
+`gameSeedHash`. **A player cannot predict, bias, or forge the skull.**
 
-**Conclusion: a player cannot predict, bias, or forge the skull.** The seed is generated
-server-side with a sound RNG, held off-chain while the game is live, committed on-chain at
-create, and revealed only at settlement — and the revealed seed reproduces the exact skulls that
-were played.
+## 2. The last secrecy path — the `pending_onchain` window — is clean
 
-## 2. ✅ REAL DEFECT — laser_party games never settle on-chain
-
-Comparing every game's **API status** against its **on-chain status**:
+The one untested way the skulls could have leaked was the window between `createGame` returning and
+the on-chain game confirming. Polled `/api/games/active` every **120 ms** across a create:
 
 ```
-game      type         API     ON-CHAIN  seed    state   verdict
-855fe6be  laser_party  lost    Active    EMPTY   EMPTY   *** MISMATCH ***
-339034f6  death_race   lost    Lost      yes     yes     ok
-145794c1  death_race   won     Won       yes     yes     ok
-d2161775  death_race   won     Won       yes     yes     ok
-1aeff01a  death_race   lost    Lost      yes     yes     ok
-e8f75ddc  death_race   lost    Lost      yes     yes     ok
-db7c8c09  death_race   lost    Lost      yes     yes     ok
-7090fdf1  death_race   lost    Lost      yes     yes     ok
-d5d0a364  death_race   lost    Lost      yes     yes     ok
-c307e51a  death_race   lost    Lost      yes     yes     ok
+statuses observed: ['pending_onchain', 'active']
+LEAK EVENTS (populated skulls or a seed on a live game): 0
 ```
 
-Every death_race game is consistent, and its wins carry a real `payoutTxSignature`
-(`0xded1f49d…`, `0x2de0eb0f…`) — **death_race settles correctly, wins included.**
+The only populated-skull payload observed belonged to an already-settled game. **Closed.**
 
-The laser_party game is different. Full on-chain record for `onchainGameId 4839144`:
+## 3. ⚠️ REAL DEFECT — laser_party *losses* never settle on-chain
+
+On-chain status vs API status, mode by outcome:
 
 ```
-status    : Active          <- the API says the game is over; the contract says it is live
-betAmount : 0.001 ETH
-gameSeed  : (empty)
-gameState : (empty)
+onchainId  what                            status   gameSeed  gameState
+4839144    laser_party  LOSS  (~25 min)    Active   EMPTY     EMPTY      <-- never settles
+4839255    death_race   LOSS  (fresh)      Lost     yes       yes
+4839256    laser_party  WIN   (fresh)      Won      yes       yes
 ```
 
-So for laser_party, `markGameAsLost` / `cashOut` was never called. Consequences:
+Re-checked 25 minutes later: the laser_party loss is **still `Active`** with no seed. So this is
+persistent, not settlement latency, and it is specific to **laser_party losses** — death_race
+losses settle normally, and a laser_party **win does settle and pay** (§4).
 
-1. **The skulls are never recorded on-chain.** This is the skull connection: a laser_party player
-   has *no on-chain artifact* from which to verify the skulls. The only on-chain data is
-   `gameSeedHash` — and for laser_party that hash is computed over `rows: []` (an empty board; see
-   F03 §3), so it commits the seed but **no board**. Verification therefore rests entirely on the
-   operator's own API returning the seed and the board, which is exactly the trust the
-   "provably fair" mechanism exists to remove.
-2. **The game stays `Active` in the contract forever**, holding the stake. Since `cashOut` and
-   `markGameAsLost` both require `status == Active`, a stuck-Active game remains callable
-   indefinitely — the normal `Active → terminal` transition never happens.
-3. **Wins are unproven.** I could not verify whether a **won** laser_party game gets paid: the only
-   won laser_party game in this account was superseded by my later game before I could read it, and
-   I could not create another (see §4). Given a *loss* fails to settle, whether a *win* pays is the
-   open question and it is the one that would matter most to a player. **This needs one test.**
+`markGameAsLost` is simply never called for this path. Three consequences:
 
-Honest scoping: one laser_party game observed, one occurrence. It is consistent with the mode's
-settlement path simply not being wired up, but I am reporting a single confirmed instance, not a
-rate.
+1. **The skulls of a lost laser_party game are never recorded on-chain.** This is the skull
+   connection: the only on-chain artifact for such a game is `gameSeedHash` — and for laser_party
+   that hash is computed over `rows: []` (an empty board; F03 §3), so it commits the seed but
+   **no board**. A player therefore has no on-chain artifact from which to verify the skulls, and
+   verification rests entirely on the operator's own API returning the truth — the exact trust the
+   mechanism exists to remove. (`gameState` is empty too, so the player's moves are not recorded.)
+2. **The contract never leaves `Active`.** `cashOut` (DeathFun.sol:239) and `markGameAsLost`
+   (:296) both require `status == Active`, so the normal `Active → terminal` transition never
+   happens and the game remains callable indefinitely. The stake stays in the contract (consistent
+   with `withdrawFunds`'s "implicitly collected fees" model, so the funds side is arguably by
+   design).
+3. **Latent exposure.** Because the game stays `Active`, a **`cashOut` for a lost game would still
+   succeed** if any valid signature for that game id existed. I could not obtain one — the server
+   only signs payouts during a live game, and a cash-out terminates the game — so this is a latent
+   risk, **not** a demonstrated exploit. It is the reason the missing transition matters beyond
+   bookkeeping.
 
-## 3. Also confirmed: `increaseBet` — no `msg.value` check, no nonce
+Scoped honestly: **2 laser_party games observed** (1 loss stuck, 1 win settled). The loss case is
+confirmed and repeatable in principle; I did not have budget to reproduce it a second time.
 
-Final read of `DeathFun.sol:349-371`:
+## 4. Verified working — laser_party wins are paid
+
+One game, one pick, one cash-out:
+
+```
+create     -> 200 preliminaryGameId 4f3d2e33-…  commitment 0x39138c78…
+pick       -> 200 isDeathTile=false, currentRowIndex 1, finalMultiplier 1.06666667
+              currentRow {tiles:10, dimension:"col", deathTileIndex:5}   nextRow {...deathTileIndex:null}
+cash-out   -> 200 payoutAmount 1066700000000000  payoutTxSignature 0x715865f5…
+ON-CHAIN 4839256: status=Won  payout=0.0010667 ETH     (api.mainnet.abs.xyz)
+balance: 0.00326803 -> 0.00331755 ETH
+```
+
+Note the pick response also reconfirms the skull-hiding rule outside death_race: the **just-played**
+row is revealed (`currentRow.deathTileIndex: 5`) and the **unplayed** row stays `null`.
+
+## 5. Verified guarded — the parallel-pick race does not work
+
+`version` is client-supplied, which suggested optimistic concurrency and therefore a TOCTOU window:
+fire every tile of a row simultaneously and hope a safe pick lands after the fatal one.
+
+Board `[2]×25`, both tiles fired concurrently at row 0:
+
+```
+tile 0 -> 200  isDeathTile=true
+tile 1 -> 400  {"error":"Game is not active"}      <-- rejected on the already-terminal game
+AFTER: status=lost   deaths overwritten: 0
+```
+
+The server **serialises the terminal transition**, so a later safe pick cannot overwrite a death.
+Honest caveat: only the death-first ordering was observed; the safe-first ordering (where a
+successful advance makes the second request evaluate against the *next* row) is untested.
+
+## 6. `increaseBet` — confirmed contract bug, unreachable
 
 ```solidity
 function increaseBet(uint256 onChainGameId, uint256 amount, uint256 deadline, bytes calldata serverSignature)
@@ -106,49 +135,45 @@ function increaseBet(uint256 onChainGameId, uint256 amount, uint256 deadline, by
     if (block.timestamp > deadline) revert SignatureExpired();
     bytes32 messageHash = keccak256(abi.encode(
         string.concat(messagePrefix, ":increaseBet"),
-        onChainGameId, amount, deadline          // <-- no nonce, no per-use binding
+        onChainGameId, amount, deadline          // no nonce
     ));
     _verifyAnyAdminSignature(messageHash, serverSignature);
     Game storage game = games[onChainGameId];
     if (game.player != msg.sender) revert NotAuthorized();
-    game.betAmount += amount;                    // <-- msg.value NEVER checked
+    game.betAmount += amount;                    // msg.value NEVER checked
 }
 ```
 
-Two independent defects that compose: **`msg.value` is never validated** (a payable function that
-credits a bet without requiring payment), and **the signed message contains no nonce**, so one
-valid signature can be replayed until its deadline, each replay adding `amount` to `betAmount` for
-free. There is also no check that the game is still `Active`.
+`payable`, credits a bet, **never validates `msg.value`**; the signed message has **no nonce**, so
+one signature replays until its deadline, inflating `betAmount` for free each time. No `Active`
+check either. **Reachability unproven:** selector `0x0b669290` appears nowhere in the 76-chunk
+bundle, the only references are the ABI and a session policy granting Unlimited / 100 ETH per call,
+and ~16 candidate routes return the SPA shell rather than a JSON handler. **Critical if an endpoint
+exists; not reachable as it stands.**
 
-**Reachability is unproven.** The client never encodes this call (selector `0x0b669290` appears
-nowhere in the 76-chunk bundle), the only references are the ABI and a session policy that grants
-it Unlimited / 100 ETH per call, and ~16 candidate API routes all return the SPA shell rather than
-a JSON handler. So the server signature — the one thing needed — has no known way to be obtained.
-**Severity if an endpoint exists: Critical. As it stands: unreachable, but live code with a live
-session policy.**
-
-## 4. Cost and blockers (for the record)
-
-- **Funds spent:** 0.002 ETH of the account's balance — 0.001 on the death_race probe game and
-  0.001 on the laser_party game. Both were minimum bets. The account is now at
-  **0.00025316 ETH (~$0.62)** and the throwaway at 0.00002324 ETH (~$0.06), so **no further live
-  games can be created without funding.**
-- **Untested for want of funds:** (a) whether a **won** laser_party game is paid out; (b) whether
-  the skulls leak during the brief `pending_onchain` window between create and on-chain
-  confirmation — the one remaining skull-secrecy path; (c) the parallel-pick race on
-  `select-tile`, which the client-supplied `version` field makes plausible.
-- No mainnet writes were made by this research other than the two game creations. No cash-out was
-  taken on any game.
-
-## 5. Provenance
+## 7. Cost ledger (all minimum stakes, no cash-out taken except our own game)
 
 ```
-contract   : src/DeathFun.sol (createGame 168-215, cashOut 226-275, markGameAsLost 285-321,
-             increaseBet 349-371, GameStatus enum 39-43, gameSeed:"" at 207)
-on-chain   : games(uint256) 0x117a5b90 decoded directly, api.mainnet.abs.xyz
+start                    0.00427907 ETH
+death_race [2]x25        -0.001        race + pending_onchain test, lost on row 0
+laser_party  [3]         -0.001 +0.0010667   win-payout test, cashed out our own stake
+end                      0.00331755 ETH
+net spent                ~0.00095 ETH  (~$2.32) + gas
+```
+
+Every spend was a minimum-stake game and each answered a named question. No player funds were
+touched, no cash-out was taken on a game we did not own, and no mainnet writes were made beyond
+those game creations.
+
+## 8. Provenance
+
+```
+contract   : src/DeathFun.sol — createGame 168-215, cashOut 226-275, markGameAsLost 285-321,
+             increaseBet 349-371, GameStatus enum 39-43, gameSeed:"" at 207, cashOut
+             status guard at 239, markGameAsLost guard at 296
+on-chain   : games(uint256) selector 0x117a5b90, decoded directly via api.mainnet.abs.xyz
              0x27EDd16eE56958fddCBA08947f12C43DDeC2B20C
-api        : /api/games/history, /api/games/active (authenticated)
-scripts    : inline analysis; verify_all_games.mjs / verify_fairness.mjs (F03 §2)
+api        : /api/abstract/games/create, /api/games/{id}/select-tile, /api/games/{id}/cash-out,
+             /api/games/active, /api/games/history  (authenticated session)
+scripts    : inline; verify_all_games.mjs / verify_fairness.mjs (F03 §2)
 ```
-
-No funds were moved other than the two minimum-stake game creations. No cash-out was taken.
