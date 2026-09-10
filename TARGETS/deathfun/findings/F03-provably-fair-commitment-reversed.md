@@ -1,11 +1,19 @@
-# F03 — The provably-fair commitment, fully reversed (and the pre-reveal question it opens)
+# F03 — Provably-fair scheme reversed, then live-verified
 
 **Target:** death.fun (DeathFun) — Abstract, chain ID 2741
-**Date:** 2026-09-10
-**Status:** ✅ Algorithm **fully recovered and validated on-chain** (849/898 games reproduce
-byte-exact). ⚠️ Pre-reveal hypothesis **open** — one live check away.
-**Severity:** **Critical if confirmed** (player sees skulls before picking → guaranteed win).
-The commitment-coverage gap below is confirmed independently and is serious on its own.
+**Date:** 2026-09-10 (live capture) / algorithm work 2026-09-09
+**Status:** Algorithm **fully recovered and validated on-chain** (706/706 standard games
+byte-exact). Pre-reveal hypothesis **FALSIFIED by live capture** — see §4.
+Two gaps **CONFIRMED independently**: §3 (games committed with no board) and §5 (the
+published verifier cannot verify any real game).
+**Severity:** **No Critical. No fund-loss vector.** §3 and §5 are integrity/reporting
+defects, not exploitable ones.
+
+> **Headline correction.** Earlier revisions of this document carried a *Critical if confirmed*
+> pre-reveal hypothesis ("see the skull before clicking"). It was tested live on 2026-09-10 and
+> **it does not hold** — the server withholds the seed and every unplayed row's skull. It is
+> retracted here in place, not deleted, because the reasoning that produced it is instructive
+> (§6). No funds were taken at any point in this research.
 
 ---
 
@@ -43,194 +51,200 @@ deathTileIndex(row i) = parseInt(sha256("<seed>-row<i>").slice(0,8),16) % tiles_
 ```
 
 Nothing else feeds into it. No player input, no bet size, no timestamp. **Know the seed, know the
-board.** That is by design (it is what makes the game verifiable), but it means the seed's secrecy
-*is* the game's fairness.
+board.** That is by design — it is what makes the game verifiable. It also means the seed's secrecy
+*is* the game's fairness, which is why the live check in §4 mattered enough to run.
 
-## 2. Validation: 849 / 898 real games reproduce byte-exact
+## 2. Validation against production data
 
-| Builder | houseEdge | Reproduced | Failed |
-|---|---|---|---|
-| **Y (as shipped)** | **.04** | **849** | 49 |
-| Y | .05 | 143 | 755 |
-| Y | .045 | 143 | 755 |
+`provably-fair/verify_all_games.mjs` — replays all 898 settled games from
+`settled-games-sample.json` through each candidate algorithm in exact JS semantics
+(`Math.round(1e8*e)/1e8`, `JSON.stringify` key order) and compares to the on-chain
+`gameSeedHash`.
 
-The edge value is the discriminator, and `.04` is the one in their own config. 849/898 games'
-on-chain `gameSeedHash` are reproduced exactly from `(seed, rowConfig)` using the algorithm above.
-**The scheme is not a guess — it is confirmed against production data at scale.**
+```
+games=898  usable=755  emptyRowConfig=143
 
-**49 games do not reproduce**, and they are exactly the configs of length 4, 10, 12 and 20
-(27 + 11 + 1 + 10) — i.e. the configs containing a `1`-tile row. The bundle has a *second* builder
-for that case:
-
-```js
-async function J(counts, seed, edge = houseEdge) {
-  let l = 1;
-  return counts.map((d, i) => {
-    if (d > 1) l *= 1 / (1 - 1/d);
-    const o = l * (1 - edge);
-    return { tiles: d, deathTileIndex: d === 1 ? 0 : getDeathTileIndex(seed, i, d),
-             multiplier: d === 1 ? null : q(o) };
-  });
-}
+  he=0.04 prec=1e8   order=tiles,deathTileIndex,multiplier   706/755  93.5%   ← the shipped builder
+  he=0.04 prec=1e8   order=tiles,multiplier,deathTileIndex     0/755   0.0%
+  he=0.04 prec=1e4   order=tiles,deathTileIndex,multiplier   339/755  44.9%
+  he=0.04 prec=null  (any order)                               0/755   0.0%
+  he=0.05 prec=1e8   (any order)  ← THE PUBLISHED VERIFIER      0/755   0.0%
+  he=0.05 prec=null  (any order)  ← THE PUBLISHED VERIFIER      0/755   0.0%
 ```
 
-Neither `Y` nor `J` matches those 49, so a third path handles 1-tile rows. Not itself a finding —
-recorded so the next person does not re-derive it.
+**706 / 706 of the standard 25-row games reproduce byte-exact.** Not a sample — every standard
+game in the set. The commitment mechanism is real and self-consistent.
 
-## 3. ✅ CONFIRMED: 143 real-money games whose commitment contains **no board at all**
+**49 games do not reproduce**, and they are *not* a bug: they are a structurally different game
+mode. Their `rowConfig` lengths are 4/10/12/20 and their `selectedTiles` are **coordinate pairs**
+(`[[1,0],[1,0]]`), not ladder indices:
 
-For 143 settled games, the on-chain commitment reproduces with `rows: []`:
+```
+gid=4838991  rowConfig=[2,2,1,1]  selectedTiles=[[1,0],[1,0]]  status=Won
+gid=4838988  rowConfig=[2,2,1,1]  selectedTiles=[[0,1],[0,0]]  status=Won
+```
+
+> **Superseded:** an earlier revision suggested these were 1-tile rows handled by a third builder
+> `J`. That was wrong. They are a different game mode; the death-race ladder algorithm simply does
+> not apply, so **they are not a finding and nothing is claimed about them.**
+
+## 3. ✅ CONFIRMED — 143 real-money games whose commitment contains **no board at all**
+
+For 143 settled games the on-chain commitment reproduces with `rows: []`:
 
 ```
 gameSeedHash == "0x" + sha256(JSON.stringify({version:"v1", rows:[], seed:"0x..."}))
 ```
 
-Verified **byte-exact for all 143** (not a sample — every one). Yet those games were played and
-paid:
+Verified **byte-exact for all 143** (every one, not a sample). Yet all 143 were played to
+completion and settled:
 
 ```
-game 4838969  Won   bet 0.001  payout 0.0035132   gameState {"selectedTiles":[9,5,6,7,8,10,11]}
-game 4838965  Lost  bet 0.001  payout 0
-   gameConfig = {"rowConfig":[]}        ← and the committed rows are [] too
-   Won 36 / Lost 107 ; win multiples 1.0165x .. 4.3612x ; picks 1..9
+game 4838969  Won   bet 0.001  payout 0.0035132   selectedTiles [9,5,6,7,8,10,11]
+Won 36 / Lost 107 ; win multiples 1.0165x .. 4.3612x ; picks 1..9
 ```
 
 **Reading:** for these games the on-chain "provably fair" commitment contains zero information
 about the outcome. Nothing binds the server to any particular board. A player verifying one of
-these games would receive a hash that matches and an **empty board** — a green tick that proves
-nothing. Whatever game mode this is (the bundle carries at least three game types:
-`DEATH_RACE`, `BASE_JUMP`, `SMASHER_FUN`, and only death_race uses `rowConfig`), the commitment
-scheme does not cover it.
+these games gets a hash that matches **and an empty board** — a green tick that proves nothing.
 
-This is independent of §4 and stands on its own: **the outcome of 143 real-money games was never
-committed in advance.** Whether the skulls were in fact chosen afterwards is unknowable *precisely
-because* nothing was committed — which is the problem.
+**Honest scoping — this is a code path, not a proven cheat:**
+- The 898-game sample is **bot-heavy**: 25 unique players, 0.73-day span, one address with 365
+  games and another with 201.
+- The 143 empty-config games come from **10 unique addresses**, dominated by one (87 games).
+- So the realistic reading is *"a client/API path exists that commits an empty board, and games
+  played through it were settled for real money,"* **not** *"players are being cheated."* What is
+  provable is narrower and still worth reporting: **the commitment did not cover those outcomes,
+  and the game can be played in that state.**
 
-## 4. ⚠️ The pre-reveal path — "see the skull before clicking"
+## 4. ❌ FALSIFIED — the pre-reveal path ("see the skull before clicking")
 
-Everything needed to see the board is **already in the player's browser**:
+**Tested live, 2026-09-10, via `console-probe.js` pasted into the real logged-in app.** The
+question was one field wide:
 
-**a. The browser ships the seed generator, the skull function, and the commitment builder.**
-`324sagnahlooz.js` exports `generateGameSeed`, `getDeathTileIndex`, `createCommitmentHash`,
-`sha256Hex`. A player can compute any board from any seed, locally, with the site's own code.
+> For an **active** game, does any API response populate `gameSeed` — or `rows[].deathTileIndex` —
+> before the player picks?
 
-**b. The live board component receives `rows[].deathTileIndex` and `gameSeed` in client state**
-(`3ym39zg5cgmew.js`):
+**Answer: no.** Raw captured responses:
 
-```js
-let l = a === e.deathTileIndex,            // is this tile the death tile?
-    d = l && i;
-className: cn("...",
-  l && !i && "border-destructive bg-destructive/60",   // ← death tile styled even when NOT selected
-  d && "border-destructive bg-destructive/80"),
-children: d ? "💀" : null
+```jsonc
+// GET /api/games/active?gameType=death_race        <- while a game was live
+{"currentGame":{"id":"145794c1-…","status":"active","betAmount":"1000000000000000",
+  "usdUnitPrice":2437.24,
+  "rows":[{"tiles":7,"multiplier":1.12,"deathTileIndex":null},
+          {"tiles":3,"multiplier":1.68,"deathTileIndex":null}, … 25 rows, every one null]}}
+// no gameSeed, no commitmentHash, all 25 deathTileIndex null
+
+// POST /api/games/145794c1-…/select-tile            <- immediately after one pick
+{"isDeathTile":false,"currentRowIndex":1,"finalMultiplier":1.12,"status":"active",
+ "currentRow":{"tiles":7,"multiplier":1.12,"deathTileIndex":5},   // row JUST played
+ "nextRow":{"tiles":3,"multiplier":1.68,"deathTileIndex":null},   // row NOT yet played
+ "version":2,"animationTag":null}
 ```
 
-The class is applied on `l` (is-death) alone. **Selection is not required.** If that state is
-populated while the game is live, the skull is readable straight off the DOM — no exploit needed,
-just inspect element. The `💀` glyph is the only part gated behind selection.
+The server reveals the skull of the row **you have already survived**, and only that row.
+`nextRow` — the one about to be played — is `null`. The seed is absent while the game is live.
+**The design holds.** The board cannot be computed ahead of the pick, so the DOM-styling path
+documented in earlier revisions (`l = a === e.deathTileIndex` → red styling independent of
+selection) is **unreachable**: there is no populated `deathTileIndex` for an unplayed row to
+style. Nothing to exploit.
 
-**c. The API→state mapper passes the seed and rows straight through** (`3vf1zq2-0zz2k.js`):
+Consequences, accepted plainly:
+- The **100x flip is off the table.** The premise was a guaranteed win from a pre-reveal leak.
+  There is no leak, so there is no guaranteed win, so there is nothing to demonstrate — and
+  therefore no reason to move player funds.
+- The `isDeathTile:false` field means the player still **trusts the server** for the moment of
+  truth during play; fairness is only *checkable* after settlement, against the on-chain
+  commitment. That is a normal provably-fair trade-off, and §2 shows the commitment backs it for
+  standard games.
+- `version: 2` in the select-tile response confirms the v2 backend is what is serving live play
+  (relevant to F02).
+
+## 5. ✅ CONFIRMED — the published verifier cannot verify any real game
+
+The devs' own verifier hard-codes `HOUSE_EDGE = 0.05` and hashes **raw unrounded floats**:
 
 ```js
-function eM(e) {
-  if (!e) return;
-  return { ..., rows: e.rows, currentRowIndex: e.currentRowIndex ?? -1,
-           selectedTiles: e.selectedTiles,
-           commitmentHash: e.commitmentHash, gameSeed: e.gameSeed, ... };
+// upstream-verifier-deathFun.js:47-59
+calculateRowMultipliers(tileCounts) {
+  const HOUSE_EDGE = 0.05;                                    // ⊥ the shipped app uses .04
+  … const multiplierWithEdge = currentMultiplier * (1 - HOUSE_EDGE);
 }
+reconstructRows() { … rows.push({ tiles, deathTileIndex, multiplier }); }   // no q() rounding
 ```
 
-**No nulling.** There *is* a deliberate strip path in the codebase —
-`Y(e) { return rows.map(r => ({...r, deathTileIndex: null, multiplier: ...})) }` — which proves the
-developers knew to null the death tile when it should be hidden. `eM` does not use it.
+The shipped app uses `houseEdge = .04` **and** rounds to `1e8` before hashing. Both differences
+change the hash, so the verifier recomputes a *different* `rows[]` and therefore a different
+`gameSeedHash`. Single-game receipt, `gid=4838990`:
 
-**d. Client-side seed generation exists**, and in demo mode it is reachable:
-
-```js
-shuffleRows = useCallback(async e => {
-  let t = generateGameSeed();                       // client-made seed
-  let n = await Promise.all(rows.map(async (r,i) =>
-      ({...r, deathTileIndex: await getDeathTileIndex(t, i, r.tiles), multiplier: ...})));
-  ... setRows(n)                                    // client sets its own board
-}, []);
+```
+on-chain seedHash     0xb04da23c01e2a9341fc1d7e56d4dc6e97f00e3ab5e3ad15fb2a9a3cd5e6dfc29
+PUBLISHED VERIFIER he=0.05 raw      0x5ca3d6cf…  no match
+PUBLISHED VERIFIER he=0.05 round 1e8 0x72656601…  no match
+APP he=0.04 round(1e8)              0xb04da23c…  MATCH
 ```
 
-In the real-mode hook this is stubbed (`shuffleRows: async () => false`), so it is **not** a live
-exploit — recorded because it shows the client is fully capable of building its own board, and a
-future wiring change would make it one.
+Across the whole set: **0 / 755.** Not one real game verifies under the tool the project
+publishes for players to verify games with. The verifier is also v1-only (`value="v1"`,
+"Always use v1 only").
 
-### So the single open question is narrow and checkable
+**Impact:** any player who follows the "provably fair — verify it yourself" flow gets a mismatch
+on an **honest** game and is told, in effect, that the operator cheated. It is a false
+fraud-signal generator pointed at the project's own users, and it destroys the evidentiary value
+of the one mechanism meant to prove fairness. Fix is one constant plus the rounding function.
 
-> For an **active** game, does any API response populate `gameSeed` — or `rows[].deathTileIndex` —
-> before the player picks?
+## 6. Methodology correction — my probe had a blind spot, proven not asserted
 
-- **Yes** → Critical, immediately. The player reads the skull from the DOM, or computes the whole
-  board offline from the seed with the site's own `getDeathTileIndex`.
-- **No** (fields null/absent until settlement) → the design holds, and this closes clean.
+The first `console-probe.js` reported "no active-game response carried the seed or death tiles"
+— which was right — but it was right **by accident for the shape that mattered**. Its parser only
+read `currentGame` / `game` / `games[0]`, so it never looked inside the top-level `currentRow` /
+`nextRow` object returned by `/select-tile`. A genuine leak in `nextRow` would have been reported
+as clean.
 
-Everything else in this document is already proven. This one field is the whole difference.
+Fixed in v2 and made testable: `probe-selftest.mjs` runs the snippet against 6 fixtures — the two
+**real captured payloads** plus two **synthetic leaks** that exist to prove the probe would fire,
+and two must-stay-quiet cases.
 
-## 5. How to settle it
+```
+v1 (from git HEAD)  against the same 6 fixtures:  5 passed, 1 FAILED   ← missed the nextRow leak
+v2 (fixed)                                         6 passed, 0 failed
+```
 
-**Attempted here and blocked by the environment — 2026-09-10.** The `live-capture` harness runs, the
-wallet shim installs, and the app sees it (`hasEthereum: true`, chain `0xab5`), but **login cannot
-complete from this container**:
+The lesson is on `CHECKLIST.md`: **a detector that has never been shown to fire is not evidence of
+absence.** Both real fixtures are kept in the test file so the negative result stays reproducible.
 
-- Privy renders its login options inside a cross-origin iframe that requires **Cloudflare
-  Turnstile** to pass first.
-- Turnstile loads an asset from `brunhild.challenges.cloudflare.com`, which is **IPv6-only (no A
-  record — checked via DNS-over-HTTPS, not just the local resolver)**.
-- This container has **no IPv6 route** (`curl -6` → `HTTP 000`), so that asset never loads:
-  `[Cloudflare Turnstile] Error: 600010`, frame title stuck on "Checking your Browser…".
-- The modal therefore renders zero options, and `/api/games/active` is auth-gated
-  (`401 {"error":"missing jwt"}`), so the game state cannot be read without a session.
+## 7. What to tell the team
 
-This is an environment limitation, not a finding about the target. The harness and the checks are
-correct and ready; they need an egress with IPv6 or a real session.
+> We reproduced your commitment scheme exactly — 706 of 706 standard games verify byte-for-byte,
+> and we're reporting that alongside the two problems, because the scheme itself is sound.
+>
+> 1. **Your published verifier can't verify any real game.** It uses `HOUSE_EDGE = 0.05` and hashes
+>    unrounded floats; your app commits with `0.04` and rounds to `1e8`. We tested all 755 standard
+>    games: zero verify with the published tool, all of them verify once the constants match. Any
+>    player who uses it gets a false mismatch — please fix it before it's read as fraud.
+> 2. **143 settled games committed an empty board** (`rowConfig: []` → `rows: []`). The hash
+>    verifies but proves nothing, so those outcomes were never fixed in advance. It looks like a
+>    client/API path rather than the web flow, but the games settled for real money in that state.
+> 3. **We also chased a pre-reveal angle and it's clean** — your API withholds the seed and keeps
+>    `nextRow.deathTileIndex` null while a game is live. We've retracted that hypothesis. No funds
+>    were taken at any point in this research.
 
-**Workaround that works today — `console-probe.js`.** A self-contained DevTools snippet that hooks
-`fetch` + XHR and records any API response mentioning the seed, the death tiles or a game status,
-then prints a verdict. It needs no session sharing and sends nothing anywhere. Verified offline
-against four fixtures (**4/4**): confirms on an active game carrying a seed or populated
-`deathTileIndex`, and stays silent on a finished game carrying a seed (which is normal by design).
-
-Run: log in at death.fun, paste the snippet, start a game, make one pick, then `__df_dump()`.
-
-The decisive question is unchanged, and it is one field:
-
-> For an **active** game, does any API response populate `gameSeed` — or `rows[].deathTileIndex` —
-> before the player picks?
-
-- **Yes** → Critical, immediately. The player reads the skull off the DOM, or computes the whole
-  board offline from the seed with the site's own `getDeathTileIndex`.
-- **No** (fields null/absent until settlement) → the design holds and this closes clean.
-
-`analyze.js` also carries the automated version of this check (co-occurrence of an in-progress
-status and a populated seed/death tile in the same payload), 10/10 in `selftest.js`.
-
-
-## 6. What to tell the team (draft line)
-
-> Your commitment scheme is fine and we've reproduced it exactly on 849 of your games. Two things:
-> (1) 143 settled games commit to an empty board — the hash verifies but proves nothing, so their
-> outcome was never fixed in advance; (2) your client receives `rows[].deathTileIndex` and
-> `gameSeed` in the game state mapper, and the board styles the death tile even when it isn't
-> selected — so if those fields are populated before the player picks, the skull is visible in the
-> DOM. Please confirm which. If they're null until settlement, ignore (2).
-
-## 7. Provenance
+## 8. Provenance
 
 ```
 verifier repo : github.com/Death-fun/death-fun-provably-fair  (games/deathFun/deathFun.js, shared.js)
-bundle        : 76 chunks, deployment dpl_EL8LodHS2wjxZShsP7vH6U1XJhs2
+bundle        : 76 chunks, deployment dpl_BArumTqywc9BCFDEfAm58dKGRGJ2
+                gameplay chunk 3ym39zg5cgmew.js sha256 8f0197141eea0eaa9d7a7a9636638974faa3cf88cf3f673a2b1ddbbf779389dd
+                  -> byte-identical to the previous deployment dpl_EL8LodHS2wjxZShsP7vH6U1XJhs2
+                     (content-addressed chunk => the deploy ID change was server-side, not gameplay)
                 algorithm  -> chunks/324sagnahlooz.js
-                row builder-> chunks/3ym39zg5cgwew.js, 2qzosnxwl7652.js
+                row builder-> chunks/3ym39zg5cgmew.js, 2qzosnxwl7652.js
                 mapper     -> chunks/3vf1zq2-0zz2k.js  (eM)
-                board      -> chunks/3ym39zg5cgwew.js, 243hitda8tys5.js
 on-chain      : 898 settled games, gameSeed revealed, gameSeedHash public
-scripts       : /tmp/prereveal_step1b.js .. step8.js  (to be moved into the target dir)
+scripts       : provably-fair/verify_all_games.mjs          (the 706/0/143 result)
+                disclosure/live-capture/console-probe.js    (v2, blind spot fixed)
+                disclosure/live-capture/probe-selftest.mjs  (6 fixtures, 2 real + 2 synthetic leaks)
 ```
 
 No mainnet state modified — every call was `eth_call`/`eth_getLogs`. No exploit was executed
-against the live app.
+against the live app, and no funds were moved.

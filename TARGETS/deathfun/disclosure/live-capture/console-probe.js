@@ -5,11 +5,26 @@
  *
  * Then: log in, start a game, make ONE pick, and run  __df_dump()  in the console.
  * Paste the output back.
+ *
+ * v2 (2026-09-10) — parser rewritten after the first live capture.
+ *   v1 only looked at currentGame / game / games[0], so it MISSED the nested
+ *   currentRow / nextRow shape returned by POST /api/games/{id}/select-tile.
+ *   That shape is the one that actually matters: nextRow.deathTileIndex is the
+ *   still-unplayed row, so a populated value there is the real leak signal.
+ *   v1 would have reported "no leak" even if nextRow carried a death tile.
  */
 (() => {
-  const KEYS = ["gameSeed", "deathTileIndex", "commitmentHash", "currentRowIndex", "selectedTiles"];
+  const KEYS = ["gameSeed", "deathTileIndex", "commitmentHash", "currentRowIndex", "selectedTiles", "nextRow"];
   window.__df_capture = [];
   const seen = new Set();
+
+  const num = (v) => (typeof v === "number" ? v : null);
+
+  // A row whose death tile is populated == a revealed skull.
+  function rowsOf(v) {
+    if (!Array.isArray(v)) return null;
+    return v.map((r) => (r && typeof r === "object" ? num(r.deathTileIndex) : null));
+  }
 
   function inspect(url, text) {
     if (typeof text !== "string" || text.length < 2) return;
@@ -18,24 +33,41 @@
     if (seen.has(fp)) return;
     seen.add(fp);
 
-    let status = null, seed = null, rows = null, deathTiles = null, gameState = null;
-    try {
-      const j = JSON.parse(text);
-      const g = j?.currentGame || j?.game || (Array.isArray(j?.games) ? j.games[0] : j) || {};
-      status = g?.status ?? null;
-      seed = g?.gameSeed ?? null;
-      gameState = g?.gameState ?? null;
-      rows = Array.isArray(g?.rows) ? g.rows : null;
-      if (rows) deathTiles = rows.map((r) => r?.deathTileIndex);
-    } catch { /* not json */ }
+    let j = null;
+    try { j = JSON.parse(text); } catch { /* not json */ }
+
+    // shape 1: polled game state  { currentGame|game|games[0] }
+    const g = j?.currentGame || j?.game || (Array.isArray(j?.games) ? j.games[0] : null) || j || {};
+    // shape 2: POST /select-tile  { currentRow, nextRow } at the TOP level
+    const curRow = j?.currentRow ?? g?.currentRow ?? null;
+    const nextRow = j?.nextRow ?? g?.nextRow ?? null;
+
+    const rows = Array.isArray(g?.rows) ? g.rows : null;
+    const rowTiles = rowsOf(rows);
+    const curDeath = curRow ? num(curRow.deathTileIndex) : null;
+    const nextDeath = nextRow ? num(nextRow.deathTileIndex) : null;
+
+    const status = g?.status ?? j?.status ?? null;
+    const seed = g?.gameSeed ?? j?.gameSeed ?? null;
+    const active = typeof status === "string" && /active|in_?progress|playing|started|selecting/i.test(status);
+
+    // The leak condition, stated precisely: while the game is still live,
+    // do we know the skull of a row that has NOT been played yet?
+    const boardRevealed = Array.isArray(rowTiles) && rowTiles.some((d) => d !== null);
+    const futureRowRevealed = nextDeath !== null;
+    const leak = active && (!!seed || boardRevealed || futureRowRevealed);
 
     window.__df_capture.push({
-      url, status, seed, rows: rows ? rows.length : null, deathTiles,
-      hasPopulatedDeathTile: Array.isArray(deathTiles) ? deathTiles.some((d) => typeof d === "number") : null,
-      hasSeed: !!seed, gameState,
+      url, status, seed, active,
+      rows: rows ? rows.length : null,
+      deathTiles: rowTiles,
+      currentRowDeathTile: curDeath,
+      nextRowDeathTile: nextDeath,
+      boardRevealed, futureRowRevealed, leak,
       raw: text.slice(0, 900),
     });
-    console.log("%c[DF-CAPTURE] " + url, "color:#0a0", { status, seed, deathTiles });
+    console.log("%c[DF-CAPTURE] " + url, "color:#0a0",
+      { status, seed, nextRowDeathTile: nextDeath, leak });
   }
 
   const of = window.fetch;
@@ -60,18 +92,17 @@
     console.log(`\n===== DF CAPTURE: ${c.length} relevant responses =====`);
     for (const e of c) {
       console.log(`\n--- ${e.url}`);
-      console.log(`    status=${JSON.stringify(e.status)}  hasSeed=${e.hasSeed}  seed=${e.seed}`);
-      console.log(`    rows=${e.rows}  deathTiles=${JSON.stringify(e.deathTiles)}  populatedDeathTile=${e.hasPopulatedDeathTile}`);
+      console.log(`    status=${JSON.stringify(e.status)}  active=${e.active}  hasSeed=${!!e.seed}  seed=${e.seed}`);
+      console.log(`    rows=${e.rows}  boardDeathTiles=${JSON.stringify(e.deathTiles)}`);
+      console.log(`    currentRowDeathTile=${JSON.stringify(e.currentRowDeathTile)}  nextRowDeathTile=${JSON.stringify(e.nextRowDeathTile)}`);
+      console.log(`    boardRevealed=${e.boardRevealed}  futureRowRevealed=${e.futureRowRevealed}`);
       console.log(`    raw: ${e.raw.slice(0, 600)}`);
     }
-    const ANSWER = c.some((e) =>
-      typeof e.status === "string" &&
-      /active|in_?progress|playing|started|selecting/i.test(e.status) &&
-      (e.hasSeed || e.hasPopulatedDeathTile));
+    const ANSWER = c.some((e) => e.leak);
     console.log(`\n===== ANSWER =====`);
     console.log(ANSWER
-      ? "PRE-REVEAL CONFIRMED: an ACTIVE game's response carried the seed and/or death tiles."
-      : "No active-game response carried the seed or death tiles. (A seed on a FINISHED game is normal.)");
+      ? "PRE-REVEAL CONFIRMED: a LIVE game's response carried the seed, a future row's skull, or a populated board."
+      : "No live-game response carried the seed or a future row's skull. (A revealed tile on the row you just played, or a seed on a FINISHED game, is normal.)");
     return ANSWER;
   };
 

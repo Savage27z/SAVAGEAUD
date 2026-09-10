@@ -1,28 +1,32 @@
 /**
  * Offline test of console-probe.js: does it correctly call the pre-reveal in both directions?
- * Mocks window.fetch, feeds it a few realistic payloads, and checks __df_dump()'s verdict.
+ *
+ * Fixtures 1 and 2 are the REAL payloads captured live from death.fun on 2026-09-10.
+ * Fixtures 3 and 4 are synthetic leaks — they exist to prove the probe is not merely
+ * agreeing with us, i.e. that it WOULD fire if a future row's skull were revealed.
  */
 import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 
-const src = fs.readFileSync("/root/.hermes/workspace/SAVAGEAUD/TARGETS/deathfun/disclosure/live-capture/console-probe.js", "utf8");
+const here = path.dirname(fileURLToPath(import.meta.url));
+const PROBE = path.join(here, "console-probe.js");
+const src = fs.readFileSync(PROBE, "utf8");
 
 function runCase(label, payloads, expected) {
-  const listeners = [];
+  const lines = [];
   const win = {
     fetch: async (url) => ({ clone: () => ({ text: async () => payloads[url] ?? "" }) }),
     XMLHttpRequest: function () {},
   };
   win.XMLHttpRequest.prototype = { open() {}, send() {}, addEventListener() {} };
-  win.console = { log: (...a) => listeners.push(a.map(String).join(" ")) };
+  win.console = { log: (...a) => lines.push(a.map(String).join(" ")) };
 
   // run the snippet verbatim — it is a self-contained IIFE that only needs window + console
-  const fn = new Function("window", "console", src);
-  fn(win, win.console);
+  new Function("window", "console", src)(win, win.console);
 
-  // drive the mocked fetches, then dump
   return (async () => {
     for (const url of Object.keys(payloads)) { try { await win.fetch(url); } catch {} }
-    // let the .then() chain settle
     await new Promise((r) => setTimeout(r, 30));
     const verdict = win.__df_dump();
     const ok = verdict === expected;
@@ -31,29 +35,62 @@ function runCase(label, payloads, expected) {
   })();
 }
 
-const liveActive = JSON.stringify({
+// ---- fixture 1: REAL polled active game (captured live) ----
+const realActivePoll = JSON.stringify({
   currentGame: {
-    id: "g1", status: "active", currentRowIndex: 1, selectedTiles: [2],
-    gameSeed: "0x1ce72fdf7009baf827f108a38f586f4f13269ae9856b1ef387ceed5fc2cf83a0",
-    commitmentHash: "0x4f1220e50b1c0c8b351b85158a2808cd4169f5f3399e15284f63b262d3dee361",
-    rows: [{ tiles: 4, deathTileIndex: 2, multiplier: 1.14 }, { tiles: 3, deathTileIndex: 0, multiplier: 1.52 }],
+    id: "145794c1-e83e-4258-a8d9-b5ea184f2f08",
+    walletAddress: "0x318f5353bab917b5243d78825875a247c90c8646",
+    status: "active",
+    betAmount: "1000000000000000",
+    rows: [
+      { tiles: 7, multiplier: 1.12, deathTileIndex: null },
+      { tiles: 3, multiplier: 1.68, deathTileIndex: null },
+      { tiles: 3, multiplier: 2.52, deathTileIndex: null },
+    ],
   },
 });
-const activeNulled = JSON.stringify({
-  currentGame: { id: "g2", status: "active", gameSeed: null, rows: [{ tiles: 4, deathTileIndex: null, multiplier: 1.14 }] },
+
+// ---- fixture 2: REAL select-tile response (captured live) ----
+const realSelectTile = JSON.stringify({
+  isDeathTile: false, currentRowIndex: 1, finalMultiplier: 1.12, status: "active",
+  currentRow: { tiles: 7, multiplier: 1.12, deathTileIndex: 5 },   // the row just played
+  nextRow: { tiles: 3, multiplier: 1.68, deathTileIndex: null },   // the row not yet played
+  version: 2, animationTag: null,
 });
+
+// ---- fixture 3: SYNTHETIC leak — next (unplayed) row's skull sent ----
+const leakNextRow = JSON.stringify({
+  isDeathTile: false, currentRowIndex: 1, status: "active",
+  currentRow: { tiles: 7, deathTileIndex: 5 },
+  nextRow: { tiles: 3, deathTileIndex: 2 },                        // <-- leak
+});
+
+// ---- fixture 4: SYNTHETIC leak — whole board + seed on a live game ----
+const leakWholeBoard = JSON.stringify({
+  currentGame: {
+    id: "g9", status: "active",
+    gameSeed: "0x1ce72fdf7009baf827f108a38f586f4f13269ae9856b1ef387ceed5fc2cf83a0",
+    rows: [{ tiles: 4, deathTileIndex: 2, multiplier: 1.14 }],
+  },
+});
+
+// ---- fixture 5: finished game carrying a seed (normal, must stay quiet) ----
 const finished = JSON.stringify({
   games: [{ id: "g3", status: "won", gameSeed: "0x1ce72fdf7009baf827f108a38f586f4f13269ae9856b1ef387ceed5fc2cf83a0",
             rows: [{ tiles: 4, deathTileIndex: 2, multiplier: 1.14 }] }],
 });
+
+// ---- fixture 6: unrelated response (must not even be captured) ----
 const unrelated = JSON.stringify({ effectiveBalance: "123", gameType: "death_race" });
 
 let pass = 0, fail = 0;
 const cases = [
-  ["ACTIVE + seed + populated death tiles  -> should CONFIRM", { "/api/games/active?gameType=death_race": liveActive }, true],
-  ["ACTIVE + nulled seed + null rows       -> should NOT flag", { "/api/games/active?gameType=death_race": activeNulled }, false],
-  ["FINISHED + seed (normal behaviour)     -> should NOT flag", { "/api/games/history": finished }, false],
-  ["unrelated response                     -> should NOT flag", { "/api/game-balance/death_race": unrelated }, false],
+  ["REAL active poll, all death tiles null      -> should NOT flag", { "/api/games/active?gameType=death_race": realActivePoll }, false],
+  ["REAL select-tile, nextRow null              -> should NOT flag", { "/api/games/1/select-tile": realSelectTile }, false],
+  ["SYNTHETIC nextRow carries a skull           -> SHOULD flag",     { "/api/games/1/select-tile": leakNextRow }, true],
+  ["SYNTHETIC active game sends seed + board    -> SHOULD flag",     { "/api/games/active?gameType=death_race": leakWholeBoard }, true],
+  ["FINISHED game with seed (normal)            -> should NOT flag", { "/api/games/history": finished }, false],
+  ["unrelated response                          -> should NOT flag", { "/api/game-balance/death_race": unrelated }, false],
 ];
 for (const [label, payloads, expected] of cases) {
   const ok = await runCase(label, payloads, expected);
