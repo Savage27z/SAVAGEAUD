@@ -200,3 +200,14 @@ Check every target against this list. Update as new vulnerability angles are dis
   multiplier}`; both under `{version, rows, seed}`.
 - **Guessable ≠ exploitable.** `version` is a small counter (1 + actions) but equality-enforced, so knowing
   it grants nothing. Check the comparison, not just the entropy.
+- **Gate every leak-check on `status`.** `currentGame` / `previousGame` serve the MOST RECENT game, not
+  necessarily a live one — after settlement they are the just-finished game with its seed and skulls
+  legitimately revealed. A leak detector without a `status=="active"` gate reports every settled game as a
+  Critical. This false-positived a scanner run this session (caught before reporting).
+- **death.fun API field casing is inconsistent — map it once, don't guess:** create + active take
+  `gameType` as a **query** param (camelCase); `select-tile` takes `game_type` in the **body** (snake_case);
+  `cash-out` takes only `{version}` and is `.strict()`. A lower-case probe of `/api/games/active` returns
+  "Game type is required", which masks whether the endpoint even works — it cost real hours this session.
+- **Before reporting any API "leak" or "mismatch", confirm which value the verifier/app actually consumes.**
+  Twice this session a mismatch turned out to be my key-order or shape guess, not their bug (F07 §5 rows,
+  F08 settled-game gate).
