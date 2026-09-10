@@ -3,7 +3,8 @@
 **Chain:** Abstract (zkSync-family L2, chain ID 2741)
 **Chain Explorer:** https://abscan.org/address/0x27EDd16eE56958fddCBA08947f12C43DDeC2B20C
 **Date:** September 9, 2026
-**Status:** 🔴 Findings (1, **confirmed on a real zkEVM fork** of the deployed contract)
+**Status:** 🔴 Findings (2 — F01 confirmed on a real zkEVM fork of the deployed contract,
+F02 confirmed live from the production bundle + on-chain reads)
 
 **Audited commit:** verified source as deployed, compiler `v0.8.24+commit.e11b9ed9`, `zksolc
 v1.5.13`, pulled via Etherscan V2 unified API (`chainid=2741`)
@@ -93,6 +94,7 @@ See [TMAAR.md](TMAAR.md).
 | # | Finding | Severity | Impact | Likelihood | Status |
 |---|---------|----------|--------|------------|--------|
 | F01 | `increaseBet()` missing `msg.value` check + missing signature-replay protection | **Low / informational** (defence-in-depth — re-rated after forensics) | Low (external) | Low | **Confirmed** — fork PoC: 1 wei paid, betAmount inflated to 35 ETH via 7 signature replays. **On-chain forensics: 7,329 real `increaseBet` txs (554 accounts, 15-min deadlines), then dormant since 2026-04-12. CORRECTION: an earlier revision claimed these proved player-submission and player-exploitability — that was wrong and is retracted. The txs are type-113 native-AA (`tx.from` = account, not signer) and the client never handles a signature, so the backend submits. No player ever held the exploit path.** |
+| F02 | **v2 migration drift** — the staged v2 contract adds signature-replay protection (`rakebackNonces`, `referralNonces`) to its two new ETH-paying claim functions but leaves `increaseBet`'s signature byte-identical to v1 with no nonce, and re-enables it at Unlimited / 100 ETH per session call | Informational (F01 timing risk) | Medium **if** v2 ships as the ABI implies | High (evidence is live) | **Confirmed** — live production bundle ships a complete undeployed v2 ABI; live proxy impl slot still points at audited v1; every v2-only selector returns no data on the live proxy. **Honest limit: an ABI cannot prove the absence of a `msg.value` check, so we do NOT claim v2 still contains F01 — we claim the nonce half is provably absent and the function is being switched back on.** |
 
 Full writeup: [findings/F01-increaseBet-free-inflation.md](findings/F01-increaseBet-free-inflation.md)
 **On-chain forensics + CORRECTION (read this too):** [findings/F01-ADDENDUM-onchain-forensics.md](findings/F01-ADDENDUM-onchain-forensics.md)
@@ -101,6 +103,20 @@ correct explanation (`tx.from` on a native-AA chain is the *account*, never the 
 keys and relayers produce identical on-chain shape). Also identifies the single EOA
 (`0x937CddeCf00cD7f1f667f385deDFaE275A0f2Ea7`) that is simultaneously the contract owner, the
 proxy-admin owner, and the signer of every `increaseBet`.
+
+**v2 migration drift:** [findings/F02-v2-migration-drift.md](findings/F02-v2-migration-drift.md)
+— the live frontend ships **two complete contract interfaces at once**. The v2 ABI (116 entries)
+adds `claimRakeback`, `claimReferral`, `payReferral`, `setGameCounter`, `setServerSignerAddress`,
+`withdrawFunds` and per-action prefixes (`createGamePrefix`, `cashOutPrefix`,
+`claimRakebackPrefix`, `claimReferralPrefix`, `markGameAsLostPrefix`), changes `cashOut` to a
+`bytes32 gameStateHash` and `createGame` to hash-based inputs — **and adds
+`rakebackNonces(address)` / `referralNonces(address)` while leaving
+`increaseBet(uint256,uint256,uint256,bytes)` completely unchanged with no nonce.** v2 also moves
+`increaseBet` from *not granted at all* in `sessionPolicyV1` to *Unlimited value / 100 ETH per
+use* in `sessionPolicyV2`. Config baked into the bundle:
+`NEXT_PUBLIC_CONTRACT_ADDRESS = 0x27EDd16e…` (live v1 proxy),
+`NEXT_PUBLIC_SERVER_WALLET_ADDRESS = 0xc372B35582933277d5f4431F1a322Abc8DeA0612` (nonce 0,
+balance 0 — signer-only key, as expected).
 
 ## Verdict
 Not clean. F01 is **confirmed end-to-end on a real zkEVM fork** of the actual deployed contract

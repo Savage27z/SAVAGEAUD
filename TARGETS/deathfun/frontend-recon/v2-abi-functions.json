@@ -1,0 +1,817 @@
+[
+  {
+    "name": "addAdmin",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "addAdmin",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "addAdmin",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "addAdmin",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "cashOut",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "bytes32",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "cashOut",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "bytes32",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "cashOut",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "string",
+      "string",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "cashOut",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "string",
+      "string"
+    ]
+  },
+  {
+    "name": "cashOut",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "bytes32",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "cashOutPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "cashOutPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "cashOutPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "claimRakeback",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "claimRakeback",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "claimRakeback",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "claimRakebackPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "claimRakebackPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "claimRakebackPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "claimReferral",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "claimReferral",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "claimReferral",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "claimReferralPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "claimReferralPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "claimReferralPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "createGame",
+    "mutability": "payable",
+    "inputs": [
+      "bytes32",
+      "bytes32",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "createGame",
+    "mutability": "payable",
+    "inputs": [
+      "bytes32",
+      "bytes32",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "createGame",
+    "mutability": "payable",
+    "inputs": [
+      "string",
+      "bytes32",
+      "string",
+      "string",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "createGame",
+    "mutability": "payable",
+    "inputs": [
+      "string",
+      "bytes32",
+      "string",
+      "string",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "createGame",
+    "mutability": "payable",
+    "inputs": [
+      "bytes32",
+      "bytes32",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "createGamePrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "createGamePrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "createGamePrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "gameCounter",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "gameCounter",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "gameCounter",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "gameCounter",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "gameCounter",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "games",
+    "mutability": "view",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "games",
+    "mutability": "view",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "games",
+    "mutability": "view",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "games",
+    "mutability": "view",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "games",
+    "mutability": "view",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "getGameDetails",
+    "mutability": "view",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "getGameDetails",
+    "mutability": "view",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "getGameDetails",
+    "mutability": "view",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "getGameDetails",
+    "mutability": "view",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "getGameDetails",
+    "mutability": "view",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "getOnChainGameId",
+    "mutability": "view",
+    "inputs": [
+      "bytes32"
+    ]
+  },
+  {
+    "name": "getOnChainGameId",
+    "mutability": "view",
+    "inputs": [
+      "bytes32"
+    ]
+  },
+  {
+    "name": "getOnChainGameId",
+    "mutability": "view",
+    "inputs": [
+      "string"
+    ]
+  },
+  {
+    "name": "getOnChainGameId",
+    "mutability": "view",
+    "inputs": [
+      "string"
+    ]
+  },
+  {
+    "name": "getOnChainGameId",
+    "mutability": "view",
+    "inputs": [
+      "bytes32"
+    ]
+  },
+  {
+    "name": "increaseBet",
+    "mutability": "payable",
+    "inputs": [
+      "uint256",
+      "uint256",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "initialize",
+    "mutability": "nonpayable",
+    "inputs": [
+      "string"
+    ]
+  },
+  {
+    "name": "initialize",
+    "mutability": "nonpayable",
+    "inputs": [
+      "string"
+    ]
+  },
+  {
+    "name": "initialize",
+    "mutability": "nonpayable",
+    "inputs": [
+      "string"
+    ]
+  },
+  {
+    "name": "initialize",
+    "mutability": "nonpayable",
+    "inputs": [
+      "string"
+    ]
+  },
+  {
+    "name": "isAdmin",
+    "mutability": "view",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "isAdmin",
+    "mutability": "view",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "isAdmin",
+    "mutability": "view",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "isAdmin",
+    "mutability": "view",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "markGameAsLost",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "bytes32",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "markGameAsLost",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "bytes32",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "markGameAsLost",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "string",
+      "string",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "markGameAsLost",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "string",
+      "string"
+    ]
+  },
+  {
+    "name": "markGameAsLost",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "bytes32",
+      "uint256",
+      "bytes"
+    ]
+  },
+  {
+    "name": "markGameAsLostPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "markGameAsLostPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "markGameAsLostPrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "messagePrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "messagePrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "messagePrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "messagePrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "messagePrefix",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "owner",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "owner",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "owner",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "owner",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "owner",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "payReferral",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "address"
+    ]
+  },
+  {
+    "name": "preliminaryToOnChainId",
+    "mutability": "view",
+    "inputs": [
+      "bytes32"
+    ]
+  },
+  {
+    "name": "preliminaryToOnChainId",
+    "mutability": "view",
+    "inputs": [
+      "bytes32"
+    ]
+  },
+  {
+    "name": "preliminaryToOnChainId",
+    "mutability": "view",
+    "inputs": [
+      "string"
+    ]
+  },
+  {
+    "name": "preliminaryToOnChainId",
+    "mutability": "view",
+    "inputs": [
+      "string"
+    ]
+  },
+  {
+    "name": "preliminaryToOnChainId",
+    "mutability": "view",
+    "inputs": [
+      "bytes32"
+    ]
+  },
+  {
+    "name": "rakebackNonces",
+    "mutability": "view",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "rakebackNonces",
+    "mutability": "view",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "rakebackNonces",
+    "mutability": "view",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "referralNonces",
+    "mutability": "view",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "referralNonces",
+    "mutability": "view",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "referralNonces",
+    "mutability": "view",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "removeAdmin",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "removeAdmin",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "removeAdmin",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "removeAdmin",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "renounceOwnership",
+    "mutability": "nonpayable",
+    "inputs": []
+  },
+  {
+    "name": "renounceOwnership",
+    "mutability": "nonpayable",
+    "inputs": []
+  },
+  {
+    "name": "renounceOwnership",
+    "mutability": "nonpayable",
+    "inputs": []
+  },
+  {
+    "name": "renounceOwnership",
+    "mutability": "nonpayable",
+    "inputs": []
+  },
+  {
+    "name": "renounceOwnership",
+    "mutability": "nonpayable",
+    "inputs": []
+  },
+  {
+    "name": "serverSignerAddress",
+    "mutability": "view",
+    "inputs": []
+  },
+  {
+    "name": "setGameCounter",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "setGameCounter",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "setGameCounter",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "setGameCounter",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256"
+    ]
+  },
+  {
+    "name": "setServerSignerAddress",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "transferOwnership",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "transferOwnership",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "transferOwnership",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "transferOwnership",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "transferOwnership",
+    "mutability": "nonpayable",
+    "inputs": [
+      "address"
+    ]
+  },
+  {
+    "name": "withdrawFunds",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "address"
+    ]
+  },
+  {
+    "name": "withdrawFunds",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "address"
+    ]
+  },
+  {
+    "name": "withdrawFunds",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "address"
+    ]
+  },
+  {
+    "name": "withdrawFunds",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "address"
+    ]
+  },
+  {
+    "name": "withdrawFunds",
+    "mutability": "nonpayable",
+    "inputs": [
+      "uint256",
+      "address"
+    ]
+  }
+]
