@@ -145,3 +145,72 @@ the account, not the signer.** Session keys, relayers, and paymasters all produc
 that look like the user's. `tx.from == subject` proves *whose account*, never *who ordered it*.
 Determining authorship requires reading the client for signature handling — which is what should
 have been done before drawing the conclusion the first time.
+
+## 5. Closing the last gap — what the client actually receives (2026-09-10, third pass)
+
+The retraction above rested on a string search: `serverSignature` appears 20 times in the
+production bundle and all 20 are inside ABI definitions. That is strong but it is a *negative*
+result, and a negative result from a literal-string grep has an obvious hole — if the backend
+returned a signature under a different field name (`sig`, `signature`, `payload`), the grep would
+miss it. So this pass checked the **flow itself** instead: what does the client do, and what does
+it actually read out of the response?
+
+From `/api/abstract/games/create`'s call site (`chunks/3vf1zq2-0zz2k.js`):
+
+```js
+let a = CURRENT_APP === DEATH_FUN_APP ? "/api/abstract/games/create" : "/api/games/create";
+let i = await fetch(`${a}?${r.toString()}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: stringify({ betAmount: ei, rowConfig: t.map(e => e.tiles) }),
+    credentials: "include",
+});
+if (!i.ok) { /* error toast */ }
+let { preliminaryGameId: n } = await i.json();      // <-- the ONLY field destructured
+return { nextGameId: n };
+```
+
+and the loading state it shows is the literal string `"Preparing game…"`.
+
+Then on success it does **not** sign, does **not** build calldata and does **not** send a
+transaction. It invalidates the `/api/games/active` and user queries and sets `fresh: false`, and
+the active-game poller (`refetchInterval`) waits while `currentGame.status` is one of
+`["cashout_pending", "pending_onchain", "increase_bet_pending"]`.
+
+Three things follow, and they close the hole completely:
+
+1. **The response contains one field, `preliminaryGameId`.** Not "the client ignores a signature"
+   — the client *cannot* receive one, because it only ever reads one key out of the response body.
+2. **The word "Preparing" is accurate.** The client's job ends at asking. There is a
+   `pending_onchain` status precisely because the on-chain call has not happened yet when the
+   client is done — something else has to do it.
+3. **`increaseBet` uses the identical shape.** It has its own pending status
+   (`increase_bet_pending`) in the same poller, which is the same prepare-then-poll pattern: the
+   client asks, the backend signs and submits, the client waits for the status to change.
+
+Combined with the session-key grant (where the session's `signer` is
+`NEXT_PUBLIC_SERVER_WALLET_ADDRESS = 0xc372B35582933277d5f4431F1a322Abc8DeA0612`, a signer-only EOA
+with nonce 0 and balance 0), the picture is unanimous across four independent artifacts: the
+client bundle's lack of any signature handling, the absence of any signature-issuing API route,
+the response-body destructuring above, and the pending-status poller.
+
+**So the one genuinely open soft spot is now closed.** The residual uncertainty is no longer "does
+the client secretly get a signature" — it is only the irreducible fact that the backend is closed
+source, so we cannot audit the server side itself. A funded live capture (log in, play a game,
+record every response) would close even that, and remains the recommended next step.
+
+### 5.1 Reconciling with the earlier "restore High likelihood" pass
+
+Commit `3b095dd` rated likelihood **High** on the strength of the session-key grant for
+`increaseBet` (`valueLimit: { limitType: Unlimited }`), reasoning that a team does not register an
+unlimited-value grant for dead code, so the backend must be calling it regularly. **That premise
+is correct** — the backend does call it. The conclusion drawn from it does not follow, and the
+distinction is the whole finding:
+
+> "The feature is used regularly" and "an outside party can reach it" are different questions.
+
+The grant assigns a permission to the **server wallet** to submit `increaseBet` on the player's
+account. It is not a capability handed to the player, and the signature exists only on the server
+that produces it. Likelihood, as an axis, asks whether someone outside can reach the flaw — and
+nothing in the grant moves that. Hence **Low (external)**, with the full three-round trail kept in
+the finding so the reasoning is auditable rather than just its endpoint.

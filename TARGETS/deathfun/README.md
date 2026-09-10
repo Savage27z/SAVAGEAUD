@@ -63,16 +63,23 @@ See [TMAAR.md](TMAAR.md).
   inconsistency is the direct root cause of F01
 - No signature-nonce/used-tracking anywhere, compounding F01 into an unlimited-replay bug, not
   just a single-use mismatch
-- **Live UI check (2026-09-10), two rounds:** (1) played the real app end-to-end with real
-  (tiny) funds — mint, create a real game, advance a round, cash out successfully. Never found a
-  manual "increase bet" *button* anywhere in the flow. (2) **But** searching the frontend's JS
-  bundles for `increaseBet` found its function selector registered in the Abstract session-key
-  permission setup with `valueLimit: Unlimited` — the same session-key grant shown in the app's
-  own "Create Session Key" screen (3 permissions: Create Game, Cash Out, Increase Bet). An
-  unlimited-value permission grant isn't registered for dead code — the backend evidently calls
-  this as part of normal operation server-side, just not via a player-clickable button. Net
-  result: likelihood stays High, not downgraded — see the finding doc's Impact × Likelihood
-  section for the full trail (both rounds documented, not just the final conclusion)
+- **Live UI check (2026-09-10), two rounds, then a third that settled it:**
+  (1) played the real app end-to-end with real (tiny) funds — mint, create a real game, advance a
+  round, cash out successfully. Never found a manual "increase bet" *button* anywhere in the flow.
+  (2) **But** searching the frontend's JS bundles for `increaseBet` found its function selector
+  registered in the Abstract session-key permission setup with `valueLimit: Unlimited` — the same
+  grant shown in the app's own "Create Session Key" screen (3 permissions: Create Game, Cash Out,
+  Increase Bet). An unlimited-value grant isn't registered for dead code, so the backend
+  evidently calls this in normal operation — this briefly **restored likelihood to High**.
+  (3) **Now settled against High:** the grant is a permission for the **server wallet** to submit
+  on the player's account, not a capability handed to the player. Confirmed on the client — the
+  create-game flow `POST`s `{betAmount, rowConfig}`, gets back **only `{preliminaryGameId}`**,
+  shows "Preparing game…", then polls `/api/games/active` until `pending_onchain` clears. It never
+  receives a signature, never builds calldata, never submits a transaction. `increaseBet` uses the
+  identical prepare-then-poll shape (`increase_bet_pending`). So the backend both signs **and**
+  submits, and no player ever holds a note. **Frequency of generation ≠ attacker access** — see
+  the finding's Impact × Likelihood section for the full trail (all three rounds kept on purpose,
+  including the one that was wrong)
 - Verified live on-chain: real $44K bankroll balance, real `messagePrefix`/`gameCounter` values,
   confirmed OLD vs. NEW contract don't share a domain prefix (ruled out one hypothesis instead of
   assuming it)
