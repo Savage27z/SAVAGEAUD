@@ -1,5 +1,36 @@
 # Changelog
 
+## v1.13.2 (Sep 10, 2026)
+
+- **death.fun F01 — CORRECTION: "the backend submits" never closed the reachability gap.**
+  Independently re-derived from the contract source (not just agreed with the prior "Low"
+  re-rating): `increaseBet`'s only caller check is `msg.sender == game.player`, satisfiable by the
+  player's own wallet with zero session-key involvement. Once any `increaseBet` tx is mined —
+  regardless of who submitted it — its calldata (incl. `serverSignature`) is permanently public.
+  So the "backend submits the first call" finding (correct, per F07/F08's independent client-flow
+  and live-capture work) only explains how a player's *first* signature gets minted, not whether
+  they can reuse it. Any of the 554 players who got one legitimate `increaseBet` during the live
+  window (2026-03-11 → 2026-04-12) had a ~15-minute, fully self-service replay path via their own
+  wallet. Re-rated: **Low today (feature is genuinely dormant, confirmed independently), High the
+  moment it's reactivated** — not a flat Low. Full mechanism in the finding's new CORRECTION
+  section.
+- **death.fun — skull-before-click, independently re-verified with a live predictive PoC.** Read
+  the client-shipped `getDeathTileIndex(seed, row, tiles) = sha256(seed+"-row"+row).slice(0,8) %
+  tiles` algorithm directly from the production bundle, pulled a live demo-mode seed out of React
+  props mid-game, and predicted two rows' death-tile positions **before playing them** — both
+  landed exactly right. Confirms demo mode is trivially exploitable this way (harmless: seed is
+  client-self-generated, no stakes). Then re-ran the same check against a real, funded, live game:
+  `gameSeed` stayed `null` and every unplayed row's `deathTileIndex` stayed `null` throughout —
+  confirms real-money mode is clean, corroborating F03/F07/F08's independent (and more extensive)
+  work reaching the same conclusion.
+- **death.fun — live adversarial sweep against the real API (funded account), Death Race only.**
+  Concurrent double-submit race on `select-tile`: cleanly serialized, no double-credit. Cash-out on
+  a resolved game: rejected both by version mismatch and by state check (layered). IDOR on
+  `/api/games/history?walletAddress=`: another wallet's address correctly 401s. Username field:
+  rejects anything outside `[A-Za-z0-9_-]`. `rowConfig` bounds at game creation: 2-7 tiles/row, 25
+  rows exactly, minimum 0.001 ETH bet — all enforced server-side. No new gaps found; corroborates
+  F04/F06/F07's independent, more extensive validation work reaching the same conclusions.
+
 ## v1.13.1 (Sep 10, 2026)
 
 - **death.fun F01 — on-chain forensics addendum.** Scanned the live contract's full history and

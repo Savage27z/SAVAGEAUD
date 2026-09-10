@@ -30,10 +30,18 @@ All three threads below are independent; any of them can move without the others
   inflated figure would demonstrate that *they* paid us, not that the contract is broken, and it
   moves live player funds to do it. The `betAmount` inflation proves the missing guard alone. The
   clean alternative offered in `live-demo/NOTE-FORMAT.md` is to cash out our own real stake.
-- **F01 likelihood is Low (external), not High.** The "restore High" reasoning on the session-key
-  grant was superseded by the client-flow proof (see the finding's Impact × Likelihood section and
-  addendum §5.1). The full three-round trail is kept deliberately, including the round that was
-  wrong, so the reasoning stays auditable.
+- **F01 likelihood is Low *today*, contingent on dormancy — not a flat Low.** The "restore High"
+  reasoning on the session-key grant was superseded by the client-flow proof (see the finding's
+  Impact × Likelihood section and addendum §5.1) — correctly: the client never receives a
+  signature over the wire. But "the backend submits" doesn't make the bug unreachable by players,
+  it only explains how the *first* legitimate signature gets minted. Once any `increaseBet` tx is
+  mined, its calldata (incl. `serverSignature`) is permanently public, and `increaseBet` only
+  requires `msg.sender == game.player` — the game's own player can always call it directly, no
+  session-key access needed. See the finding's **CORRECTION** section (added in a later session,
+  independently verified against the contract source): any of the 554 players who got one
+  legitimate bump during the live window had a ~15-minute, fully self-service replay path. Rated
+  Low *now* only because the feature is dormant (F07/F08 confirm no live issuance) — reactivating
+  it (F02's v2 ABI already stages this) makes it High again, immediately, for every player.
 
 ## Overview
 "Mines"-style on-chain casino: player wagers ETH, advances through a grid for increasing
@@ -123,7 +131,7 @@ See [TMAAR.md](TMAAR.md).
 
 | # | Finding | Severity | Impact | Likelihood | Status |
 |---|---------|----------|--------|------------|--------|
-| F01 | `increaseBet()` missing `msg.value` check + missing signature-replay protection | **Low / informational** (defence-in-depth — re-rated after forensics) | Low (external) | Low | **Confirmed** — fork PoC: 1 wei paid, betAmount inflated to 35 ETH via 7 signature replays. **On-chain forensics: 7,329 real `increaseBet` txs (554 accounts, 15-min deadlines), then dormant since 2026-04-12. CORRECTION: an earlier revision claimed these proved player-submission and player-exploitability — that was wrong and is retracted. The txs are type-113 native-AA (`tx.from` = account, not signer) and the client never handles a signature, so the backend submits. No player ever held the exploit path.** |
+| F01 | `increaseBet()` missing `msg.value` check + missing signature-replay protection | **Low today / High if reactivated** (contingent on dormancy, not permanent) | Low (external), contingent | Low *now*, High the moment the feature is live | **Confirmed** — fork PoC: 1 wei paid, betAmount inflated to 35 ETH via 7 signature replays. **On-chain forensics: 7,329 real `increaseBet` txs (554 accounts, 15-min deadlines), then dormant since 2026-04-12. The txs are type-113 native-AA (`tx.from` = account, not signer) and the client never receives a signature over the wire — the backend submits the first call.** **But** calldata for any mined tx is permanently public, and `increaseBet` only requires `msg.sender == game.player` — no session-key access needed for the player to replay their own already-mined signature directly. So "the backend submits" never closed the reachability gap; it only explains how the first signature gets minted. Currently unreachable only because the feature is dormant (F07/F08 confirm no live issuance) — see the finding's **CORRECTION** section. |
 | F02 | **v2 migration drift** — the staged v2 contract adds signature-replay protection (`rakebackNonces`, `referralNonces`) to its two new ETH-paying claim functions but leaves `increaseBet`'s signature byte-identical to v1 with no nonce, and re-enables it at Unlimited / 100 ETH per session call | Informational (F01 timing risk) | Medium **if** v2 ships as the ABI implies | High (evidence is live) | **Confirmed** — live production bundle ships a complete undeployed v2 ABI; live proxy impl slot still points at audited v1; every v2-only selector returns no data on the live proxy. **Honest limit: an ABI cannot prove the absence of a `msg.value` check, so we do NOT claim v2 still contains F01 — we claim the nonce half is provably absent and the function is being switched back on.** |
 | **F03** | **Provably-fair commitment reversed + pre-reveal path** — the whole board is a pure function of the seed; the client bundle ships the seed generator, the skull function and the commitment builder; **143 real-money games commit to an empty board** (`rows: []`), and the pre-reveal path is one live check from confirmed | **Critical if confirmed** — commitment-coverage gap confirmed on its own | High | **Confirmed (algorithm + empty-board gap)** / **Open (pre-reveal)** | See [findings/F03-provably-fair-commitment-reversed.md](findings/F03-provably-fair-commitment-reversed.md). Algorithm reproduced **849/898** on-chain commitments byte-exact (houseEdge `.04`, `q()` = 8-dp rounding). The *only* open item: does an **active** game's payload carry `gameSeed` or a populated `deathTileIndex`? Yes → Critical, immediately. |
 

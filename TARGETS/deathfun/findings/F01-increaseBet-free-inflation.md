@@ -46,6 +46,48 @@ for the **server wallet** to submit the call on the player's account; it is not 
 handed to the player, and the signature still only exists on the server. The rating above reflects
 the corrected question (*can an outsider reach it*), not the frequency of use.
 
+## CORRECTION (2026-09-10, later session): "the backend submits" doesn't close the gap either
+
+The Low/informational rating above rests entirely on one question: does the player's client ever
+*receive* a `serverSignature`? Every check that produced that rating — the `serverSignature`
+string grep, the create-game flow trace, F07/F08's live-capture harnesses — answers that same
+question, and answers it correctly: no, the client never receives one over the wire.
+
+But that was never the only way to get one. **Once *any* `increaseBet` transaction is mined —
+submitted by the backend via session key, or by anyone else — its full calldata, including
+`serverSignature`, is permanently public on-chain.** Nothing about who *submitted* the original
+call controls who can *read it back*. And re-submitting it needs no session-key access at all:
+
+```solidity
+Game storage game = games[onChainGameId];
+if (game.player != msg.sender) revert NotAuthorized();
+```
+
+That's the entire caller check in `increaseBet`. It's satisfied by the game's own player calling
+from their own wallet, directly, with zero session-key involvement — the session-key
+infrastructure only matters for a *third party* (the backend) acting on the player's behalf, not
+for the player acting as themselves. Nothing else about the account-abstraction submission layer
+gates a second call.
+
+So the real precondition was never "does the client receive a signature via the API" — it's "does
+the *chain* ever contain one for a game I own." The forensics already answered that for the live
+window (2026-03-11 → 2026-04-12): 7,329 such transactions, 554 distinct player accounts, each one
+a `(onChainGameId, amount, deadline, serverSignature)` tuple sitting in public calldata the moment
+it was mined, with a ~15-minute deadline window behind it. Any one of those 554 players could have
+pulled their own transaction's calldata off Abscan/an RPC and resubmitted it directly, from their
+own wallet, with `msg.value = 0`, repeatedly, until `deadline` passed — no interception, no
+session-key access, no special tooling beyond reading a public block explorer.
+
+**This doesn't move the current status** — the feature is dormant (no live route, no backend
+issuance of new signatures per F07/F08), so there is still no *currently* obtainable signature to
+replay, and that part of the "Low" reasoning holds. What it corrects is the *reason* likelihood is
+low: it's low because the feature is off, not because "the backend submits" made the bug
+unreachable by players. The moment the feature is reactivated (F02's v2 ABI already stages this),
+every player who receives even one legitimate bump regains a trivial, self-service, ~15-minute
+window to inflate their own bet for free — via their own wallet, no session-key or backend access
+required at any point. **Likelihood should read: Low today (contingent on dormancy), High the
+moment the feature goes live** — not a flat Low that a "backend submits" argument makes permanent.
+
 ## Status
 **Confirmed** — reproduced end-to-end on a real zkEVM (foundry-zksync) fork of the actual
 deployed contract.
