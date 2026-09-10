@@ -204,6 +204,40 @@ main contract.
 
 ---
 
+## Headless browser on the Linux container (for web-facing target work)
+
+Needed for anything that requires driving a real web app — e.g. the death.fun reachability capture
+(`TARGETS/deathfun/disclosure/live-capture/`). This container has **no browser by default and a
+broken apt**, so `apt-get install chromium` does not work. What does:
+
+1. `curl -sL -o /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb` → `dpkg -i`
+2. Fetch each missing `.so`'s deb **by hand** — get the exact `Filename:` from the suite
+   `Packages.gz` index and `curl` it, then `dpkg -x <deb> /opt/chrome-libs`
+3. Run with `export LD_LIBRARY_PATH=/opt/chrome-libs/usr/lib/x86_64-linux-gnu`
+
+A working script is at `~/.hermes/scripts/fix-chrome-libs.sh`. Result on this box:
+`Google Chrome 153.0.8010.36`, launching headless.
+
+**Three traps, all hit for real:**
+
+- **`Packages.gz` contains NO file lists.** It maps *package name → Filename*. To answer "which
+  package owns `libatk-1.0.so.0`?", the index is **`Contents-amd64.gz`** (lines:
+  `usr/lib/.../libatk-1.0.so.0   libatk1.0-0t64`). Using Packages.gz for this looks right and
+  silently never matches — a resolver loop will spin forever printing "no file match".
+- **`apt-get download` also fails** with `E: Some packages could not be authenticated`. It skips the
+  dependency resolver but *not* GPG, so it is not a way around a broken apt-key. `curl` the
+  `Filename:` path directly instead — that bypasses apt entirely.
+- **One bad package name aborts the whole `apt-get install` transaction.** On noble,
+  `libatk1.0-0` and `libasound2` don't exist (`-0t64` / `-2t64`), and one unresolvable name means
+  *nothing* installs — including the libs that would have worked. Symptom: exit 100, "Unmet
+  dependencies", and `libnspr4.so` still missing even though `apt-cache policy libnspr4` shows a
+  candidate. Also: Chrome reports only the *first* missing soname per launch, so resolving a
+  20-library set means 20 iterations of run → parse → fetch → extract.
+
+Full detail in the `headless-chrome-setup` skill.
+
+---
+
 ## Berachain
 
 | Property | Value |

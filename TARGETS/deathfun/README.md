@@ -12,6 +12,27 @@ v1.5.13`, pulled via Etherscan V2 unified API (`chainid=2741`)
 **Repo:** verified source only (Abscan). `github.com/Death-fun` exists but only hosts a
 client-side provably-fair hash-verifier tool, not the contract source.
 
+## Open threads (updated 2026-09-10 — read this before touching the target)
+
+All three threads below are independent; any of them can move without the others.
+
+| Thread | State | Blocked on |
+|---|---|---|
+| **Disclosure email** | `disclosure/draft-email.md` **v3** ready to send. Leads with the F01 defect, then the v2 question, ends with an explicit "no funds were taken". Correction note kept at the bottom, marked do-not-send. | nothing — send it whenever 𝖲𝖠𝖵𝖠𝖦𝖤 wants |
+| **Live reachability capture** (`disclosure/live-capture/`) — answers "does the backend ever hand a *player* a signature?" | Harness built, 6/6 self-test passing, Chrome installed and both dry runs done. **Not yet run with a real key.** | the throwaway funded key (0.005 ETH on Abstract) |
+| **Authorised live on-chain demo** (`disclosure/live-demo/`) — replays one note 5x on mainnet to show the contract's own `betAmount` inflated | Harness built, tested against mainnet reads, `selector_controls.py` proves `increaseBet` exists on the live proxy. **Not yet run.** | two signed notes from the team (`ask-for-the-notes.md`) — send that, or `ask-live-demo.md` for the softer version |
+
+**Standing decisions — do not relitigate without new evidence:**
+
+- **No cash-out.** `cashOut` requires the team's own signature over `payoutAmount`, so paying the
+  inflated figure would demonstrate that *they* paid us, not that the contract is broken, and it
+  moves live player funds to do it. The `betAmount` inflation proves the missing guard alone. The
+  clean alternative offered in `live-demo/NOTE-FORMAT.md` is to cash out our own real stake.
+- **F01 likelihood is Low (external), not High.** The "restore High" reasoning on the session-key
+  grant was superseded by the client-flow proof (see the finding's Impact × Likelihood section and
+  addendum §5.1). The full three-round trail is kept deliberately, including the round that was
+  wrong, so the reasoning stays auditable.
+
 ## Overview
 "Mines"-style on-chain casino: player wagers ETH, advances through a grid for increasing
 multipliers, cashes out before hitting a "death" tile. Outcome logic runs off-chain (server
