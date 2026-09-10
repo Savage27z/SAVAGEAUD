@@ -62,12 +62,16 @@ See [TMAAR.md](TMAAR.md).
   inconsistency is the direct root cause of F01
 - No signature-nonce/used-tracking anywhere, compounding F01 into an unlimited-replay bug, not
   just a single-use mismatch
-- **Live UI check (2026-09-10):** played the real app end-to-end with real (tiny) funds —
-  mint membership-equivalent, create a real game, advance a round, cash out successfully. Never
-  found an "increase bet" control anywhere in the flow — the feature doesn't appear exposed to
-  regular players through the current website, even though the contract function is fully public
-  and callable directly. Downgrades F01's practical likelihood from High to Medium without
-  changing its validity — see the finding doc's updated Impact × Likelihood section
+- **Live UI check (2026-09-10), two rounds:** (1) played the real app end-to-end with real
+  (tiny) funds — mint, create a real game, advance a round, cash out successfully. Never found a
+  manual "increase bet" *button* anywhere in the flow. (2) **But** searching the frontend's JS
+  bundles for `increaseBet` found its function selector registered in the Abstract session-key
+  permission setup with `valueLimit: Unlimited` — the same session-key grant shown in the app's
+  own "Create Session Key" screen (3 permissions: Create Game, Cash Out, Increase Bet). An
+  unlimited-value permission grant isn't registered for dead code — the backend evidently calls
+  this as part of normal operation server-side, just not via a player-clickable button. Net
+  result: likelihood stays High, not downgraded — see the finding doc's Impact × Likelihood
+  section for the full trail (both rounds documented, not just the final conclusion)
 - Verified live on-chain: real $44K bankroll balance, real `messagePrefix`/`gameCounter` values,
   confirmed OLD vs. NEW contract don't share a domain prefix (ruled out one hypothesis instead of
   assuming it)
