@@ -1,0 +1,53 @@
+{
+ "betincrease_events_total": 7329,
+ "first": {
+  "block": 45017869,
+  "utc": "2026-03-11T05:53:40",
+  "tx": "0x11dab0336ea0cbb9cb42d999239bb1cf195346512b0af82d5d13038bc236b626"
+ },
+ "last": {
+  "block": 53195558,
+  "utc": "2026-04-12T13:20:51",
+  "tx": "0x731d9954d046b4c5ca349d4db1958a44b64b873feb64a042439d3e18800dc41b"
+ },
+ "tx_from_equals_player": 7329,
+ "txs_with_zero_value": 0,
+ "txs_value_ne_amount": 0,
+ "distinct_signatures": 7329,
+ "distinct_players": 554,
+ "deadline_window_seconds": 900,
+ "recovered_signer": "0x937CddeCf00cD7f1f667f385deDFaE275A0f2Ea7",
+ "signer_isAdmin_live": true,
+ "signer_is_contract_owner": true,
+ "signer_is_proxy_admin_owner": true,
+ "note": "tx_from==player verified separately in check_senders.py: 7329/7329 match, 0 mismatch",
+ "sample": [
+  {
+   "gid": 4191810,
+   "amount_eth": 0.001,
+   "value_eth": 0.001,
+   "deadline": 1773209320,
+   "from": "0x9f06c49e76c58209055e0c89d6272e963d96abbe",
+   "sig": "c1723bb33d20a367133b595a26128b6f1edd648acbbe0f9d897691355c9b3c74691c40fd2f7d467e440e1b47ddcda4deeeb26c114e05b2de8495ecdaaf73d7a11b",
+   "tx": "0x11dab0336ea0cbb9cb42d999239bb1cf195346512b0af82d5d13038bc236b626"
+  },
+  {
+   "gid": 4191811,
+   "amount_eth": 0.001,
+   "value_eth": 0.001,
+   "deadline": 1773209330,
+   "from": "0x9f06c49e76c58209055e0c89d6272e963d96abbe",
+   "sig": "a712f210fadc31c66a2ede7de9832c13249e0d18112d74e08d05f34705909c9f7bd688bb4b72925ab605fdd1a0ff73046c41c497466d74e074da7c803cee098c1b",
+   "tx": "0xde929ca20a8495565043231b8712bf0780c0d0c37cb088418198d53c2e43b70e"
+  },
+  {
+   "gid": 4192071,
+   "amount_eth": 0.001,
+   "value_eth": 0.001,
+   "deadline": 1773216428,
+   "from": "0xe066f2d5d0f02e229b0454f4c4359c086e2927d4",
+   "sig": "7f78d9c69dfb394ad0ab09dfa4e43e9d5b587a086b91bcf024208cbb97d3e6ef418be62ae92fe5e6c6b7f17dfcefd3cd8510e79294495d238d8bbf0cd88506d71b",
+   "tx": "0xea99fa719d3da6e69a4f9118716ce2fc99ae4e131ec926ea4b48ace17c75e032"
+  }
+ ]
+}

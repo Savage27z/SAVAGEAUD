@@ -1,5 +1,32 @@
 # Changelog
 
+## v1.13.1 (Sep 10, 2026)
+
+- **death.fun F01 — on-chain forensics addendum.** Scanned the live contract's full history and
+  decoded **every `increaseBet` transaction ever mined (7,329)**. Two open questions from the
+  original writeup are now settled with production data:
+  - **The player submits, not the backend.** `tx.from == game.player` on **7,329/7,329** txs
+    (554 distinct players, 0 mismatches). The server only supplies the signature — so every user
+    held `msg.value` and the calldata, and therefore the exploit, for the month the feature ran.
+    This *corrects* the original likelihood reasoning ("the backend must be calling it"): right
+    that the feature was real infrastructure, wrong about who called it.
+  - **Feature is dormant, not removed.** Ran 2026-03-11 → 2026-04-12 (5,279 + 2,050 events), then
+    **zero calls for 5 months**. No UI button and no API route today
+    (`/api/games/<id>/increase-bet` → 404 HTML; method validated against the real
+    `/api/games/<id>/select-tile` route → 401 JSON). Function still deployed and callable.
+  - **Never exploited.** 7,329 distinct signatures, zero reuse; every tx paid the signed amount in
+    full. Good news for the disclosure.
+  - **Signer identified:** `0x937CddeCf00cD7f1f667f385deDFaE275A0f2Ea7` — 60/60 ECDSA recoveries,
+    live `isAdmin` == true, and the same EOA is contract owner **and** proxy-admin owner. One key
+    holds upgrades, bankroll withdrawal, and all settlement signatures.
+  - Reproducible scripts + summary in `TARGETS/deathfun/forensics/`.
+- **Bonus (unrelated, same target):** independently reproduced death.fun's provably-fair scheme
+  from live on-chain data — `deathTile = sha256("<seed>-row<i>")[0:8] % tiles` replayed **10/10
+  real games** correctly, and the commitment `sha256(JSON({version, rows, seed}))` matched the
+  on-chain `gameSeedHash` exactly (houseEdge 0.04, 8-dp rounding). Seed entropy checked across 122
+  games: 122 unique 32-byte seeds, no predictability. Confirms the scheme is sound as designed.
+
+
 ## v1.13.0 (Sep 3, 2026)
 
 - **Exploit-wave study (Aug 20 – Sep 3)** — Postmortems: Provenance state-divergence
