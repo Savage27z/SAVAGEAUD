@@ -3,8 +3,10 @@
 **Chain:** Abstract (zkSync-family L2, chain ID 2741)
 **Chain Explorer:** https://abscan.org/address/0x27EDd16eE56958fddCBA08947f12C43DDeC2B20C
 **Date:** September 9, 2026
-**Status:** 🔴 Findings (2 — F01 confirmed on a real zkEVM fork of the deployed contract,
-F02 confirmed live from the production bundle + on-chain reads)
+**Status:** 🔴 Findings (3 — F01 confirmed on a real zkEVM fork; F02 and F03 confirmed live from
+the production bundle + on-chain reads. **F03 is the headline: the provably-fair commitment is
+fully reversed (849/898 games reproduced byte-exact), 143 games commit to an empty board, and the
+pre-reveal path is one live check from confirmed.**)
 
 **Audited commit:** verified source as deployed, compiler `v0.8.24+commit.e11b9ed9`, `zksolc
 v1.5.13`, pulled via Etherscan V2 unified API (`chainid=2741`)
@@ -123,6 +125,7 @@ See [TMAAR.md](TMAAR.md).
 |---|---------|----------|--------|------------|--------|
 | F01 | `increaseBet()` missing `msg.value` check + missing signature-replay protection | **Low / informational** (defence-in-depth — re-rated after forensics) | Low (external) | Low | **Confirmed** — fork PoC: 1 wei paid, betAmount inflated to 35 ETH via 7 signature replays. **On-chain forensics: 7,329 real `increaseBet` txs (554 accounts, 15-min deadlines), then dormant since 2026-04-12. CORRECTION: an earlier revision claimed these proved player-submission and player-exploitability — that was wrong and is retracted. The txs are type-113 native-AA (`tx.from` = account, not signer) and the client never handles a signature, so the backend submits. No player ever held the exploit path.** |
 | F02 | **v2 migration drift** — the staged v2 contract adds signature-replay protection (`rakebackNonces`, `referralNonces`) to its two new ETH-paying claim functions but leaves `increaseBet`'s signature byte-identical to v1 with no nonce, and re-enables it at Unlimited / 100 ETH per session call | Informational (F01 timing risk) | Medium **if** v2 ships as the ABI implies | High (evidence is live) | **Confirmed** — live production bundle ships a complete undeployed v2 ABI; live proxy impl slot still points at audited v1; every v2-only selector returns no data on the live proxy. **Honest limit: an ABI cannot prove the absence of a `msg.value` check, so we do NOT claim v2 still contains F01 — we claim the nonce half is provably absent and the function is being switched back on.** |
+| **F03** | **Provably-fair commitment reversed + pre-reveal path** — the whole board is a pure function of the seed; the client bundle ships the seed generator, the skull function and the commitment builder; **143 real-money games commit to an empty board** (`rows: []`), and the pre-reveal path is one live check from confirmed | **Critical if confirmed** — commitment-coverage gap confirmed on its own | High | **Confirmed (algorithm + empty-board gap)** / **Open (pre-reveal)** | See [findings/F03-provably-fair-commitment-reversed.md](findings/F03-provably-fair-commitment-reversed.md). Algorithm reproduced **849/898** on-chain commitments byte-exact (houseEdge `.04`, `q()` = 8-dp rounding). The *only* open item: does an **active** game's payload carry `gameSeed` or a populated `deathTileIndex`? Yes → Critical, immediately. |
 
 Full writeup: [findings/F01-increaseBet-free-inflation.md](findings/F01-increaseBet-free-inflation.md)
 **On-chain forensics + CORRECTION (read this too):** [findings/F01-ADDENDUM-onchain-forensics.md](findings/F01-ADDENDUM-onchain-forensics.md)

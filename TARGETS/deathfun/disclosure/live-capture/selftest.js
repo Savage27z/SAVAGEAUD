@@ -75,6 +75,52 @@ cases.push({
   ],
 });
 
+// ---- F03 pre-reveal detector -----------------------------------------------------------
+// 7. POSITIVE: active game carrying a populated seed -> the skull is computable
+cases.push({
+  name: "pre-reveal positive (active game + populated gameSeed)",
+  expect: "PRE_REVEAL",
+  lines: [
+    { seq: 1, kind: "res", url: "https://death.fun/api/games/active", body: JSON.stringify({
+      currentGame: { id: "g1", status: "active", currentRowIndex: 0, selectedTiles: [],
+                     gameSeed: "0x1ce72fdf7009baf827f108a38f586f4f13269ae9856b1ef387ceed5fc2cf83a0",
+                     commitmentHash: "0x4f1220e5" } }) },
+  ],
+});
+
+// 8. POSITIVE: active game carrying populated death tiles in rows
+cases.push({
+  name: "pre-reveal positive (active game + populated deathTileIndex)",
+  expect: "PRE_REVEAL",
+  lines: [
+    { seq: 1, kind: "res", url: "https://death.fun/api/games/active", body: JSON.stringify({
+      currentGame: { status: "active", rows: [{ tiles: 4, deathTileIndex: 2, multiplier: 1.14 }] } }) },
+  ],
+});
+
+// 9. NEGATIVE: the SAME seed on a FINISHED game is expected behaviour, must NOT flag
+cases.push({
+  name: "pre-reveal negative (finished game + seed is legitimate)",
+  expect: "not-player-reachable",
+  lines: [
+    { seq: 1, kind: "res", url: "https://death.fun/api/games/history", body: JSON.stringify({
+      games: [{ id: "g1", status: "won", gameSeed: "0x1ce72fdf7009baf827f108a38f586f4f13269ae9856b1ef387ceed5fc2cf83a0",
+                rows: [{ tiles: 4, deathTileIndex: 2, multiplier: 1.14 }] }] }) },
+  ],
+});
+
+// 10. NEGATIVE: active game with deathTileIndex explicitly null (the intended design)
+cases.push({
+  name: "pre-reveal negative (active game, deathTileIndex nulled)",
+  expect: "not-player-reachable",
+  lines: [
+    { seq: 1, kind: "res", url: "https://death.fun/api/games/active", body: JSON.stringify({
+      currentGame: { status: "active", gameSeed: null, currentRowIndex: 1,
+                     rows: [{ tiles: 4, deathTileIndex: null, multiplier: 1.14 },
+                            { tiles: 2, deathTileIndex: null, multiplier: 2.28 }] } }) },
+  ],
+});
+
 let pass = 0, fail = 0;
 for (const c of cases) {
   const dir = path.join(tmp, c.name.replace(/[^a-z0-9]+/gi, "_"));
