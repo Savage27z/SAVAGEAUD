@@ -2,9 +2,51 @@
 
 **Target:** death.fun (DeathFun) — Abstract, chain ID 2741
 **Date:** 2026-09-10
-**Status:** ⚠️ **OPEN — not confirmed, not claimed as a finding.** Reachability is unproven.
-**Severity if it holds:** **Critical** (a board of zero-tile rows makes the death check
-unsatisfiable). If it does not hold, this file is a dead end and should be closed as such.
+**Status:** ✅ **CLOSED — VALIDATED SERVER-SIDE. Not a vulnerability.** See §0.
+**Severity:** none. The requested input is rejected before any game exists.
+
+---
+
+## 0. RESOLUTION (2026-09-10) — the server validates `rowConfig` completely
+
+Tested live against the real endpoint with an authenticated session. The server rejects malformed
+boards with a per-element zod schema, and **no game is created and no funds are spent on rejection**:
+
+| board sent | server response |
+|---|---|
+| `[8] × 25` | `400` — *"Each row must have at most 7 tiles."* (per row) |
+| `[0] × 25` | `400` — *"Each row must have at least 2 tiles."* (per row) |
+| `[1] × 25` | `400` — *"Each row must have at least 2 tiles."* |
+| `[-1] × 25` | `400` — *"Too small: expected number to be >=0"* **and** *"at least 2 tiles"* |
+| `[3.5] × 25` | `400` — *"Invalid input: expected int, received number"* |
+| `[3] × 5` | `400` — *"Must have exactly 25 rows."* |
+| `[3] × 25`, bet 1 wei | `400` — *"Bet is below the minimum allowed bet of 0.001 ETH."* |
+| `[3] × 25`, bet 1 ETH | `400` — *"Bet exceeds the maximum allowed bet for the current game balance."* |
+
+So the schema enforces, per element: **array**, **exactly 25 rows**, **integer**, **≥ 0**, **≥ 2**,
+**≤ 7**. Every route to `tiles = 0` is closed, so `sha256(seed-rowN) % 0` → `NaN` is unreachable.
+
+The client-side UI toast was never the real control — the server-side schema is. §1–§3 below are kept
+as the record of the hypothesis and how it was killed; the "client is the only bound observed"
+reasoning in §1 was an argument from absence (the server code isn't visible), and it was wrong.
+
+**Bonus from the same session:** the contract genuinely validates *nothing* (§1 of
+`auth-blockade-and-contract-trust-model.md`), so the server schema is the *entire* defence for the
+board — and it holds. Also confirmed: `increaseBet` has **no client call site and no REST endpoint**
+(the ABI and the dormant session policy are the only references, and selector `0x0b669290` appears
+nowhere), which settles F01's reachability as **not reachable through the app**.
+
+### The request format, for anyone reproducing this
+
+The body must be **superjson**-wrapped, because `betAmount` is a `bigint`:
+
+```json
+{"json":{"betAmount":"1000000000000000","rowConfig":[3,3,…25 values…]},
+ "meta":{"values":{"betAmount":["bigint"]}}}
+```
+
+A plain `{"betAmount":…,"rowConfig":[…]}` body produces
+`expected bigint/array, received undefined` — the fields are never populated.
 
 ---
 
