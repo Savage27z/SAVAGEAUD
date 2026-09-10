@@ -52,3 +52,4 @@ TARGETS/sherwood/signer.py
 TARGETS/sherwood/altkeys.py
 TARGETS/sherwood/cand_test.py
 TARGETS/sherwood/found_sweep.py
+TARGETS/deathfun/provably-fair/rowconfig-scan-results.json
