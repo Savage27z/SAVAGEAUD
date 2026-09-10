@@ -1,0 +1,11 @@
+{
+  "name": "deathfun-live-capture",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "F01 reachability capture: log in as a normal user, play one real game, record every request/response/WS frame, and search for any signature handed to the client.",
+  "dependencies": {
+    "puppeteer-core": "^24.0.0",
+    "ethers": "^6.13.0"
+  }
+}

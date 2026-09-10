@@ -1,0 +1,7 @@
+node_modules/
+capture.jsonl
+trace.log
+analysis.json
+final.png
+*.key
+.env
