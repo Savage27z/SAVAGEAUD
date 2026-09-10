@@ -1,67 +1,93 @@
 **To:** (no security contact found — see note at bottom)
-**Subject:** Confirmed bug in DeathFun's increaseBet() — free bet inflation via signature replay — private disclosure
+**Subject:** DeathFun `increaseBet()` — missing payment check and missing replay protection (private disclosure)
+
+> **STATUS: DRAFT — CORRECTED 2026-09-10.** The previous revision claimed a player could
+> exploit this by replaying a note they obtained through normal app use. That claim was
+> wrong and has been removed. See the correction note at the bottom for what changed and why
+> — do not send the old version.
 
 Hi death.fun team,
 
-I'm an independent security researcher. I found and confirmed a real bug in your deployed
-DeathFun contract (`0x27EDd16eE56958fddCBA08947f12C43DDeC2B20C` on Abstract). Sending this
-privately before any public writeup, standard responsible-disclosure practice. Everything below
-was verified on a local fork of your actual deployed bytecode — nothing was run against
-mainnet, no real funds were touched, and no admin signature was requested or produced.
+I'm an independent security researcher. I found a defect in your deployed DeathFun contract
+(`0x27EDd16eE56958fddCBA08947f12C43DDeC2B20C` on Abstract). Sending this privately before any
+public writeup. Nothing was ever run against mainnet, no real funds were touched, and no admin
+signature was requested or forged.
 
-**The bug — `increaseBet()`**
+**The issue — `increaseBet()`**
 
-This function lets a player add more ETH to an active game, authorized by a signed note from
-your backend. It's missing two checks:
+This function adds ETH to an active game, authorized by a signed note from your backend. Two
+checks are missing:
 
-1. It never verifies that the ETH actually sent matches the amount the note says. Your
-   `createGame()` function does this correctly (it signs `msg.value` into the hash); `increaseBet`
-   doesn't.
-2. It never marks a note as used. There's no record anywhere of which signed notes have already
-   been redeemed.
+1. **The payment is never verified.** The function is `payable`, but nothing compares `msg.value`
+   to the `amount` it credits. Your `createGame()` gets this right — it signs `msg.value` into the
+   hash, so the signature is bound to a specific payment. `increaseBet` signs only `amount`.
+2. **The note is never consumed.** There is no record of which signed notes have been redeemed.
+   The only bound is `deadline`.
 
-Put together: anyone who has ever gotten ONE legitimate "increase bet" note from your backend can
-resubmit that exact same note to the contract as many times as they want, before it expires,
-paying nothing after the first time. Each resubmission adds the full amount to their recorded bet
-for free.
+Combined, the contract permits the same signed note to be submitted repeatedly, each time
+crediting the full `amount` to `betAmount`, with no payment attached after the first. The
+contract relies entirely on the off-chain caller to choose the correct `msg.value`.
 
-**Proof, read-only version** — attached (`F01-attacker-view.js`) is a small script that
-constructs the exact call this requires: the message hash your contract expects, and the raw
-calldata for calling `increaseBet` with 0 ETH attached. It does not send anything anywhere — no
-signer, no broadcast — it's there so you can see exactly what fields matter without needing to
-trust us or set up any tooling. Run it yourself, it's pure local computation.
+**What we verified, and how**
 
-**Proof, fully executed version** — we also ran this end-to-end against your real deployed
-contract on a local zkEVM fork (Abstract's chain type needs a patched Foundry build to do this at
-all, which was its own project — happy to share that too if useful to you). Result: a test
-account paid 1 wei total for a real game, then replayed one legitimately-obtained
-`increaseBet` signature 7 times, ending with a recorded bet of 35 ETH. Zero additional ETH ever
-required after the first wei.
+We confirmed the contract's behaviour end-to-end on a local zkEVM fork of your deployed
+bytecode (Abstract needs a zkEVM-aware Foundry build; getting that working was its own project,
+and I'm happy to share it). Using a test key installed as an admin **on the fork copy only** via
+`vm.store`, a test account paid 1 wei for a real game, then replayed a single signed
+`increaseBet` message 7 times, ending with a recorded bet of 35 ETH and no further ETH ever
+required.
 
-**One honest caveat, worth telling you directly:** we played through your app's actual UI for a
-bit and never found a button that triggers `increaseBet` at all — it doesn't look like your
-current website exposes this feature to regular players. That doesn't make the bug less real
-(it's a public function on a public contract; anyone with a wallet and a script can call it
-directly, no UI required), but it may mean current real-world exposure is lower than the function
-itself suggests. Wanted to be upfront about that rather than overstate it.
+**Important, and I want to be precise about it:** that fork test demonstrates what the *contract*
+permits **given a valid signature**. It does not demonstrate that an external party can obtain
+one — the test grants itself admin rights to get there. So please read the proof as "the
+function is missing its guards," not "someone can already do this."
 
-Whether this becomes a real drain depends on something we can't see from outside: does your
-backend ever trust the on-chain `betAmount` (or the `BetIncrease` event) for anything — payout
-sizing, odds, limits? If so, this is a direct path to draining funds from the ~$44K bankroll. If
-your backend keeps its own independent ledger and ignores this on-chain value, the practical
-impact is smaller (a falsifiable public record / fake wagered-volume stats), but the missing
-checks are real either way and worth fixing.
+**That precondition matters, so here is everything we know about it**
 
-**Fix is small** — two lines: check `msg.value == amount`, and track used signatures (e.g. a
+- Your client bundle contains **no code that handles `serverSignature`** — every occurrence in
+  the shipped JavaScript is inside an ABI definition, and the only `createGame` call-site is a
+  gas estimate built on placeholder arguments. The browser never receives a note.
+- The session-key grant in your app names the **server wallet** as the signer, so the backend
+  builds, signs and submits these calls.
+- I scanned the full history of the contract. `increaseBet` was called **7,329 times between
+  11 March and 12 April 2026**, then **not once in the five months since**. There is no player-
+  facing button for it today, and no API route for it either.
+- Across all 7,329 calls: every one attached exactly the signed amount, and **no signature was
+  ever reused.** So this was not exploited, and there is no bad state to clean up.
+
+**Why I'm still reporting it**
+
+The function is public, live on your proxy, and unguarded. Its safety currently depends on your
+backend always choosing the right `msg.value` — which is a property of the caller, not of the
+contract. Any new caller breaks that: a future client, a partner integration, the operator/
+provider mode, or simply a third deposit function copy-pasted from `increaseBet` (it already
+diverges from `createGame`, and there are no nonces anywhere in the contract).
+
+**Fix is small** — bind `msg.value` into the signed hash, and track consumed signatures (e.g.
 `mapping(bytes32 => bool)` keyed on the message hash). Happy to share the exact diff.
 
-No ask here beyond getting this in front of you. We'll hold off on anything public until you've
-had a chance to look at it.
+No ask beyond getting this in front of you. I'll hold off on anything public until you've had a
+chance to look at it.
 
 Thanks,
 [your name / handle]
 
 ---
+
+### Correction note (kept for the record, not for sending)
+
+The first revision of this email stated that *"anyone who has ever gotten ONE legitimate note
+from your backend"* can replay it, and described the fork signature as
+*"legitimately-obtained."* Both were wrong:
+
+- The fork PoC installs its own test key as admin (`vm.store`, `isAdmin` slot) — it manufactures
+  the signature rather than obtaining one.
+- The live client never handles a signature, so no player ever holds a note to replay.
+
+The underlying defect (two missing checks) is unchanged and still real. Only the exploitability
+claim changed. Sending the old version would have been a false claim that the team could disprove
+in minutes.
+
 *Note: no security contact page, bug bounty program, or security.txt found on death.fun or their
 GitHub org (`github.com/Death-fun`, which only hosts a client-side hash-verifier tool). Sending
 via [their support/Twitter/whatever channel you pick] — swap this note out once you've picked a

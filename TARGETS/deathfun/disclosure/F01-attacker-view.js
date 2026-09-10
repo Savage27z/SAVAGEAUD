@@ -66,9 +66,21 @@ function toEthSignedMessageHash(hash) {
 }
 
 // ---- Illustration: a legitimate note the backend might issue --------------
-// (Numbers are illustrative. In the real attack, `amount` is whatever a genuine
-// "increase bet" request the player made once actually asked for - the backend
-// signs exactly this, expecting the player to send this much ETH.)
+// (Numbers are illustrative. In a real interaction, `amount` is whatever a genuine
+// "increase bet" request asked for - the backend signs exactly this, expecting the
+// player to send this much ETH.)
+//
+// ⚠️ CORRECTION (2026-09-10): this script originally said the note is "obtained
+// completely normally, through one real 'increase bet' request" by the player.
+// Further analysis of the live client bundle shows that is NOT true - the browser
+// never receives or handles a serverSignature (every occurrence in the shipped JS
+// sits inside an ABI definition; the only createGame call-site is a dummy-argument
+// gas estimate), and the session-key grant names the SERVER's wallet as signer. The
+// backend builds, signs and submits the call. So the precondition illustrated below
+// is not reachable by a player. The fork PoC reaches it by installing its OWN test
+// key into the isAdmin mapping with vm.store (see fork-test/test/...t.sol L30, L46-48).
+// This remains a correct demonstration of what the CONTRACT permits given a valid
+// signature; it is not evidence that an external party can obtain one.
 const onChainGameId = 12345n;      // some real, active game the attacker owns
 const amount = ethers.parseEther("5"); // what the backend intended you to pay
 const deadline = Math.floor(Date.now() / 1000) + 3600; // 1 hour, backend's choice
@@ -83,10 +95,10 @@ console.log("messageHash:  ", messageHash);
 console.log("digest an admin key must sign:", ethSignedHash);
 console.log();
 console.log("--- The bug, in the shape of a raw call ---");
-console.log("Once a player has ONE valid `serverSignature` over the fields above");
-console.log("(obtained completely normally, through one real 'increase bet' request),");
+console.log("Given ONE valid `serverSignature` over the fields above, this is the ONLY");
 console.log("this is the ONLY call needed to exploit it - repeated as many times as");
-console.log("wanted before `deadline`:");
+console.log("wanted before `deadline`. NOTE: no player-reachable path to obtaining that");
+console.log("signature was found - see the correction note in the header.");
 console.log();
 
 const iface = new ethers.Interface(ABI);
