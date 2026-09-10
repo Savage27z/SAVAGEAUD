@@ -5,11 +5,16 @@
 - **death.fun F01 — on-chain forensics addendum.** Scanned the live contract's full history and
   decoded **every `increaseBet` transaction ever mined (7,329)**. Two open questions from the
   original writeup are now settled with production data:
-  - **The player submits, not the backend.** `tx.from == game.player` on **7,329/7,329** txs
-    (554 distinct players, 0 mismatches). The server only supplies the signature — so every user
-    held `msg.value` and the calldata, and therefore the exploit, for the month the feature ran.
-    This *corrects* the original likelihood reasoning ("the backend must be calling it"): right
-    that the feature was real infrastructure, wrong about who called it.
+  - ~~**The player submits, not the backend.**~~ **RETRACTED — this was wrong.** `tx.from ==
+    game.player` on 7,329/7,329 txs does **not** prove the player submitted it: on Abstract these
+    are type-113 native-AA transactions, so `tx.from` is the *account*, not the signer, and a
+    session key produces the identical on-chain shape. Decisive counter-check: the client bundle
+    has **zero non-ABI references** to `serverSignature` (every hit is inside an ABI entry), and
+    its only `createGame` call-site is a dummy-argument gas estimate — a client that never
+    receives a signature cannot build a signed call. The session grant names the **server wallet**
+    as signer. **The backend submits.** The original writeup's inference ("the backend evidently
+    calls this server-side") was correct; an earlier revision of this addendum wrongly
+    "corrected" it and has been fixed. **No player ever held the exploit path.**
   - **Feature is dormant, not removed.** Ran 2026-03-11 → 2026-04-12 (5,279 + 2,050 events), then
     **zero calls for 5 months**. No UI button and no API route today
     (`/api/games/<id>/increase-bet` → 404 HTML; method validated against the real

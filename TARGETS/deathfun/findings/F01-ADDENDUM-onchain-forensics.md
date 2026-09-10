@@ -1,15 +1,21 @@
-# F01 — ADDENDUM: on-chain forensics settle the open questions
+# F01 — ADDENDUM & **CORRECTION**: on-chain forensics on all 7,329 `increaseBet` txs
 
 **Date:** 2026-09-10
 **Method:** full-history `eth_getLogs` scan of the live contract + calldata decode of every
-`increaseBet` transaction ever mined. No fork, no synthetic data — real production transactions.
+`increaseBet` transaction ever mined + client-bundle analysis. No fork, no synthetic data.
 
-This addendum answers the two questions left open in the original F01 writeup:
-
-1. **Is `increaseBet` actually called in production, or is it dead code?**
-2. **Who submits the transaction — the server, or the player?**
-
-Both are now settled with on-chain evidence. One of them changes the likelihood rating.
+> ## ⚠️ THIS DOCUMENT CORRECTS ITS OWN FIRST DRAFT
+>
+> An earlier version of this addendum concluded **"the player submits the transaction, therefore
+> any player could have zeroed `msg.value` and replayed their signature."** That conclusion was
+> **wrong** and has been retracted. It was pushed in commit `ac15485` before being checked
+> properly. The evidence below is the same; the interpretation is corrected.
+>
+> **What was right:** the on-chain facts (7,329 txs, `tx.from` == `game.player`, 554 players,
+> zero signature reuse, 15-minute deadline, dormant since 2026-04-12, signer identified).
+>
+> **What was wrong:** assuming `tx.from == game.player` means the *player* chose the calldata and
+> `msg.value`. On Abstract it does not — see §2.
 
 ---
 
@@ -24,95 +30,118 @@ Full-history scan of `BetIncrease` logs on the proxy (`0x27EDd1…B20C`), deploy
 | First call | block 45,017,869 — **2026-03-11 05:53:40 UTC** |
 | Last call | block 53,195,558 — **2026-04-12 13:20:51 UTC** |
 | Calls since 2026-04-12 (5 months) | **0** |
-| Distinct player wallets | **554** |
+| Distinct player accounts | **554** |
 | Signature deadline window | **exactly 15 minutes** after each call |
 | Amounts seen | 0.0005–0.01 ETH (median 0.001) |
 
-So the feature ran hard for one month, across 554 real users, then was switched off entirely.
-It has not been called once in the five months since.
+The feature ran for one month across 554 users, then was switched off. Not called once in the
+five months since.
 
-- Today there is **no player-facing button** for it in the app (confirms the earlier live-UI
-  check), and **no API route** for it either — `/api/games/<id>/increase-bet` returns the
-  Next.js 404 page, while the genuine sibling route `/api/games/<id>/select-tile` returns
-  `{"error":"missing jwt"}` 401. (Method validated against a known-real route, not assumed.)
-- The function is still deployed and still callable on the live proxy. The frontend still ships
-  the ABI entry and the session-key policy that grants it `valueLimit: Unlimited`.
+- No player-facing button today (confirms the earlier live-UI check).
+- No API route either: `/api/games/<id>/increase-bet` returns the Next.js 404 page, while the
+  genuine sibling route `/api/games/<id>/select-tile` returns `{"error":"missing jwt"}` 401.
+  (Probe method validated against a known-real route, not assumed.)
+- The function is still deployed and still callable. The frontend still ships the ABI entry and
+  the session-key policy granting it `valueLimit: Unlimited`.
 
-**Net:** dormant, not removed. Re-enabling the feature re-opens the exploit path immediately.
+**Net:** dormant, not removed.
 
-## 2. The player — not the server — submits the transaction
+## 2. Who submits? — the backend, not the player
 
-This was the open question that decided whether the bug was reachable at all. Decoding all
-7,329 transactions settles it:
+The first draft read `tx.from == game.player` as "the player sent it". That inference is invalid
+on Abstract. Three independent checks, in order of strength:
 
-| Check | Result |
-|---|---|
-| Txs where `tx.from` == `game.player` (event topic 2) | **7,329 / 7,329** |
-| Txs where they differ | **0** |
-| Distinct sending addresses | 554 (= distinct players) |
-| Txs with `msg.value == 0` | **0** |
-| Txs where `msg.value` ≠ signed `amount` | **0** |
-| Signatures reused more than once | **0** (7,329 distinct) |
+### 2a. The transactions are type-113 (native account abstraction)
 
-**The player's own wallet called `increaseBet` every single time.** The server never submits this
-call — it only supplies the signature. That is only possible if the signature is handed to the
-player's client, because otherwise the player's wallet would have nothing to build the
-transaction from.
-
-Which means, for the month the feature was live, **every one of those 554 players held
-everything needed to exploit it**:
-
-- they controlled `msg.value` (the contract never checks it — so `0` instead of `amount`), and
-- they controlled the calldata (so the same signature could be resubmitted until the deadline).
-
-**Recovered signer.** ECDSA-recovering the signature on all 60 sampled transactions yields one
-address, 60/60:
+Both a real `increaseBet` tx and a real `createGame` tx are **type `0x71` = 113**, the zkSync
+EIP-712 native-AA transaction type:
 
 ```
-0x937CddeCf00cD7f1f667f385deDFaE275A0f2Ea7
+type 0x71   from 0xad2d158d…35aad   to 0x27edd1…b20c   value 0x1c6bf52634000
 ```
 
-Live `isAdmin(0x937CddeC…)` on the proxy returns **true**. That same address is also:
+The `from` account is a **smart contract** (1,632 bytes of code at both sampled player
+addresses), not an EOA. On this transaction type the `from` field is the *account*, and the
+account's validator decides which key signed: the owner's key **or any session key installed on
+the account**. So `from == player` identifies **whose account acted**, not **who signed the
+order**. A relayer holding a session key produces exactly the same on-chain shape.
 
-- the contract **owner** (`owner()` on the proxy), and
-- the **owner of the proxy admin**, i.e. it holds upgrade rights over the bankroll.
+### 2b. The client bundle never handles a signature — decisive
 
-One EOA key controls upgrades, bankroll withdrawal, and every settlement signature.
+If the player were submitting, the client would need the server's signature to build the call.
+It does not. Across all 76 frontend chunks:
 
-## 3. What this does to the rating
+- **Every** occurrence of `serverSignature` is inside an ABI definition (`name:"serverSignature"`).
+  Non-ABI occurrences: **zero**.
+- **Every** occurrence of `preliminaryGameId` is likewise inside an ABI definition; the single
+  non-ABI use is `let {preliminaryGameId} = await resp.json()` — it reads an *identifier* from
+  the REST API and does nothing else with it.
+- The only client call-site referencing `createGame` is a **gas estimate** with placeholder
+  arguments — a zeroed `bytes32`, a zeroed 130-hex-character dummy signature, and
+  `account: 0x…0001`. It exists to quote a fee to the user; it is not a submission.
 
-**Likelihood — revised and split:**
+A client that never receives a signature cannot construct a signed call. Whatever submits these
+transactions holds the signature, and it is not the browser.
 
-- *Reachability* is no longer theoretical. It is **proven by 7,329 production transactions**:
-  the caller is the player, the caller chose the value, and the caller could have sent zero.
-  Any of 554 real users could have executed this with a modified client. This is as reachable
-  as a bug gets.
-- *Exploitation today* is **low**: the feature is off, no UI, no API route, and no signature can
-  be obtained. All historical signatures are long past their 15-minute deadline.
+### 2c. The session key belongs to the server
 
-The original writeup rated Likelihood **High** on the inference that "an unlimited-value
-session-key grant isn't registered for dead code — the backend must be calling it." That
-inference turned out to be **half right and half wrong**, and the correction matters:
+From the app's own session-key policy:
 
-- ✅ Right that the feature was real infrastructure, not dead code — it processed 7,329 calls.
-- ❌ Wrong about the mechanism: the *backend* was not calling it. The **player** was. That makes
-  the bug *worse* for reachability (any user can trigger it) and simultaneously explains why it
-  was never exploited (nobody realised, and it is now switched off).
+```js
+signer: NEXT_PUBLIC_SERVER_WALLET_ADDRESS   // 0xc372B35582933277d5f4431F1a322Abc8DeA0612
+callPolicies: [ createGame (Unlimited, cap 100 ETH/use), cashOut (LimitZero),
+                markGameAsLost (LimitZero), increaseBet (Unlimited, cap 100 ETH/use) ]
+```
 
-**Revised severity: High impact / reachability proven, currently dormant.**
-Still High overall — the missing checks are real, the deployed code still has them, the money is
-still in the contract, and the only thing standing between an attacker and a drain is a
-server-side feature flag.
+The grant names the **server wallet** as the session signer, and the client PATCHes that config to
+`/api/users` — i.e. it is handed to the backend for the backend to use. This is consistent with
+2a and 2b: the backend signs an admin message, then signs and broadcasts a type-113 transaction
+through the session key, with the player's account as `from`.
 
-**Note on the 15-minute deadline:** short, but not a mitigation. A replayed signature needs only
-seconds, and the credit is permanent on-chain once written.
+**Corrected conclusion:** the exploit path is **not** held by players. A player never possesses a
+signature, never chooses `msg.value`, and has no code path to build the call. `tx.from == player`
+is an artefact of session-key architecture, not evidence of player authorship.
 
-**Note for the disclosure:** the absence of any reused signature across 7,329 calls is good news
-for the team — it is evidence this was never exploited, which they will want to know. It also
-means the clean fix (bind `msg.value` into the hash and add a nonce) has no cleanup to do.
+**This means the original writeup's inference was correct after all** — *"an unlimited-value
+permission grant isn't registered for dead code; the backend evidently calls this server-side."*
+The backend does. The first draft of this addendum wrongly "corrected" that.
 
-## 4. Still unverified
+## 3. Impact on the rating — F01 is downgraded
 
-Whether the off-chain backend trusts on-chain `betAmount` / `BetIncrease` for payout sizing.
-Unchanged from the original writeup — the backend is closed-source and this remains the pivot
-between "bankroll drain" and "falsified public record." The forensics above do not resolve it.
+| | Original writeup | After forensics |
+|---|---|---|
+| Exploitable by | "any ordinary player, no elevated privilege" | **the backend only** (or a compromised session/admin key) |
+| Likelihood | High | **Low for external exploitation** |
+| Severity | High | **Low / informational — defence-in-depth** |
+
+F01 is a **latent hardening gap, not a live drain**:
+
+- The two missing checks are real and still deployed.
+- The function is public and callable — but it **reverts without a valid admin signature**, and
+  no external party can obtain one.
+- The observed production flow was **correct in practice**: all 7,329 calls attached exactly the
+  signed amount, and zero signatures were ever reused.
+
+What keeps it worth reporting rather than dropping:
+
+1. **Payer-controlled signatures are one integration away.** The contract's safety depends
+   entirely on the *off-chain* caller choosing the right `msg.value`. The provider/iframe mode
+   (`/api/i/…`, `sessionPolicyV2`) and any future partner or alternative client are new callers
+   who may not preserve that property. The contract should not need to trust them.
+2. **Systemic inconsistency.** `createGame` binds `msg.value` into its signed hash; `increaseBet`
+   does not. There is no nonce/used-signature tracking anywhere in the contract. Adding a third
+   deposit function by copy-paste is a natural next step and would inherit the gap.
+3. **Cheap to fix, no migration cost** — bind `msg.value` into the hash and add a nonce.
+4. **Zero cleanup needed** — no signature was ever replayed, so no bad state exists.
+
+Still unresolved and unchanged: whether the backend trusts on-chain `betAmount`/`BetIncrease` for
+anything. It no longer affects exploitability (only the backend can write that value), but it
+still bounds how bad a future mis-integration would be.
+
+## 4. What was actually learned here
+
+The generalisable lesson, worth folding into CHECKLIST.md: **on a native-AA chain, `tx.from` is
+the account, not the signer.** Session keys, relayers, and paymasters all produce transactions
+that look like the user's. `tx.from == subject` proves *whose account*, never *who ordered it*.
+Determining authorship requires reading the client for signature handling — which is what should
+have been done before drawing the conclusion the first time.

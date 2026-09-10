@@ -92,14 +92,15 @@ See [TMAAR.md](TMAAR.md).
 
 | # | Finding | Severity | Impact | Likelihood | Status |
 |---|---------|----------|--------|------------|--------|
-| F01 | `increaseBet()` missing `msg.value` check + missing signature-replay protection | High (conditional — see writeup) | High | **Reachability proven** | **Confirmed** — fork PoC: 1 wei paid, betAmount inflated to 35 ETH via 7 signature replays. **Plus on-chain forensics: 7,329 real `increaseBet` txs, all submitted by the player's own wallet (0/7329 server-submitted), 554 distinct players — the exploit path was held by every user for a month. Feature now dormant since 2026-04-12.** |
+| F01 | `increaseBet()` missing `msg.value` check + missing signature-replay protection | **Low / informational** (defence-in-depth — re-rated after forensics) | Low (external) | Low | **Confirmed** — fork PoC: 1 wei paid, betAmount inflated to 35 ETH via 7 signature replays. **On-chain forensics: 7,329 real `increaseBet` txs (554 accounts, 15-min deadlines), then dormant since 2026-04-12. CORRECTION: an earlier revision claimed these proved player-submission and player-exploitability — that was wrong and is retracted. The txs are type-113 native-AA (`tx.from` = account, not signer) and the client never handles a signature, so the backend submits. No player ever held the exploit path.** |
 
 Full writeup: [findings/F01-increaseBet-free-inflation.md](findings/F01-increaseBet-free-inflation.md)
-**On-chain forensics addendum (read this too):** [findings/F01-ADDENDUM-onchain-forensics.md](findings/F01-ADDENDUM-onchain-forensics.md)
-— settles the "who submits it" question with 7,329 decoded production transactions and corrects
-the original likelihood reasoning: the *player* submits, not the backend. Also identifies the
-single EOA (`0x937CddeCf00cD7f1f667f385deDFaE275A0f2Ea7`) that is simultaneously the contract
-owner, the proxy-admin owner, and the signer of every `increaseBet`.
+**On-chain forensics + CORRECTION (read this too):** [findings/F01-ADDENDUM-onchain-forensics.md](findings/F01-ADDENDUM-onchain-forensics.md)
+— 7,329 decoded production transactions, the retraction of the player-submission claim, and the
+correct explanation (`tx.from` on a native-AA chain is the *account*, never the *signer* — session
+keys and relayers produce identical on-chain shape). Also identifies the single EOA
+(`0x937CddeCf00cD7f1f667f385deDFaE275A0f2Ea7`) that is simultaneously the contract owner, the
+proxy-admin owner, and the signer of every `increaseBet`.
 
 ## Verdict
 Not clean. F01 is **confirmed end-to-end on a real zkEVM fork** of the actual deployed contract
