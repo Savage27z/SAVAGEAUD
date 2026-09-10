@@ -173,16 +173,42 @@ Everything else in this document is already proven. This one field is the whole 
 
 ## 5. How to settle it
 
-The `live-capture` harness (`disclosure/live-capture/`) already records every response body. The
-specific check is one grep of the capture:
+**Attempted here and blocked by the environment — 2026-09-10.** The `live-capture` harness runs, the
+wallet shim installs, and the app sees it (`hasEthereum: true`, chain `0xab5`), but **login cannot
+complete from this container**:
 
-```
-grep for "gameSeed" and "deathTileIndex" in responses while currentGame.status == "active"
-```
+- Privy renders its login options inside a cross-origin iframe that requires **Cloudflare
+  Turnstile** to pass first.
+- Turnstile loads an asset from `brunhild.challenges.cloudflare.com`, which is **IPv6-only (no A
+  record — checked via DNS-over-HTTPS, not just the local resolver)**.
+- This container has **no IPv6 route** (`curl -6` → `HTTP 000`), so that asset never loads:
+  `[Cloudflare Turnstile] Error: 600010`, frame title stuck on "Checking your Browser…".
+- The modal therefore renders zero options, and `/api/games/active` is auth-gated
+  (`401 {"error":"missing jwt"}`), so the game state cannot be read without a session.
 
-`capture.js --connect --play` + `analyze.js` gives it; I will add `gameSeed`/`deathTileIndex` to
-the analyzer's watch list (they are currently only covered by the generic 65-byte/selector
-patterns, which would **not** catch a plaintext seed — a gap worth closing before the run).
+This is an environment limitation, not a finding about the target. The harness and the checks are
+correct and ready; they need an egress with IPv6 or a real session.
+
+**Workaround that works today — `console-probe.js`.** A self-contained DevTools snippet that hooks
+`fetch` + XHR and records any API response mentioning the seed, the death tiles or a game status,
+then prints a verdict. It needs no session sharing and sends nothing anywhere. Verified offline
+against four fixtures (**4/4**): confirms on an active game carrying a seed or populated
+`deathTileIndex`, and stays silent on a finished game carrying a seed (which is normal by design).
+
+Run: log in at death.fun, paste the snippet, start a game, make one pick, then `__df_dump()`.
+
+The decisive question is unchanged, and it is one field:
+
+> For an **active** game, does any API response populate `gameSeed` — or `rows[].deathTileIndex` —
+> before the player picks?
+
+- **Yes** → Critical, immediately. The player reads the skull off the DOM, or computes the whole
+  board offline from the seed with the site's own `getDeathTileIndex`.
+- **No** (fields null/absent until settlement) → the design holds and this closes clean.
+
+`analyze.js` also carries the automated version of this check (co-occurrence of an in-progress
+status and a populated seed/death tile in the same payload), 10/10 in `selftest.js`.
+
 
 ## 6. What to tell the team (draft line)
 
