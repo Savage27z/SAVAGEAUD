@@ -51,6 +51,19 @@ looks like:
 
 ### 2. But the frontend ships the whole v2 interface
 
+**Positive controls first**, so the "no data ⇒ not implemented" claim above is rigorous rather
+than an absence-of-evidence argument. `increaseBet` with an expired deadline reverts with
+`SignatureExpired()`, which proves the proxy *does* execute that selector:
+
+| Probe | Revert / return data | Meaning |
+|---|---|---|
+| `increaseBet(…, deadline=1)` | `0x0819bdcd` | = `SignatureExpired()` — **function exists and reached its first check** |
+| nonexistent selector `0xdeadbeef` | `0x` (empty) | empty revert = selector does not exist |
+| `claimRakeback(uint256,uint256,bytes)` | `0x` (empty) | **v2-only, not deployed** |
+
+So an empty revert genuinely means "no such function," and `increaseBet` genuinely is live. The
+`0xdeadbeef` control is what makes this airtight.
+
 Both interfaces are present in the same production bundle (76 JS chunks, deployment
 `dpl_EL8LodHS2wjxZShsP7vH6U1XJhs2`). The v2 ABI — extracted from
 `/_next/static/chunks/2dv16jyi4hsfw.js`, 116 function entries — contains functions that
