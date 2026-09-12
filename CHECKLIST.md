@@ -265,3 +265,55 @@ reward vaults. 12 shapes; the checklist deltas worth memorizing:
 - **Never route internal ops through the user-facing taxed/hooked surface.** If protocol
   tax/fee can exceed the configured slippage, the internal path is a brick. Retry loops must
   recompute *all* amounts on total failure. (M-25, H-02, L-24)
+
+
+## Corpus-prioritised triage — Shieldify 125 audits / 1022 findings (added 2026-09-12)
+Source: `POSTMORTEMS/shieldify-125-corpus-2026.md` + `POSTMORTEMS/refs/shieldify-125-pattern-ranking.md`.
+**This section changes the ORDER we check things in. Read it before starting any target.**
+
+**The core rule: rank bug classes by SEVERE DENSITY, not by frequency.** In 125 real audits the
+most common family (`input_validation`, 115 findings) is 3% severe; the most dangerous
+(`reward_accounting`, 56 findings) is 39% severe. Count-based triage points you at the cheapest bugs.
+
+**Priority order (severe-dense first):**
+1. **reward/accrual accounting** — 39% severe. Run the 8-point vault gauntlet (OLY import, F8):
+   eligibility filtered by stake duration? `totalShares == 0` guard actually reachable? `== 0` used as
+   "uninitialized" where 0 is legitimate? `x * PRECISION / y` bounds? rounding dust destination?
+   catch-up loops stepping one cycle per tx? allocated-vs-minted tracked separately? events from a
+   pre-scan that can `break` early?
+2. **withdrawal / exit / queue** — 29% severe. Queues, cooldowns, bridging delays, fulfillment math.
+3. **rounding / precision / decimals** — 27% severe, only 2.5% of volume. CHECK: `convertToShares`
+   rounds UP on withdrawal (ERC-4626 — a round-down here was a Critical); never compare/scale raw
+   amounts of two different-decimals tokens (OLY H-04/H-07 identical bug).
+4. **fee / tax routing** — 25% severe. Fees charged to the protocol instead of returned; fees paid
+   when not due; config able to dodge fees entirely.
+5. **funds locked / DoS / griefing** — 20% severe AND 9.6% of volume — the only family in both
+   top-3s. Severity here is "funds nobody can move", not theft — under-audited because it reads as UX.
+6. **access control** — 20% severe. 8 of the corpus's 34 Criticals.
+7. **web2 / off-chain / frontend** — 22% severe, 0 Criticals but 9 Highs. Decimals handling,
+   parameter spoofing, error handling on the off-chain side is a HIGH. Do not skip it.
+
+**Deprioritise to "mention, don't deepen":** docs/spec (38), events/returns (31), pause/emergency
+polish (21), auction polish (6) = **96 findings, zero Criticals or Highs across 125 audits.**
+`gas_optimization` = 88 findings, 1 severe. `reentrancy` = 12 findings, 1 severe (lowest-yield
+famous class in this corpus).
+
+**NEW mandatory check — AA / session-key / module authz (3rd sighting of this pattern):**
+ERC-4337 modular wallets and session-key modules produced **10 of 34 Criticals** in this corpus
+(Etherspot CAM alone: 8). Grep every session-key/module path for:
+- **Key identity**: does `enableSessionKey`/`addKey` check the key is unused AND not registered to
+  another wallet? Missing either = session-key hijack. (A key's identity is not its value.)
+- **Whose state is being read**: any `validUntil`/`expiry`/`owner` check — is it reading the
+  **subject's** field or the **caller's**? A privileged caller whose own field is 0 turns the check
+  into `0 >= now` → always false → skipped.
+- **`msg.sender` isn't the caller in a module context**: install/uninstall/execute paths that take
+  `sender` from calldata and treat it as the real sender → anyone can act on any wallet.
+- **Proof consumption**: does the validator CONSUME the signature (nonce/used-flag), or merely verify
+  it? Verify-without-consume = replay.
+Cross-ref: `pattern-trace-2026-09` Pattern 1 (authz satisfiable from attacker's default state),
+OLY import F3 (sentinel values bypass membership checks) + F11 (be your own counterparty).
+
+**Prior-art reading list (chains we hunt):** Robinhood Chain — `Up`, `OffYield`, `Topaz Dex`,
+`Trace` (public Shieldify reports exist). Abstract — Onchain Heroes, DEPTH, Souls.club, Spellborne,
+Pudgy Strategy, Aborean, Infinite Beyond, Shady/Dropster, Tollan Universe. Read these BEFORE
+touching a target on those chains (BountyForge "What Changed" method, now with a corpus behind it).
