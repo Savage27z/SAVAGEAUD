@@ -211,3 +211,57 @@ Check every target against this list. Update as new vulnerability angles are dis
 - **Before reporting any API "leak" or "mismatch", confirm which value the verifier/app actually consumes.**
   Twice this session a mismatch turned out to be my key-order or shape guess, not their bug (F07 §5 rows,
   F08 settled-game gate).
+
+
+## Public-audit pattern import — Pashov OLY/OlympusX, 66 findings (added 2026-09-12)
+Source: `POSTMORTEMS/oly-pashov-66-2026.md`. Use as a **pre-audit grep list** on any target
+with this shape: Uniswap V4 hooks, LST (stETH/wstETH) vaults, taxed tokens, multi-cycle
+reward vaults. 12 shapes; the checklist deltas worth memorizing:
+
+- **Earmarked-balance sweep.** If a contract keeps per-user credited balances AND has a path
+  that uses `address(this).balance` / `balanceOf(this)` as "surplus", check for a zero-input
+  permissionless trigger. (OLY C-01: anyone redistributed genesis' earmarked ETH.)
+- **Form-of-value across steps.** In any multi-step ETH↔WETH flow, state the form of every
+  value at each hop; never infer "amount used" from a *requested* amount — measure the delta
+  and handle a sweep returning extra; never cache a derived ID (`tokenId`/`poolId`) when the
+  underlying op can no-op. (H-01, C-02, C-03)
+- **Config → derived state.** For every setter: list derived state, confirm recompute. For
+  every mapping membership check: what value can never be a key (`address(0)`), and does the
+  code accept it anyway? (C-04, M-12, L-15/16/17/26)
+- **Shares vs assets.** On any rebasing/LST/4626 token, label *every* use site shares-or-assets,
+  verify conversion direction + rounding (can wrap mint 0?), and grep for hardcoded pegs. Read
+  the return-value semantics of every external call consumed (`stETH.submit()` returns SHARES,
+  not amount — that one misread was a Critical). (C-05, L-07, L-11, L-27, M-19)
+- **Terminal-flag lifecycle.** For each `filled`/`settled` boolean, enumerate exits and trace
+  accumulated value. Attach fees to participants, not containers (a tick/range/pool). A hard
+  `require` on a partial fill is a griefing vector. (H-03, M-08, M-09, M-23, L-05)
+- **Price-read decision test.** Used to size/mint/burn/liquidate ⇒ demand TWAP + observation
+  cardinality + staleness + decimals + deviation; a "fall back to spot" branch is Critical-class
+  by default. (H-06, M-04, L-04, L-17, L-22, L-26)
+- **Branch-diff the arithmetic.** Any two branches computing the same kind of amount must agree
+  on scaling, rounding and fees (1e6 applied in one branch and not the other = rebalancing
+  silently off). Never compare/sum raw amounts of two different tokens. Every swap variant gets
+  the same effective tax. (H-04, H-07, H-08, L-20)
+- **Vault reward-accrual gauntlet** — 8 checks, run verbatim on every staking/vault/inflation
+  system: (1) is the `totalShares == 0` guard *reachable* (a permanent dead/minimum stake makes
+  it unreachable — bug, not safety net)? (2) every `== 0` used as "uninitialized" — can 0 be
+  legitimate? (3) `x * PRECISION / y` under/overflow bounds. (4) rounding dust: where does it go,
+  is the pool zeroed anyway? (5) does the claim path filter by the *stake's* duration/cycle
+  eligibility or just by availability? (6) catch-up loops advancing one step per tx. (7) are
+  "allocated" and "minted" emissions tracked separately — can a claim fall between them?
+  (8) events derived from a pre-scan that can `break` early. (M-01, M-02, M-06, M-11, M-14,
+  M-16, M-17, M-22, L-09, L-10, L-18, L-19, M-07 — 13 findings, largest family.)
+- **Outbound transfer must-not-fail.** Push ERC20 rewards to a blacklistable token (USDC) can
+  lock a user out of staking *entirely*; a computed remainder can exceed an external protocol's
+  max (Lido 1000 stETH → all withdrawals revert) or fall under its min (100 wei → `harvest()`
+  reverts); excess `msg.value` must be refunded. (M-03, M-10, L-06, M-15)
+- **Setter-vs-constructor invariant diff.** Build setters × invariants-established-at-construction
+  and diff; then define the meaningful min/max of each config value and check it's enforced.
+  (L-15, L-16, L-17, L-26, M-13, L-22)
+- **Permissionless self-dealing probe.** For each free entry point: can I be both sides of a
+  bonus (self-referral doubles it)? can I grow a victim's array (gas-grief their unstake)? can I
+  race to revert them? is the payout gate actually terminal (auction *ended*, epoch *filled*) —
+  or only implied by the UI? (H-05, L-01, L-12, L-05, L-23)
+- **Never route internal ops through the user-facing taxed/hooked surface.** If protocol
+  tax/fee can exceed the configured slippage, the internal path is a brick. Retry loops must
+  recompute *all* amounts on total failure. (M-25, H-02, L-24)
