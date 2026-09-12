@@ -41,6 +41,14 @@ death_race   my own games, 25/25 rows — on-chain seed → skulls == API-report
 laser_party  my own game, 20/20 rows
 ```
 
+> ⚠️ **CORRECTION (2026-09-12, see `F09-tile-leak-reassessment.md` §T2):** the claim below that the
+> create-response `hash` **equals** the on-chain `gameSeedHash` is **FALSIFIED**. A fresh on-chain read
+> of the game in question (gid 4839273) shows create `hash = 0xbfed3068…` vs on-chain
+> `gameSeedHash = 0x4a76da3e…` — different values. `F07` §6 is correct; this paragraph compared the
+> create hash against the API's own `commitmentHash` field instead of the game's on-chain value. The
+> fairness conclusion is unaffected: the on-chain commitment is correct and the verifier does not
+> consume the create-time `hash`.
+
 And for every game created, the `hash` returned to the client at create **equals** the on-chain
 `gameSeedHash`. **A player cannot predict, bias, or forge the skull.**
 

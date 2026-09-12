@@ -81,12 +81,20 @@ key-order issue in F07 §5.)
 
 ## Still open — one structural test not yet run
 
+> ⚠️ **CORRECTION (2026-09-12, see `F09-tile-leak-reassessment.md` §T1/§T1b):** the sentence below —
+> "The scanner is already wired to catch it" — is **WRONG**. The v1 scanner never parsed
+> `previousGame`; it reads only `currentGame` and `history`. A planted, unambiguous `previousGame`
+> leak (active game, seed set, all 25 skulls filled) produced `leaks: NONE` from v1, while the same
+> leak in `currentGame` was caught — so v1's silence is **not** evidence about this shape. Use
+> `disclosure/f09-reassess/live-board-leak-scanner-v2.py`, which parses `currentGame` +
+> `previousGame` + `history` and ships a `--self-test` proving it fires on both leak shapes. The test
+> itself still requires two live games (a production wager) and remains **Blocked**.
+
 **Does creating a *second* game while one is active make the first one appear as `previousGame` with its
 seed, while it is still playable?** A leak of that shape would be real.
 
 Not tested because it needs two live games simultaneously (0.002 ETH) and the account is nearly out of
-funds. The scanner is already wired to catch it — run it while a second game exists and read the
-`previousGame` fields.
+funds. Run `live-board-leak-scanner-v2.py` while a second game exists and read the `previousGame` fields.
 
 Related observation from the same session: `previousGame` was observed serving a *finished* game's seed
 (`status: won`), and `currentGame` kept serving the last settled game with a full board. Both are correct
