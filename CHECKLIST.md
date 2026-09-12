@@ -320,3 +320,36 @@ touching a target on those chains (BountyForge "What Changed" method, now with a
 
 | death.fun | **New checklist item (detector COVERAGE must be enumerated per response SLOT, with a planted positive control per slot — this one invalidated a published negative):** the scanner that certified "leaks: NONE across every read path" parsed only `currentGame` and `history`. It never referenced `previousGame` — which was the exact shape the same report left open ("does a second game push the first into `previousGame` with its seed?"). A planted leak there (active game + seed + all 25 skulls) produced **`leaks: NONE`**, while the identical leak in `currentGame` was caught. Two rules, both cheap: **(1) before trusting a negative detector's silence, read its source and list the fields/slots/shapes it actually parses — a clean result is only evidence for the shapes the parser covers; (2) for every shape, plant a leak and prove the detector fires (positive control), plus a secure fixture proving it doesn't false-positive.** Implement detection as a PURE function over parsed payloads so fixtures can be run without a network, and ship `--self-test` with the tool. Fix + proof: `disclosure/f09-reassess/live-board-leak-scanner-v2.py` (parses current+previous+history, `--self-test` 3/3) — v1 exit 0 on the planted leak, v2 exit 1. |
 | death.fun | **New checklist item (contradiction between two of your OWN artifacts is a finding — resolve it with primary data, never by picking the one you like):** `F05` §1 asserted the create-response `hash` equalled the on-chain `gameSeedHash`; `F07` §6 recorded the opposite for the same game. One fresh read-only `eth_call` to `games(gid)` settled it: on-chain `0x4a76da3e…` vs create `0xbfed3068…` → **F05 was wrong** (it had compared the create hash against the API's own `commitmentHash` field, not the chain value). The pair had been sitting in the repo for two days. **When two artifacts disagree on a load-bearing fact, that's a scheduled re-verification, not a judgement call.** Then widen the negative properly: the create `hash` was falsified against **607** candidate constructions (4 version encodings x 5 row shapes x 4 seed encodings x all 6 top-level key orders, + row-object key orders + string forms), the 9 neighbouring games' commitments, and all 898 sampled games — **with a passing sanity control** proving the same hasher reproduces a known on-chain commitment. A negative without a passing positive control on the same tool is not a result. |
+
+## narbet (Monad) — recon rules added 2026-09-12
+Target: `TARGETS/narbet/`. Monad mainnet 143, Pyth Entropy V2, 19 games, UUPS, no verified source.
+
+- **PROXY EXISTENCE ORACLE — get the revert-data rule right or it lies every time.** To test whether
+  a contract implements a selector (no source, no ABI match), call it: a **return value** or a revert
+  carrying **≥4 bytes of revert data** (a custom-error selector) ⇒ IMPLEMENTED; a revert with
+  **empty `"0x"` data** ⇒ ABSENT. That empty-revert case is exactly what a proxy fallback returns when
+  the implementation lacks the selector. **Do NOT test `"data" in error_json` — every revert payload
+  has a `data` key, usually the empty string, so that rule reports every selector as implemented on
+  every proxy** (it did, on 10/10 contracts). Include a known-absent selector as a control.
+- **Resolve derived contract roles on the proxy, not from the app's naming.** Bundle variable names
+  (`rootContractAddress`, `registryContractAddress`) were misleading; the actual roles came from
+  probing which selectors each proxy answers (`getIsGame`/`tokenTotalShares` ⇒ BankRoll;
+  `edgeFactor`/`entropy`/`REFUND_*` ⇒ shared config base).
+- **"entropy" is a doubly-loaded word.** In any **Privy**-based bundle, `entropyId` /
+  `entropyIdVerifier` are Privy embedded-wallet recovery fields. Pyth's randomness contract is also
+  `entropy`. I briefly concluded the Pyth inference was wrong on a keyword count. **Resolve a
+  randomness-provider claim from the typed ABI (`internalType: "contract IEntropyV2"`, or the
+  `_entropyCallback(uint64,address,bytes32)` signature) — never from a keyword count.**
+- **Grep with a terminating pipe SIGPIPEs Python mid-run.** `python3 script.py | head -80` killed the
+  script before its `json.dump`, silently losing the artifact while the console looked complete.
+  Redirect to a file, then read the file.
+- **Entropy-casino cheat-sheet to check on every such target:** (a) `REFUND_COMMIT_WAIT_BLOCKS` /
+  `REFUND_TIMEOUT_BLOCKS` vs the provider's real fulfillment latency — if the randomness can land
+  *inside* the commit window, a player can abort after seeing the outcome; (b) whether the
+  `_entropyCallback` settles atomically or leaves a request-pending window (`AwaitingVRF` /
+  `NotAwaitingVRF` / `NoRequestPending` errors are the tell); (c) `suspend`/`permantlyBan` × in-flight
+  funds — a banned player who cannot `*_Refund` has funds locked (`funds_locked_dos`); (d) multi-step
+  games (`Mines_Start`→`Mines_Reveal`→`Mines_End`) — double-reveal, reveal bounds, mid-game config
+  setters; (e) **advertised house edge in the client bundle vs on-chain `edgeFactor()`** — a mismatch
+  is the death.fun verifier-constant-drift bug family. Record the numbers, then reconcile against
+  real `X_Outcome_Event` payouts.

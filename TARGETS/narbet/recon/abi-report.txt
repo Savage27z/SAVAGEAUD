@@ -1,0 +1,277 @@
+bundle bytes: 5260158
+distinct ABI arrays parsed: 65
+
+=== FUNCTIONS (130) ===
+  <constructor>()  [nonpayable]
+  Baccarat_GetState(address player) -> tuple  [view]
+  Baccarat_Play(uint256[5] wager,address tokenAddress)  [payable]
+  Baccarat_Refund()  [nonpayable]
+  CoinFlip_GetState(address player) -> tuple  [view]
+  CoinFlip_Play(uint256 wager,address tokenAddress,bool isHeads,uint32 numBets)  [payable]
+  CoinFlip_Refund()  [nonpayable]
+  Crash_GetState(address player) -> tuple  [view]
+  Crash_Play(uint256 wager,uint32 multiplier,address tokenAddress,uint32 numBets)  [payable]
+  Crash_Refund()  [nonpayable]
+  Dice_GetState(address player) -> tuple  [view]
+  Dice_Play(uint256 wager,uint32 multiplier,address tokenAddress,bool isOver,uint32 numBets)  [payable]
+  Dice_Refund()  [nonpayable]
+  DragonTiger_GetState(address player) -> tuple  [view]
+  DragonTiger_Play(uint256 wager,address tokenAddress,uint8 betType,uint32 numBets)  [payable]
+  DragonTiger_Refund()  [nonpayable]
+  FishPrawnCrab_GetState(address player) -> tuple  [view]
+  FishPrawnCrab_Play(uint256[] _wager,uint256[] _fishPrawnCrabType,address _tokenAddress)  [payable]
+  FishPrawnCrab_Refund()  [nonpayable]
+  HiLo_GetState(address player) -> tuple  [view]
+  HiLo_Play(uint256 wager,address tokenAddress,uint8 currentCard,bool isHigher,uint32 numBets)  [payable]
+  HiLo_Refund()  [nonpayable]
+  Keno_GetState(address player) -> tuple  [view]
+  Keno_Play(uint256 wager,address tokenAddress,uint8[] pickedNumbers,uint32 numBets)  [payable]
+  Keno_Refund()  [nonpayable]
+  Limbo_GetState(address player) -> tuple  [view]
+  Limbo_Play(uint256 wager,uint32 multiplier,address tokenAddress,uint32 numBets)  [payable]
+  Limbo_Refund()  [nonpayable]
+  Mines_End()  [nonpayable]
+  Mines_GetMaxReveal() -> uint256[24]  [view]
+  Mines_GetMultipliers(uint256 numMines,uint256 numRevealed) -> uint256  [view]
+  Mines_GetState(address player) -> tuple  [view]
+  Mines_Refund()  [nonpayable]
+  Mines_Reveal(bool[25] tiles,bool isCashout)  [payable]
+  Mines_SetMultipliers(uint256 numMines)  [nonpayable]
+  Mines_Start(uint256 wager,address tokenAddress,uint8 numMines,bool[25] tiles,bool isCashout)  [payable]
+  Plinko_GetMaxMultipliers(uint256 _risk) -> uint256[9]  [view]
+  Plinko_GetMultipliers() -> uint256[17][9][3]  [view]
+  Plinko_GetState(address player) -> tuple  [view]
+  Plinko_Play(uint256 wager,address tokenAddress,uint8 numRows,uint8 risk,uint32 numBets)  [payable]
+  Plinko_Refund()  [nonpayable]
+  REFUND_COMMIT_WAIT_BLOCKS() -> uint256  [view]
+  REFUND_TIMEOUT_BLOCKS() -> uint256  [view]
+  Range_GetState(address player) -> tuple  [view]
+  Range_Play(uint256 wager,uint32 multiplier,address tokenAddress,bool isOver,uint32 numBets)  [payable]
+  Range_Refund()  [nonpayable]
+  RockPaperScissors_GetState(address player) -> tuple  [view]
+  RockPaperScissors_Play(uint256 wager,address tokenAddress,uint8 action,uint32 numBets)  [payable]
+  RockPaperScissors_Refund()  [nonpayable]
+  Roulette_GetState(address player) -> tuple  [view]
+  Roulette_Play(uint256[] _wager,uint256[] _rouletteType,address _tokenAddress)  [payable]
+  Roulette_Refund()  [nonpayable]
+  SicBo_GetState(address player) -> tuple  [view]
+  SicBo_Play(uint256[] wagers,uint8[] betTypes,uint8[] specificValues,address tokenAddress)  [payable]
+  SicBo_Refund()  [nonpayable]
+  Slots_GetMultipliers() -> uint16[]  [view]
+  Slots_GetState(address player) -> tuple  [view]
+  Slots_Play(uint256 wager,address tokenAddress,uint32 numBets)  [payable]
+  Slots_Refund()  [nonpayable]
+  VideoPoker_GetState(address player) -> tuple  [view]
+  VideoPoker_Refund()  [nonpayable]
+  VideoPoker_Replace(bool[5] toReplace)  [payable]
+  VideoPoker_Start(uint256 wager,address tokenAddress)  [payable]
+  War_GetState(address player) -> tuple  [view]
+  War_Play(uint256 wager,address tokenAddress,bool warBet,uint32 numBets)  [payable]
+  War_Refund()  [nonpayable]
+  WheelOfFortune_GetState(address player) -> tuple  [view]
+  WheelOfFortune_Play(uint256 wager,address tokenAddress,uint32 numBets)  [payable]
+  WheelOfFortune_Refund()  [nonpayable]
+  _determineHandPayout(tuple[5] cardsInHand) -> uint256,uint256  [pure]
+  _entropyCallback(uint64 sequence,address provider,bytes32 randomNumber)  [nonpayable]
+  allowance(address owner,address spender) -> uint256  [view]
+  approve(address spender,uint256 amount) -> bool  [nonpayable]
+  balanceOf(address account) -> uint256  [view]
+  bankroll() -> address  [view]
+  calculatedIncome(address _user,address _token) -> uint256  [view]
+  decimals() -> uint8  [view]
+  decreaseAllowance(address spender,uint256 subtractedValue) -> bool  [nonpayable]
+  deposit(address _token,uint256 _amount)  [payable]
+  edgeFactor() -> uint256  [view]
+  entropy() -> address  [view]
+  getAllSegmentMultipliers() -> uint256[54]  [view]
+  getFeeInfo() -> address,uint256  [view]
+  getIsGame(address game) -> bool  [view]
+  getIsValidWager(address game,address tokenAddress) -> bool  [view]
+  getOwner() -> address  [view]
+  getRandomFee() -> uint256  [view]
+  getSegmentMultiplier(uint8 segment) -> uint256  [view]
+  houseLiquidityList(address) -> uint256  [view]
+  increaseAllowance(address spender,uint256 addedValue) -> bool  [nonpayable]
+  increaseSuspensionTime(uint256 suspensionTime)  [nonpayable]
+  initialize(address _bankroll,address _entropy)  [nonpayable]
+  isPlayerSuspended(address player) -> bool,uint256  [view]
+  liftSuspension()  [nonpayable]
+  maxMultiplier() -> uint256  [view]
+  name() -> string  [view]
+  owner() -> address  [view]
+  permantlyBan()  [nonpayable]
+  proxiableUUID() -> bytes32  [view]
+  renounceOwnership()  [nonpayable]
+  riskCap() -> uint256  [view]
+  setEdgeFactor(uint256 _edgeFactor)  [nonpayable]
+  setFeeInfo(address _receiver,uint256 _rate)  [nonpayable]
+  setGame(address game,bool isValid)  [nonpayable]
+  setHouseLiquidity(address _tokenAddress,uint256 _houseLiquidity)  [nonpayable]
+  setMaxMulitplier(uint256 _risk,uint256[9] _maxMmultipliers)  [nonpayable]
+  setMaxMultiplier(uint256 _risk,uint256[9] _maxMultipliers)  [nonpayable]
+  setPlinkoMultipliers(uint256[] multipliers,uint8 numRows,uint8 risk)  [nonpayable]
+  setRiskCap(uint256 _riskCap)  [nonpayable]
+  setTokenAddress(address tokenAddress,bool isValid)  [nonpayable]
+  setWagerNumber(uint256 _wagerNumber)  [nonpayable]
+  setWhiteList(address _manager,bool _tag)  [nonpayable]
+  setWrappedAddress(address wrapped)  [nonpayable]
+  suspend(uint256 suspensionTime)  [nonpayable]
+  symbol() -> string  [view]
+  tokenTotalShares(address) -> uint256  [view]
+  totalSupply() -> uint256  [view]
+  transfer(address to,uint256 amount) -> bool  [nonpayable]
+  transferFrom(address from,address to,uint256 amount) -> bool  [nonpayable]
+  transferOwnership(address newOwner)  [nonpayable]
+  transferPayout(address player,uint256 payout,address tokenAddress)  [nonpayable]
+  upgradeTo(address newImplementation)  [nonpayable]
+  upgradeToAndCall(address newImplementation,bytes data)  [payable]
+  userShares(address,address) -> uint256  [view]
+  wagerNumber() -> uint256  [view]
+  wheelMultipliers(uint256) -> uint256  [view]
+  whiteList(address) -> bool  [view]
+  withdraw(address _token,uint256 _amount)  [nonpayable]
+  withdrawFunds(address tokenAddress,address to,uint256 amount)  [nonpayable]
+  withdrawNativeFunds(address to,uint256 amount)  [nonpayable]
+
+=== EVENTS (80) ===
+  AdminChanged(address previousAdmin,address newAdmin)
+  Approval(address owner,address spender,uint256 value)
+  Baccarat_Outcome_Event(address playerAddress,uint256 totalWager,uint256[5] wager,uint256 totalPayout,address tokenAddress,tuple[6] playerHand,tuple[3] bankerCards,tuple[3] playerCards,uint256[3] outcome,uint256[5] payouts,uint64 sequenceNumber)
+  Baccarat_Play_Event(address playerAddress,uint256[5] wager,uint256 totalWager,address tokenAddress,uint256 sequenceNumber)
+  Baccarat_Refund_Event(address player,uint256 wager,address tokenAddress)
+  BankRoll_Fee_Info(address receiver,uint256 rate)
+  BankRoll_Game_State_Changed(address gameAddress,bool isValid)
+  BankRoll_Max_Payout_Changed(uint256 payout)
+  BankRoll_Stake(address user,address token,uint256 amount,uint256 shares,uint256 userTotalSheres,uint256 tokenShareTotal,uint256 totalPool)
+  BankRoll_Withdraw(address user,address token,uint256 amount,uint256 userAmount,uint256 userTotalSheres,uint256 tokenShareTotal,uint256 totalPool)
+  Bankroll_Token_State_Changed(address tokenAddress,bool isValid)
+  BeaconUpgraded(address beacon)
+  CoinFlip_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] coinOutcomes,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  CoinFlip_Play_Event(address playerAddress,uint256 wager,address tokenAddress,bool isHeads,uint32 numBets,uint256 sequenceNumber)
+  CoinFlip_Refund_Event(address player,uint256 wager,address tokenAddress)
+  Crash_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint32 multiplier,uint32[] crashPoints,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  Crash_Play_Event(address playerAddress,uint256 wager,uint32 multiplier,address tokenAddress,uint32 numBets,uint256 sequenceNumber)
+  Crash_Refund_Event(address player,uint256 wager,address tokenAddress)
+  Dice_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint32 multiplier,bool isOver,uint256[] diceOutcomes,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  Dice_Play_Event(address playerAddress,uint256 wager,uint32 multiplier,address tokenAddress,bool isOver,uint32 numBets,uint256 sequenceNumber)
+  Dice_Refund_Event(address player,uint256 wager,address tokenAddress)
+  DragonTiger_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] dragonCards,uint8[] tigerCards,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  DragonTiger_Play_Event(address playerAddress,uint256 wager,address tokenAddress,uint8 betType,uint32 numBets,uint256 sequenceNumber)
+  DragonTiger_Refund_Event(address player,uint256 wager,address tokenAddress)
+  FishPrawnCrab_Outcome_Event(address playerAddress,uint256 totalWager,uint256 totalPayout,address tokenAddress,uint256[] wager,uint256[] fishPrawnCrabType,uint256[] payouts,uint256[3] outcome,uint64 sequenceNumber)
+  FishPrawnCrab_Play_Event(address playerAddress,uint256[] wager,uint256[] fishPrawnCrabType,uint256 totalWager,address tokenAddress,uint256 sequenceNumber)
+  FishPrawnCrab_Refund_Event(address player,uint256 totalWager,address tokenAddress)
+  HiLo_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] currentCards,uint8[] nextCards,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  HiLo_Play_Event(address playerAddress,uint256 wager,address tokenAddress,uint8 currentCard,bool isHigher,uint32 numBets,uint256 sequenceNumber)
+  HiLo_Refund_Event(address player,uint256 wager,address tokenAddress)
+  Initialized(uint8 version)
+  Keno_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[][] drawnNumbers,uint8[] matchCounts,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  Keno_Play_Event(address playerAddress,uint256 wager,address tokenAddress,uint8[] pickedNumbers,uint8 numberCount,uint32 numBets,uint256 sequenceNumber)
+  Keno_Refund_Event(address player,uint256 wager,address tokenAddress)
+  Limbo_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint32 multiplier,uint256[] limboOutcomes,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  Limbo_Play_Event(address playerAddress,uint256 wager,uint32 multiplier,address tokenAddress,uint32 numBets,uint256 sequenceNumber)
+  Limbo_Refund_Event(address player,uint256 wager,address tokenAddress)
+  Mines_End_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint256 numMines,bool[25] revealedTiles,uint256 multiplier)
+  Mines_Fee_Event(address playerAddress,uint256 sequenceNumber)
+  Mines_Play_Event(address playerAddress,uint256 wager,address tokenAddress,uint8 numMines,bool isCashout,uint256 sequenceNumber)
+  Mines_Refund_Event(address player,uint256 wager,address tokenAddress)
+  Mines_RevealCashout_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint256 numMines,bool[25] minesTiles,bool[25] revealedTiles,uint256 multiplier,uint64 sequenceNumber)
+  Mines_Reveal_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint256 numMines,bool[25] minesTiles,bool[25] revealedTiles,uint256 multiplier,uint64 sequenceNumber)
+  NewEdgeFactor(uint256 edgeFactor)
+  NewHouseLiquidity(address token,uint256 houseLiquidity)
+  NewRiskCap(uint256 riskCap)
+  NewWagerNumber(uint256 wagerNumber)
+  OwnershipTransferred(address previousOwner,address newOwner)
+  Plinko_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint16[] paths,uint8 numRows,uint8 risk,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  Plinko_Play_Event(address playerAddress,uint256 wager,address tokenAddress,uint8 numRows,uint8 risk,uint32 numBets,uint256 sequenceNumber)
+  Plinko_Refund_Event(address player,uint256 wager,address tokenAddress)
+  Range_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint32 multiplier,bool isOver,uint256[] rangeOutcomes,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  Range_Play_Event(address playerAddress,uint256 wager,uint32 multiplier,address tokenAddress,bool isOver,uint32 numBets,uint256 sequenceNumber)
+  Range_Refund_Event(address player,uint256 wager,address tokenAddress)
+  RefundCommitmentCreated(address player,uint256 requestID,uint256 claimableBlock)
+  RockPaperScissors_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] outcomes,uint8[] randomActions,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  RockPaperScissors_Play_Event(address playerAddress,uint256 wager,address tokenAddress,uint8 action,uint32 numBets,uint256 sequenceNumber)
+  RockPaperScissors_Refund_Event(address player,uint256 wager,address tokenAddress)
+  Roulette_Outcome_Event(address playerAddress,uint256 totalWager,uint256 totalPayout,address tokenAddress,uint256[] wager,uint256[] rouletteType,uint256[] payouts,uint256 outcome,uint64 sequenceNumber)
+  Roulette_Play_Event(address playerAddress,uint256[] wager,uint256[] rouletteType,uint256 totalWager,address tokenAddress,uint256 sequenceNumber)
+  Roulette_Refund_Event(address player,uint256 totalWager,address tokenAddress)
+  SicBo_Outcome_Event(address playerAddress,uint256 totalWager,uint256 payout,address tokenAddress,uint8[3] diceResults,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  SicBo_Play_Event(address playerAddress,uint256[] wagers,uint8[] betTypes,uint8[] specificValues,uint256 totalWager,address tokenAddress,uint32 numBets,uint256 sequenceNumber)
+  SicBo_Refund_Event(address player,uint256 wager,address tokenAddress)
+  Slots_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint16[] slotIDs,uint256[] multipliers,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  Slots_Play_Event(address playerAddress,uint256 wager,address tokenAddress,uint32 numBets,uint256 sequenceNumber)
+  Slots_Refund_Event(address player,uint256 wager,address tokenAddress)
+  Transfer(address from,address to,uint256 value)
+  Upgraded(address implementation)
+  VideoPoker_Fee_Event(address playerAddress,uint256 sequenceNumber)
+  VideoPoker_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,tuple[5] playerHand,uint256 outcome,uint64 sequenceNumber,uint64 sequenceNumberStart)
+  VideoPoker_Play_Event(address playerAddress,uint256 wager,address tokenAddress,uint256 sequenceNumber)
+  VideoPoker_Refund_Event(address player,uint256 wager,address tokenAddress)
+  VideoPoker_Start_Event(address playerAddress,tuple[5] playerHand,uint64 sequenceNumber)
+  War_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] playerCards,uint8[] dealerCards,uint8[] warPlayerCards,uint8[] warDealerCards,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  War_Play_Event(address playerAddress,uint256 wager,address tokenAddress,bool warBet,uint32 numBets,uint256 sequenceNumber)
+  War_Refund_Event(address player,uint256 wager,address tokenAddress)
+  WheelOfFortune_Outcome_Event(address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] resultSegments,uint256[] payouts,uint32 numGames,uint64 sequenceNumber)
+  WheelOfFortune_Play_Event(address playerAddress,uint256 wager,address tokenAddress,uint32 numBets,uint256 sequenceNumber)
+  WheelOfFortune_Refund_Event(address player,uint256 wager,address tokenAddress)
+
+=== ERRORS (57) ===
+  AlreadyInGame()
+  AlreadySuspended(uint256 suspensionTime)
+  AwaitingVRF(uint256 requestID)
+  BlockNumberTooLow(uint256 have,uint256 want)
+  DenominatorOverflow()
+  DuplicateNumber(uint8 number)
+  EdgeFactorNotSet()
+  FishPrawnCrabType(uint256 rType)
+  InvalidAction()
+  InvalidBetType(uint256 betType)
+  InvalidCurrentCard(uint8 currentCard)
+  InvalidEdgeFactor(uint256 edgeFactor,uint256 min,uint256 max)
+  InvalidFeeRate(uint256 rate)
+  InvalidGameAddress()
+  InvalidMultiplier(uint256 max,uint256 min,uint256 multiplier)
+  InvalidNumBets(uint256 maxNumBets)
+  InvalidNumMines()
+  InvalidNumRows()
+  InvalidNumber(uint8 number)
+  InvalidNumberCount(uint8 numberCount)
+  InvalidNumberToReveal(uint32 numberPicked,uint256 maxAllowed)
+  InvalidNumberToSet()
+  InvalidRisk()
+  InvalidRiskCap(uint256 riskCap,uint256 min,uint256 max)
+  InvalidSpecificValue(uint8 specificValue)
+  InvalidValue(uint256 required,uint256 sent)
+  InvalidWagerNumber(uint256 wagerNumber,uint256 min,uint256 max)
+  MinNumberToReveal(uint32 numberReveal)
+  MismatchedArrayLengths()
+  MismatchedLength(uint256 multipliers,uint256 outcome)
+  MultiplicationOverflow()
+  MultiplierAlreadySet(uint8 numRows,uint8 risk)
+  NoFeeRequired()
+  NoLiquiditySet()
+  NoRequestPending()
+  NotApprovedBankroll()
+  NotAwaitingVRF()
+  NotInGame()
+  NotManager(address want,bool tag)
+  NotOwner(address want,address have)
+  NumeratorOverflow()
+  OnlyCoordinatorCanFulfill(address have,address want)
+  PlayerSuspended(uint256 suspensionTime)
+  RefundClaimPending(uint256 have,uint256 want)
+  RefundFailed()
+  RefundRequestInactive(uint256 requestID)
+  RefundTooEarly(uint256 have,uint256 want)
+  RouletteType(uint256 rType)
+  TicketExposureAboveLimit(uint256 exposure,uint256 maxExposure)
+  TileAlreadyRevealed(uint8 position)
+  TimeRemaingOnSuspension(uint256 suspensionTime)
+  TotalWagerOverflow()
+  TransferFailed()
+  WagerAboveLimit(uint256 wager,uint256 maxWager)
+  WagerOverflow()
+  WithdrawFail()
+  ZeroWager()
+
+saved /root/.hermes/workspace/SAVAGEAUD/TARGETS/narbet/recon/abi-real.json

@@ -1,0 +1,1070 @@
+{
+ "functions": {
+  "<constructor>": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "REFUND_COMMIT_WAIT_BLOCKS": {
+   "inputs": "",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "REFUND_TIMEOUT_BLOCKS": {
+   "inputs": "",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "Roulette_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "Roulette_Play": {
+   "inputs": "uint256[] _wager,uint256[] _rouletteType,address _tokenAddress",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Roulette_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "_entropyCallback": {
+   "inputs": "uint64 sequence,address provider,bytes32 randomNumber",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "bankroll": {
+   "inputs": "",
+   "outputs": "address",
+   "mut": "view"
+  },
+  "edgeFactor": {
+   "inputs": "",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "entropy": {
+   "inputs": "",
+   "outputs": "address",
+   "mut": "view"
+  },
+  "getRandomFee": {
+   "inputs": "",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "houseLiquidityList": {
+   "inputs": "address",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "initialize": {
+   "inputs": "address _bankroll,address _entropy",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "proxiableUUID": {
+   "inputs": "",
+   "outputs": "bytes32",
+   "mut": "view"
+  },
+  "riskCap": {
+   "inputs": "",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "setEdgeFactor": {
+   "inputs": "uint256 _edgeFactor",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "setHouseLiquidity": {
+   "inputs": "address _tokenAddress,uint256 _houseLiquidity",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "setRiskCap": {
+   "inputs": "uint256 _riskCap",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "setWagerNumber": {
+   "inputs": "uint256 _wagerNumber",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "setWhiteList": {
+   "inputs": "address _manager,bool _tag",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "upgradeTo": {
+   "inputs": "address newImplementation",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "upgradeToAndCall": {
+   "inputs": "address newImplementation,bytes data",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "wagerNumber": {
+   "inputs": "",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "whiteList": {
+   "inputs": "address",
+   "outputs": "bool",
+   "mut": "view"
+  },
+  "Baccarat_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "Baccarat_Play": {
+   "inputs": "uint256[5] wager,address tokenAddress",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Baccarat_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "_determineHandPayout": {
+   "inputs": "tuple[5] cardsInHand",
+   "outputs": "uint256,uint256",
+   "mut": "pure"
+  },
+  "calculatedIncome": {
+   "inputs": "address _user,address _token",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "deposit": {
+   "inputs": "address _token,uint256 _amount",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "getFeeInfo": {
+   "inputs": "",
+   "outputs": "address,uint256",
+   "mut": "view"
+  },
+  "getIsGame": {
+   "inputs": "address game",
+   "outputs": "bool",
+   "mut": "view"
+  },
+  "getIsValidWager": {
+   "inputs": "address game,address tokenAddress",
+   "outputs": "bool",
+   "mut": "view"
+  },
+  "getOwner": {
+   "inputs": "",
+   "outputs": "address",
+   "mut": "view"
+  },
+  "increaseSuspensionTime": {
+   "inputs": "uint256 suspensionTime",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "isPlayerSuspended": {
+   "inputs": "address player",
+   "outputs": "bool,uint256",
+   "mut": "view"
+  },
+  "liftSuspension": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "owner": {
+   "inputs": "",
+   "outputs": "address",
+   "mut": "view"
+  },
+  "permantlyBan": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "renounceOwnership": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "setFeeInfo": {
+   "inputs": "address _receiver,uint256 _rate",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "setGame": {
+   "inputs": "address game,bool isValid",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "setTokenAddress": {
+   "inputs": "address tokenAddress,bool isValid",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "setWrappedAddress": {
+   "inputs": "address wrapped",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "suspend": {
+   "inputs": "uint256 suspensionTime",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "tokenTotalShares": {
+   "inputs": "address",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "transferOwnership": {
+   "inputs": "address newOwner",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "transferPayout": {
+   "inputs": "address player,uint256 payout,address tokenAddress",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "userShares": {
+   "inputs": "address,address",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "withdraw": {
+   "inputs": "address _token,uint256 _amount",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "withdrawFunds": {
+   "inputs": "address tokenAddress,address to,uint256 amount",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "withdrawNativeFunds": {
+   "inputs": "address to,uint256 amount",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "CoinFlip_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "CoinFlip_Play": {
+   "inputs": "uint256 wager,address tokenAddress,bool isHeads,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "CoinFlip_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "Crash_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "Crash_Play": {
+   "inputs": "uint256 wager,uint32 multiplier,address tokenAddress,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Crash_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "Dice_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "Dice_Play": {
+   "inputs": "uint256 wager,uint32 multiplier,address tokenAddress,bool isOver,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Dice_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "DragonTiger_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "DragonTiger_Play": {
+   "inputs": "uint256 wager,address tokenAddress,uint8 betType,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "DragonTiger_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "allowance": {
+   "inputs": "address owner,address spender",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "approve": {
+   "inputs": "address spender,uint256 amount",
+   "outputs": "bool",
+   "mut": "nonpayable"
+  },
+  "balanceOf": {
+   "inputs": "address account",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "decimals": {
+   "inputs": "",
+   "outputs": "uint8",
+   "mut": "view"
+  },
+  "decreaseAllowance": {
+   "inputs": "address spender,uint256 subtractedValue",
+   "outputs": "bool",
+   "mut": "nonpayable"
+  },
+  "increaseAllowance": {
+   "inputs": "address spender,uint256 addedValue",
+   "outputs": "bool",
+   "mut": "nonpayable"
+  },
+  "name": {
+   "inputs": "",
+   "outputs": "string",
+   "mut": "view"
+  },
+  "symbol": {
+   "inputs": "",
+   "outputs": "string",
+   "mut": "view"
+  },
+  "totalSupply": {
+   "inputs": "",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "transfer": {
+   "inputs": "address to,uint256 amount",
+   "outputs": "bool",
+   "mut": "nonpayable"
+  },
+  "transferFrom": {
+   "inputs": "address from,address to,uint256 amount",
+   "outputs": "bool",
+   "mut": "nonpayable"
+  },
+  "FishPrawnCrab_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "FishPrawnCrab_Play": {
+   "inputs": "uint256[] _wager,uint256[] _fishPrawnCrabType,address _tokenAddress",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "FishPrawnCrab_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "HiLo_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "HiLo_Play": {
+   "inputs": "uint256 wager,address tokenAddress,uint8 currentCard,bool isHigher,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "HiLo_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "Keno_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "Keno_Play": {
+   "inputs": "uint256 wager,address tokenAddress,uint8[] pickedNumbers,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Keno_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "Limbo_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "Limbo_Play": {
+   "inputs": "uint256 wager,uint32 multiplier,address tokenAddress,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Limbo_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "Mines_End": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "Mines_GetMaxReveal": {
+   "inputs": "",
+   "outputs": "uint256[24]",
+   "mut": "view"
+  },
+  "Mines_GetMultipliers": {
+   "inputs": "uint256 numMines,uint256 numRevealed",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "Mines_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "Mines_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "Mines_Reveal": {
+   "inputs": "bool[25] tiles,bool isCashout",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Mines_SetMultipliers": {
+   "inputs": "uint256 numMines",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "Mines_Start": {
+   "inputs": "uint256 wager,address tokenAddress,uint8 numMines,bool[25] tiles,bool isCashout",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Plinko_GetMaxMultipliers": {
+   "inputs": "uint256 _risk",
+   "outputs": "uint256[9]",
+   "mut": "view"
+  },
+  "Plinko_GetMultipliers": {
+   "inputs": "",
+   "outputs": "uint256[17][9][3]",
+   "mut": "view"
+  },
+  "Plinko_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "Plinko_Play": {
+   "inputs": "uint256 wager,address tokenAddress,uint8 numRows,uint8 risk,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Plinko_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "setMaxMulitplier": {
+   "inputs": "uint256 _risk,uint256[9] _maxMmultipliers",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "setMaxMultiplier": {
+   "inputs": "uint256 _risk,uint256[9] _maxMultipliers",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "setPlinkoMultipliers": {
+   "inputs": "uint256[] multipliers,uint8 numRows,uint8 risk",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "RockPaperScissors_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "RockPaperScissors_Play": {
+   "inputs": "uint256 wager,address tokenAddress,uint8 action,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "RockPaperScissors_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "SicBo_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "SicBo_Play": {
+   "inputs": "uint256[] wagers,uint8[] betTypes,uint8[] specificValues,address tokenAddress",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "SicBo_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "Slots_GetMultipliers": {
+   "inputs": "",
+   "outputs": "uint16[]",
+   "mut": "view"
+  },
+  "Slots_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "Slots_Play": {
+   "inputs": "uint256 wager,address tokenAddress,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Slots_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "maxMultiplier": {
+   "inputs": "",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "VideoPoker_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "VideoPoker_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "VideoPoker_Replace": {
+   "inputs": "bool[5] toReplace",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "VideoPoker_Start": {
+   "inputs": "uint256 wager,address tokenAddress",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Range_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "Range_Play": {
+   "inputs": "uint256 wager,uint32 multiplier,address tokenAddress,bool isOver,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "Range_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "War_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "War_Play": {
+   "inputs": "uint256 wager,address tokenAddress,bool warBet,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "War_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "WheelOfFortune_GetState": {
+   "inputs": "address player",
+   "outputs": "tuple",
+   "mut": "view"
+  },
+  "WheelOfFortune_Play": {
+   "inputs": "uint256 wager,address tokenAddress,uint32 numBets",
+   "outputs": "",
+   "mut": "payable"
+  },
+  "WheelOfFortune_Refund": {
+   "inputs": "",
+   "outputs": "",
+   "mut": "nonpayable"
+  },
+  "getAllSegmentMultipliers": {
+   "inputs": "",
+   "outputs": "uint256[54]",
+   "mut": "view"
+  },
+  "getSegmentMultiplier": {
+   "inputs": "uint8 segment",
+   "outputs": "uint256",
+   "mut": "view"
+  },
+  "wheelMultipliers": {
+   "inputs": "uint256",
+   "outputs": "uint256",
+   "mut": "view"
+  }
+ },
+ "events": {
+  "AdminChanged": {
+   "inputs": "address previousAdmin,address newAdmin"
+  },
+  "BeaconUpgraded": {
+   "inputs": "address beacon"
+  },
+  "Initialized": {
+   "inputs": "uint8 version"
+  },
+  "NewEdgeFactor": {
+   "inputs": "uint256 edgeFactor"
+  },
+  "NewHouseLiquidity": {
+   "inputs": "address token,uint256 houseLiquidity"
+  },
+  "NewRiskCap": {
+   "inputs": "uint256 riskCap"
+  },
+  "NewWagerNumber": {
+   "inputs": "uint256 wagerNumber"
+  },
+  "RefundCommitmentCreated": {
+   "inputs": "address player,uint256 requestID,uint256 claimableBlock"
+  },
+  "Roulette_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 totalWager,uint256 totalPayout,address tokenAddress,uint256[] wager,uint256[] rouletteType,uint256[] payouts,uint256 outcome,uint64 sequenceNumber"
+  },
+  "Roulette_Play_Event": {
+   "inputs": "address playerAddress,uint256[] wager,uint256[] rouletteType,uint256 totalWager,address tokenAddress,uint256 sequenceNumber"
+  },
+  "Roulette_Refund_Event": {
+   "inputs": "address player,uint256 totalWager,address tokenAddress"
+  },
+  "Upgraded": {
+   "inputs": "address implementation"
+  },
+  "Baccarat_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 totalWager,uint256[5] wager,uint256 totalPayout,address tokenAddress,tuple[6] playerHand,tuple[3] bankerCards,tuple[3] playerCards,uint256[3] outcome,uint256[5] payouts,uint64 sequenceNumber"
+  },
+  "Baccarat_Play_Event": {
+   "inputs": "address playerAddress,uint256[5] wager,uint256 totalWager,address tokenAddress,uint256 sequenceNumber"
+  },
+  "Baccarat_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "BankRoll_Fee_Info": {
+   "inputs": "address receiver,uint256 rate"
+  },
+  "BankRoll_Game_State_Changed": {
+   "inputs": "address gameAddress,bool isValid"
+  },
+  "BankRoll_Max_Payout_Changed": {
+   "inputs": "uint256 payout"
+  },
+  "BankRoll_Stake": {
+   "inputs": "address user,address token,uint256 amount,uint256 shares,uint256 userTotalSheres,uint256 tokenShareTotal,uint256 totalPool"
+  },
+  "BankRoll_Withdraw": {
+   "inputs": "address user,address token,uint256 amount,uint256 userAmount,uint256 userTotalSheres,uint256 tokenShareTotal,uint256 totalPool"
+  },
+  "Bankroll_Token_State_Changed": {
+   "inputs": "address tokenAddress,bool isValid"
+  },
+  "OwnershipTransferred": {
+   "inputs": "address previousOwner,address newOwner"
+  },
+  "CoinFlip_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] coinOutcomes,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "CoinFlip_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,address tokenAddress,bool isHeads,uint32 numBets,uint256 sequenceNumber"
+  },
+  "CoinFlip_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "Crash_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint32 multiplier,uint32[] crashPoints,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "Crash_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint32 multiplier,address tokenAddress,uint32 numBets,uint256 sequenceNumber"
+  },
+  "Crash_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "Dice_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint32 multiplier,bool isOver,uint256[] diceOutcomes,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "Dice_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint32 multiplier,address tokenAddress,bool isOver,uint32 numBets,uint256 sequenceNumber"
+  },
+  "Dice_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "DragonTiger_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] dragonCards,uint8[] tigerCards,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "DragonTiger_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,address tokenAddress,uint8 betType,uint32 numBets,uint256 sequenceNumber"
+  },
+  "DragonTiger_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "Approval": {
+   "inputs": "address owner,address spender,uint256 value"
+  },
+  "Transfer": {
+   "inputs": "address from,address to,uint256 value"
+  },
+  "FishPrawnCrab_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 totalWager,uint256 totalPayout,address tokenAddress,uint256[] wager,uint256[] fishPrawnCrabType,uint256[] payouts,uint256[3] outcome,uint64 sequenceNumber"
+  },
+  "FishPrawnCrab_Play_Event": {
+   "inputs": "address playerAddress,uint256[] wager,uint256[] fishPrawnCrabType,uint256 totalWager,address tokenAddress,uint256 sequenceNumber"
+  },
+  "FishPrawnCrab_Refund_Event": {
+   "inputs": "address player,uint256 totalWager,address tokenAddress"
+  },
+  "HiLo_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] currentCards,uint8[] nextCards,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "HiLo_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,address tokenAddress,uint8 currentCard,bool isHigher,uint32 numBets,uint256 sequenceNumber"
+  },
+  "HiLo_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "Keno_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[][] drawnNumbers,uint8[] matchCounts,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "Keno_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,address tokenAddress,uint8[] pickedNumbers,uint8 numberCount,uint32 numBets,uint256 sequenceNumber"
+  },
+  "Keno_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "Limbo_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint32 multiplier,uint256[] limboOutcomes,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "Limbo_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint32 multiplier,address tokenAddress,uint32 numBets,uint256 sequenceNumber"
+  },
+  "Limbo_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "Mines_End_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint256 numMines,bool[25] revealedTiles,uint256 multiplier"
+  },
+  "Mines_Fee_Event": {
+   "inputs": "address playerAddress,uint256 sequenceNumber"
+  },
+  "Mines_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,address tokenAddress,uint8 numMines,bool isCashout,uint256 sequenceNumber"
+  },
+  "Mines_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "Mines_RevealCashout_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint256 numMines,bool[25] minesTiles,bool[25] revealedTiles,uint256 multiplier,uint64 sequenceNumber"
+  },
+  "Mines_Reveal_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint256 numMines,bool[25] minesTiles,bool[25] revealedTiles,uint256 multiplier,uint64 sequenceNumber"
+  },
+  "Plinko_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint16[] paths,uint8 numRows,uint8 risk,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "Plinko_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,address tokenAddress,uint8 numRows,uint8 risk,uint32 numBets,uint256 sequenceNumber"
+  },
+  "Plinko_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "RockPaperScissors_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] outcomes,uint8[] randomActions,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "RockPaperScissors_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,address tokenAddress,uint8 action,uint32 numBets,uint256 sequenceNumber"
+  },
+  "RockPaperScissors_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "SicBo_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 totalWager,uint256 payout,address tokenAddress,uint8[3] diceResults,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "SicBo_Play_Event": {
+   "inputs": "address playerAddress,uint256[] wagers,uint8[] betTypes,uint8[] specificValues,uint256 totalWager,address tokenAddress,uint32 numBets,uint256 sequenceNumber"
+  },
+  "SicBo_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "Slots_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint16[] slotIDs,uint256[] multipliers,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "Slots_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,address tokenAddress,uint32 numBets,uint256 sequenceNumber"
+  },
+  "Slots_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "VideoPoker_Fee_Event": {
+   "inputs": "address playerAddress,uint256 sequenceNumber"
+  },
+  "VideoPoker_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,tuple[5] playerHand,uint256 outcome,uint64 sequenceNumber,uint64 sequenceNumberStart"
+  },
+  "VideoPoker_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,address tokenAddress,uint256 sequenceNumber"
+  },
+  "VideoPoker_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "VideoPoker_Start_Event": {
+   "inputs": "address playerAddress,tuple[5] playerHand,uint64 sequenceNumber"
+  },
+  "Range_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint32 multiplier,bool isOver,uint256[] rangeOutcomes,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "Range_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint32 multiplier,address tokenAddress,bool isOver,uint32 numBets,uint256 sequenceNumber"
+  },
+  "Range_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "War_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] playerCards,uint8[] dealerCards,uint8[] warPlayerCards,uint8[] warDealerCards,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "War_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,address tokenAddress,bool warBet,uint32 numBets,uint256 sequenceNumber"
+  },
+  "War_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  },
+  "WheelOfFortune_Outcome_Event": {
+   "inputs": "address playerAddress,uint256 wager,uint256 payout,address tokenAddress,uint8[] resultSegments,uint256[] payouts,uint32 numGames,uint64 sequenceNumber"
+  },
+  "WheelOfFortune_Play_Event": {
+   "inputs": "address playerAddress,uint256 wager,address tokenAddress,uint32 numBets,uint256 sequenceNumber"
+  },
+  "WheelOfFortune_Refund_Event": {
+   "inputs": "address player,uint256 wager,address tokenAddress"
+  }
+ },
+ "errors": {
+  "AlreadyInGame": {
+   "inputs": ""
+  },
+  "AwaitingVRF": {
+   "inputs": "uint256 requestID"
+  },
+  "BlockNumberTooLow": {
+   "inputs": "uint256 have,uint256 want"
+  },
+  "DuplicateNumber": {
+   "inputs": "uint8 number"
+  },
+  "EdgeFactorNotSet": {
+   "inputs": ""
+  },
+  "InvalidEdgeFactor": {
+   "inputs": "uint256 edgeFactor,uint256 min,uint256 max"
+  },
+  "InvalidFeeRate": {
+   "inputs": "uint256 rate"
+  },
+  "InvalidNumBets": {
+   "inputs": "uint256 maxNumBets"
+  },
+  "InvalidRiskCap": {
+   "inputs": "uint256 riskCap,uint256 min,uint256 max"
+  },
+  "InvalidValue": {
+   "inputs": "uint256 required,uint256 sent"
+  },
+  "InvalidWagerNumber": {
+   "inputs": "uint256 wagerNumber,uint256 min,uint256 max"
+  },
+  "NoFeeRequired": {
+   "inputs": ""
+  },
+  "NoLiquiditySet": {
+   "inputs": ""
+  },
+  "NoRequestPending": {
+   "inputs": ""
+  },
+  "NotApprovedBankroll": {
+   "inputs": ""
+  },
+  "NotInGame": {
+   "inputs": ""
+  },
+  "NotManager": {
+   "inputs": "address want,bool tag"
+  },
+  "NotOwner": {
+   "inputs": "address want,address have"
+  },
+  "OnlyCoordinatorCanFulfill": {
+   "inputs": "address have,address want"
+  },
+  "PlayerSuspended": {
+   "inputs": "uint256 suspensionTime"
+  },
+  "RefundClaimPending": {
+   "inputs": "uint256 have,uint256 want"
+  },
+  "RefundFailed": {
+   "inputs": ""
+  },
+  "RefundRequestInactive": {
+   "inputs": "uint256 requestID"
+  },
+  "RefundTooEarly": {
+   "inputs": "uint256 have,uint256 want"
+  },
+  "RouletteType": {
+   "inputs": "uint256 rType"
+  },
+  "TicketExposureAboveLimit": {
+   "inputs": "uint256 exposure,uint256 maxExposure"
+  },
+  "TransferFailed": {
+   "inputs": ""
+  },
+  "WagerAboveLimit": {
+   "inputs": "uint256 wager,uint256 maxWager"
+  },
+  "ZeroWager": {
+   "inputs": ""
+  },
+  "AlreadySuspended": {
+   "inputs": "uint256 suspensionTime"
+  },
+  "InvalidGameAddress": {
+   "inputs": ""
+  },
+  "TimeRemaingOnSuspension": {
+   "inputs": "uint256 suspensionTime"
+  },
+  "WithdrawFail": {
+   "inputs": ""
+  },
+  "NotAwaitingVRF": {
+   "inputs": ""
+  },
+  "DenominatorOverflow": {
+   "inputs": ""
+  },
+  "InvalidMultiplier": {
+   "inputs": "uint256 max,uint256 min,uint256 multiplier"
+  },
+  "MultiplicationOverflow": {
+   "inputs": ""
+  },
+  "NumeratorOverflow": {
+   "inputs": ""
+  },
+  "TotalWagerOverflow": {
+   "inputs": ""
+  },
+  "WagerOverflow": {
+   "inputs": ""
+  },
+  "InvalidBetType": {
+   "inputs": "uint256 betType"
+  },
+  "FishPrawnCrabType": {
+   "inputs": "uint256 rType"
+  },
+  "InvalidCurrentCard": {
+   "inputs": "uint8 currentCard"
+  },
+  "InvalidNumber": {
+   "inputs": "uint8 number"
+  },
+  "InvalidNumberCount": {
+   "inputs": "uint8 numberCount"
+  },
+  "InvalidNumMines": {
+   "inputs": ""
+  },
+  "InvalidNumberToReveal": {
+   "inputs": "uint32 numberPicked,uint256 maxAllowed"
+  },
+  "MinNumberToReveal": {
+   "inputs": "uint32 numberReveal"
+  },
+  "TileAlreadyRevealed": {
+   "inputs": "uint8 position"
+  },
+  "InvalidNumRows": {
+   "inputs": ""
+  },
+  "InvalidNumberToSet": {
+   "inputs": ""
+  },
+  "InvalidRisk": {
+   "inputs": ""
+  },
+  "MismatchedLength": {
+   "inputs": "uint256 multipliers,uint256 outcome"
+  },
+  "MultiplierAlreadySet": {
+   "inputs": "uint8 numRows,uint8 risk"
+  },
+  "InvalidAction": {
+   "inputs": ""
+  },
+  "InvalidSpecificValue": {
+   "inputs": "uint8 specificValue"
+  },
+  "MismatchedArrayLengths": {
+   "inputs": ""
+  }
+ },
+ "n_abi_arrays": 65
+}

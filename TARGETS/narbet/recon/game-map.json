@@ -1,0 +1,123 @@
+{
+ "0xd6F08aF222C8aa69F99B6099F93C6d96897d378f": {
+  "impl": "0x10e7375ed7c77ea3b7328beb0852ef69e95d53b7",
+  "games": [
+   "Slots"
+  ],
+  "extra": [
+   "getRandomFee()",
+   "edgeFactor()",
+   "REFUND_COMMIT_WAIT_BLOCKS()",
+   "entropy()"
+  ]
+ },
+ "0xbbE3FA39912355C49Aa3ccdD02C51d989Fb33E79": {
+  "impl": "0x03f6c356978c57cd577d465a6b7821ee4abeb02c",
+  "games": [
+   "FishPrawnCrab"
+  ],
+  "extra": [
+   "getRandomFee()",
+   "edgeFactor()",
+   "REFUND_COMMIT_WAIT_BLOCKS()",
+   "entropy()"
+  ]
+ },
+ "0xb9e0b5447B92eb5CF246693F7b533d5c84AA8dC5": {
+  "impl": "0x69aaec5a6edd0ce0533c08d749e7d25b781a5a62",
+  "games": [
+   "Limbo"
+  ],
+  "extra": [
+   "getRandomFee()",
+   "edgeFactor()",
+   "REFUND_COMMIT_WAIT_BLOCKS()",
+   "entropy()"
+  ]
+ },
+ "0xb86A1955E96147665d7bdd70E50bD6Af38E086d1": {
+  "impl": "0x016ad1852ca89181c45e543f42570cad8b0f4d80",
+  "games": [
+   "VideoPoker"
+  ],
+  "extra": [
+   "getRandomFee()",
+   "edgeFactor()",
+   "REFUND_COMMIT_WAIT_BLOCKS()",
+   "entropy()"
+  ]
+ },
+ "0xb82360d08784f0Ff24A740ADaD6b1AC2391C8D57": {
+  "impl": "0xbe4d58428ae13e0b8edbab92e7994e4c7f0073ee",
+  "games": [
+   "CoinFlip"
+  ],
+  "extra": [
+   "getRandomFee()",
+   "edgeFactor()",
+   "REFUND_COMMIT_WAIT_BLOCKS()",
+   "entropy()"
+  ]
+ },
+ "0x843D62ad75F5d0b383f8520e23d19174b7961b8E": {
+  "impl": "0x8d2026407da5324bf955ba7f21962816cb477bfc",
+  "games": [
+   "RockPaperScissors"
+  ],
+  "extra": [
+   "getRandomFee()",
+   "edgeFactor()",
+   "REFUND_COMMIT_WAIT_BLOCKS()",
+   "entropy()"
+  ]
+ },
+ "0x8261A173DC96e206b8D8621ca1231a3E7bcB851E": {
+  "impl": "0x862f403a4c0fd667e868b12ca085e18133d72e0a",
+  "games": [
+   "Baccarat"
+  ],
+  "extra": [
+   "getRandomFee()",
+   "edgeFactor()",
+   "REFUND_COMMIT_WAIT_BLOCKS()",
+   "entropy()"
+  ]
+ },
+ "0x5859E2926750F3981f95bbA16b86d8e69cf4334B": {
+  "impl": "0x3eba1cecfc04f74b831e9a8e695f741649990be5",
+  "games": [
+   "Plinko"
+  ],
+  "extra": [
+   "getRandomFee()",
+   "edgeFactor()",
+   "REFUND_COMMIT_WAIT_BLOCKS()",
+   "entropy()"
+  ]
+ },
+ "0x4A050DD00c08856cc3d7C5BD152E4e601ffDaa35": {
+  "impl": "0xe976fbe7210878c203f1770b44bf15bf7edf399a",
+  "games": [
+   "Roulette"
+  ],
+  "extra": [
+   "getRandomFee()",
+   "edgeFactor()",
+   "REFUND_COMMIT_WAIT_BLOCKS()",
+   "entropy()"
+  ]
+ },
+ "0x3014d056Db789984552084Db359D7C56A620549b": {
+  "impl": "0x116ad93f4dcb9c1d7c2c7214cccb50118ab0d196",
+  "games": [
+   "Mines"
+  ],
+  "extra": [
+   "getRandomFee()",
+   "edgeFactor()",
+   "REFUND_COMMIT_WAIT_BLOCKS()",
+   "entropy()",
+   "Mines_SetMultipliers(uint256)"
+  ]
+ }
+}
