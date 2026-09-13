@@ -1,0 +1,23 @@
+{
+ "control": {
+  "bet_status": "0x1",
+  "settle_status": "0x1",
+  "player_delta": 190.0
+ },
+ "drain": {
+  "bet_status": "0x1",
+  "drain_status": "0x1",
+  "drain_logs": 0,
+  "precheck": "empty revert (execution reverted)",
+  "settle_status": "0x0",
+  "player_delta": 0.0,
+  "state": [
+   100000000000000000000,
+   349916,
+   0,
+   104496603,
+   1,
+   0
+  ]
+ }
+}

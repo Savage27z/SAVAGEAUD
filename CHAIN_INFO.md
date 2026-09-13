@@ -89,6 +89,17 @@ main contract.
 - Mainnet RPC may require API key — check docs.
 - Used for: OBSDN audit (Perpetual DEX, $220K TVL)
 
+### Mainnet RPC reality (measured 2026-09-13, nar.bet audit — saves a lot of wasted time)
+
+| Endpoint | Verdict |
+|---|---|
+| `https://rpc2.monad.xyz` | ✅ **Use this.** Works with a browser `User-Agent`; `getLogs` capped at **29,999 blocks** (`-32012`) |
+| `https://rpc.monad.xyz` | ❌ Unusable under load — `413 Request Entity Too Large` on *tiny* requests and `-32602 Invalid params` on a call that worked 60 s earlier. Throttling artifacts, not real errors — don't debug code against them |
+| `rpc1.monad.xyz`, drpc, publicnode, thirdweb | ⚠️ 403/400 with bare python-urllib → send `User-Agent: Mozilla/5.0 …`; rpc1 then returns `-32602` |
+| `api.monadscan.com` | ❌ 404 for *everything*, including WMON — uncalibrated negative, not evidence that a contract is unverified |
+
+**Always chunk `getLogs` and always run a positive control** (WMON `0x3bd359C1119dA7Da1D913D1C2B7dC461115433A` emits dozens of logs per 100 blocks). A chunked scan that silently drops errored chunks under-counts; if per-topic counts come out exactly equal, that is the tell that the sample is complete.
+
 ---
 
 ## Ethereum

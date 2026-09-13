@@ -1,0 +1,48 @@
+{
+ "owner_fn_probe": [
+  {
+   "sel": "0x4a9aa3c5",
+   "arg": "WMON",
+   "status": "0x1",
+   "after": "require: not whitelist token"
+  },
+  {
+   "sel": "0x4a9aa3c5",
+   "arg": "NATIVE",
+   "status": "0x0",
+   "after": "require: not whitelist token"
+  },
+  {
+   "sel": "0x7320ca26",
+   "arg": "WMON",
+   "status": "0x1",
+   "after": "require: not whitelist token"
+  },
+  {
+   "sel": "0x7320ca26",
+   "arg": "NATIVE",
+   "status": "0x1",
+   "after": "require: not whitelist token"
+  }
+ ],
+ "drain_probe": [
+  {
+   "fn": "withdrawNativeFunds(owner,100)",
+   "status": "0x1",
+   "pool_delta": -100.0,
+   "err": "OK"
+  },
+  {
+   "fn": "withdrawFunds(owner,(native),100)",
+   "status": "0x0",
+   "pool_delta": 0.0,
+   "err": "OK"
+  }
+ ],
+ "drain_all": {
+  "status": "0x1",
+  "err": "OK",
+  "pool_after": 0,
+  "owner_after": 528753728351489845049014
+ }
+}

@@ -1,0 +1,14 @@
+{
+ "owner_is_contract": true,
+ "owner_code_size": 23,
+ "drain": {
+  "status": "0x1",
+  "pool_after": 0,
+  "logs": 0
+ },
+ "settle_after_drain": {
+  "status": null,
+  "err": "empty revert (Insufficient funds for gas * price + value)",
+  "player_delta": 0.0
+ }
+}
