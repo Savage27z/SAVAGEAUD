@@ -203,5 +203,12 @@ TARGETS/narbet/recon/
 - **`rpc.monad.xyz` is unusable under load** — `413 Request Entity Too Large` on *tiny* requests and
   `-32602 Invalid params` on a call that worked one minute earlier. Both are throttling artifacts.
   Do not debug your own code against them.
-- `api.monadscan.com` 404s for everything, including WMON — explorer-side data is unavailable (an
-  uncalibrated negative, not evidence).
+- `api.monadscan.com` does **not** 404 — it answers
+  `{"result":"You are using a deprecated V1 endpoint, switch to Etherscan V2"}`. That is a
+  *calibrated* read (an earlier note calling it "404 for everything" was a wrong detector read).
+  The working route is Etherscan V2 with `chainid=143`, and it needs **any Etherscan API key** —
+  the one credential that would enable source-level review of this target.
+- Sourcify (chainId 143) has nothing: `sourcify.dev/server/v2/contract/143/<lowercase-addr>` → 404
+  for real contracts (checksummed addresses give 400, so pass lowercase). Verified negative.
+- `rpc2.monad.xyz` is **archival** — `--fork-block-number` pinning works (forked cleanly at
+  104496570 and 104496600).
