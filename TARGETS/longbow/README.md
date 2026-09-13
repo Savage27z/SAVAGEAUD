@@ -106,30 +106,66 @@ SLV **$58.10**, SGOV **$101.04** — all sane. ⇒ **no decimals/scale misconfig
 
 ## Audit surface (ranked by expected value)
 
-1. **★ ORCL `DualAggregator` (`0x4a9aBC75…`, verified, 23KB).** A "dual" source aggregator is a
-   primary/fallback design — exactly where a real bug lives (picks the wrong side, falls back to a stale
-   source, no cross-check between sources). Read the source first: it is free and verified.
-2. **★ CASHCAT Uniswap adapter (`0x709400Ed…`, 5,207 B, UNVERIFIED).** Bytecode contains
-   `observe(uint32[])` (`0x883bdbfd`) and **does not** contain `slot0()` — so it is a **TWAP, not a spot
-   read**. Open: TWAP window length, pool depth, whether a sustained push is cheap, and whether the
-   window is long enough that the answer is honest. Impact is bounded by Morpho's **isolation** — market 5
-   holds only ~$5 of USDG, so price inflation there buys nothing. Verify that bound before spending time.
-3. **★ Shared quote feed "USDG / USD" (`0x61B7e565…`, 8 dp).** 28 markets depend on it. Confirm it is a
-   genuine Chainlink feed (phase-encoded roundId, advancing) and not something re-usable/writable.
-4. **Staleness / liveness (hypothesis, not yet a finding).** `MorphoChainlinkOracleV2.price()` validates
-   only `answer > 0`; the equity feeds freeze outside market hours — **measured: the NVDA feed's
-   `updatedAt` was 44.1 hours old while the ETH feed was current.** Two consequences to test on a fork:
-   (a) positions can't be liquidated during a gap at a price that *should* have moved; (b) a dead /
-   deprecated aggregator is indistinguishable from a live one, so the market keeps operating on a frozen
-   price forever.
+### ⚠️ REVISIONS (same session — corrections to the recon above, kept visible)
+
+- **RETRACTED: "the ORCL feed is Longbow's own code."** It is **Chainlink's**. `DualAggregator` is a port of
+  Chainlink's `OCR2Aggregator` (`BUSL 1.1`, imports `@chainlink/contracts`, `typeAndVersion = "DualAggregator
+  1.0.0"`), adding a **secondary-report** source with a `cutoffTime` window. So **27 of 28 feeds are Chainlink
+  infrastructure** (26 aggregator proxies + 1 DualAggregator) — not 26. The 23,186-byte size that flagged it
+  as "custom" is just a bigger Chainlink contract, not Longbow's code. Only **one** feed is Longbow's own:
+  the CASHCAT adapter.
+- **WITHDRAWN: the "no staleness check" hypothesis (was promoted as a candidate finding).** Morpho's
+  `ChainlinkDataFeedLib.getPrice()` checks only `answer >= 0`, and the source says so **on purpose**:
+  *"Staleness is not checked because it's assumed that the Chainlink feed keeps its promises on this. The price
+  is not checked to be in the min/max bounds because it's assumed that the Chainlink feed keeps its promises."*
+  That is Morpho's documented upstream design decision, deployed vanilla by Longbow — **not a Longbow
+  finding**, and not a bug at all. Recorded so nobody re-derives it as one.
+  (Source: `morpho-org/morpho-blue-oracles` → `src/morpho-chainlink/libraries/ChainlinkDataFeedLib.sol`.)
+- **RETRACTED: "verification read from a 500 error."** Already corrected in `CHAIN_INFO.md` — a 500
+  appeared intermittently for both verified and unverified addresses.
+
+1. **★ CASHCAT Uniswap adapter (`0x709400Ed…`, 5,207 B, UNVERIFIED) — Longbow's ONLY genuinely custom
+   contract found.** Bytecode contains `observe(uint32[])` (`0x883bdbfd`) and **does not** contain
+   `slot0()` ⇒ it is a **TWAP, not a spot read**. Open: window length, which pool it reads, cost of a
+   sustained push. **Impact is bounded by Morpho isolation:** market 5 has ~$5.00 of USDG supplied, so
+   inflating CASHCAT collateral there buys ~$5. Confirmed both CASHCAT/USDG V3 pools (fee 500 and 3000)
+   have **`liquidity = 0`** — empty pools whose `observe()` history is untethered from a real market, and
+   neither matches the adapter's $0.16459 (fee-500 slot0 ⇒ $0.1175, fee-3000 ⇒ $0.2549). Worth knowing
+   which pool it reads; not currently profitable to exploit.
+2. **Shared quote feed "USDG / USD" (`0x61B7e565…`, 8 dp).** All 28 markets depend on it. Genuine
+   Chainlink-style aggregator (phase-encoded roundId 2^64+101, advancing, `updatedAt` current).
+3. **Trust concentration: ONE address owns every feed.** `owner() == 0xeE27D5Ae494300902D90454e8630A3F1C68c9C52`
+   on the ORCL `DualAggregator` *and* on the aggregators behind the proxies (checked ETH/NVDA/SPCX) — the
+   address is a **171-byte contract (Safe-proxy shape)**. The entire $1.7M collateral side is priced by
+   feeds under a single owner. Longbow's reliance is inherited, but it belongs in the trust model.
+4. **The delegated "min/max bounds" promise is effectively empty.** Morpho skips bounds checks *because
+   Chainlink is assumed to enforce them* — yet every feed here reports `minAnswer = 1` and
+   `maxAnswer ≈ 9.58e52`. So the one guard Morpho declines to make is, in practice, not made by the feed
+   either. Normal Chainlink practice, but it means nothing stands between a bad report and a bad borrow.
 5. **Curator is a single EOA** (`owner` = `curator`, codesize 0) with 10% fee and a 1-day timelock on
    cap/guardian changes. Enumerate which vault powers are **instant** (`setIsAllocator`, `setCurator`,
    `setFee`, `setFeeRecipient`, `setSupplyQueue` vs `reallocate`) and whether any instant path can move
-   the vault into a hostile market. Vault currently holds $8, so severity is low — but the mechanism is
-   reusable at scale.
-6. **Collateral-vs-real-market price** (H3, highest impact if it holds): do the tokenized equities trade
-   near their oracle price on-chain? If a token is obtainable far below its oracle price, buy → post →
-   borrow is a direct theft path.
+   the vault into a hostile market. Vault holds $8.02 today, so severity is low — the mechanism is reusable.
+6. **Collateral-vs-real-market price (H3) — TESTED, NEGATIVE.** Compared each big collateral's oracle price
+   against its live Uniswap V3 USDG pool (real pools, 22,142 B, real liquidity):
+
+   | Collateral | DEX price | Oracle price | Difference |
+   |---|---|---|---|
+   | NVDA (fee 500) | $215.68 | $218.30 | −1.2% |
+   | SPCX (fee 500) | $149.38 | $149.97 | −0.4% |
+   | GOOGL (fee 500) | $337.65 | $339.05 | −0.4% |
+
+   Within spread/fee noise ⇒ **the collateral is not obtainable below its oracle price**, so the
+   buy → post → borrow theft path does not open here. This was the highest-impact hypothesis and it fails.
+
+### Verdict so far: no outsider-reachable finding — and the stack is thinner than it looked
+
+Everything load-bearing is upstream: Morpho Blue + `MetaMorphoV1_1` + MorphoChainlinkOracleV2 + Chainlink
+feeds. Longbow's original code reduces to **one unverified oracle adapter for a memecoin in a $5 market**,
+plus configuration choices (LLTVs, caps) and a single-EOA curator. There is **no fork-attack pass yet**, so
+this is **not** a clean verdict — the mandatory fork phase (impersonate/forge reports, try to borrow past
+LLTV, try to displace a liquidation) has not run.
+
 
 ## Open questions / blocked
 
