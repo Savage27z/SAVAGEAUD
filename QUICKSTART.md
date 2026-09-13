@@ -68,3 +68,19 @@ Every target gets the **entire methodology stack**, not a subset. Think of it as
 - They communicate in brief signals. One-word approvals, short redirects. Don't over-deliberate.
 - They defer to your judgment on target selection. Pick one and execute.
 - Reports must sound human — natural language, "-" bullets, analogies over jargon.
+
+---
+
+## Local tooling on this box (machine-level, not in the repo)
+
+- **HuntProxy** — MCP-native web-security workbench (Rust, Apache-2.0): capture proxy + persistent
+  Chromium + searchable traffic history + replay/fuzzer + findings store, driven by tool calls.
+  Installed `~/.local/bin/HuntProxy` (data in `~/.huntproxy`, 10 plugins, Chromium verified headless),
+  wired into Hermes as MCP server **`huntproxy`** (38 tools; `/reload-mcp` or a new session activates).
+  Verified with a manual stdio handshake (38 tools advertised) and `hermes mcp test huntproxy`.
+  Use it for the **app surface** (web UI / API / relayer / referral / webhooks) — the non-contract
+  half of a bounty. Reference: skill `app-surface-bounty-hunting`,
+  `references/huntproxy-mcp-workbench.md`. Note: Hermes MCP support is silently disabled without
+  `pip install mcp`; and `hermes mcp add` cancels without a TTY unless you pipe `Y`.
+- Note this box is a datacenter IP — expect bot checks on live targets; HuntProxy supports an
+  upstream (residential) proxy via `~/.huntproxy/config.toml`.
