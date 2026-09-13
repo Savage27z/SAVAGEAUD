@@ -1,0 +1,64 @@
+{
+  "_README": "One of these per target: TARGETS/<n>/spec.json. This is the artifact the protocol loop turns on. 'Before' steps 3-5 produce it; 'During' works through sections[] one at a time; every claim needs an evidence string (file:line, tx hash, fork receipt, or an on-chain read). A section with an empty evidence field is OPEN, no matter how convincing it reads.",
+
+  "target": {
+    "name": "",
+    "app": "",
+    "chain": "",
+    "chain_id": null,
+    "opened": "",
+    "source": {
+      "verified": false,
+      "route": "e.g. Etherscan V2 chainid=<n> + key / Sourcery / none (black-box)",
+      "note": "if unverified, say so explicitly — it caps classic source review and the spec must say which steps are reachable"
+    },
+    "contracts": [
+      {"address": "", "role": "", "impl": "", "proxy_kind": "ERC-1967 / minimal / none", "code_size": null, "known": true}
+    ],
+    "coverage_gap": "contracts/proxies known to exist but NOT yet mapped or audited — must be non-empty or explicitly 'none'"
+  },
+
+  "integrations": [
+    {"name": "", "kind": "oracle / relayer / bridge / token / upgrade path / off-chain", "trusted": true, "notes": ""}
+  ],
+
+  "actors": [
+    {"name": "", "address": "", "authority": "EOA / EOA+7702 delegation / multisig / contract / timelock", "can": [], "cannot": [], "verified_how": ""}
+  ],
+
+  "assumptions": [
+    {"id": "ASM-1", "statement": "", "accepted_by_design": false, "breaks_if": ""}
+  ],
+
+  "invariants": [
+    {"id": "INV-1", "statement": "e.g. sum(userShares) * sharePrice <= pool balance", "where": "contract:function", "check": "how it is tested (fork call / fuzz / static)", "checked": false, "result": "", "evidence": ""}
+  ],
+
+  "never_should_happen": [
+    {"id": "NSH-1", "statement": "", "attempt": "concrete fork attack performed", "result": "blocked / partial / succeeded", "evidence": ""}
+  ],
+
+  "sections": [
+    {"id": "S1", "name": "one contract or one flow", "contracts": [], "depends_on": [], "value_flows": [], "status": "not_started", "evidence": "", "findings": []}
+  ],
+
+  "value_movers": [
+    {"function": "", "contract": "", "direction": "in / out / both", "caller_can_be": "anyone / owner / player / game", "guards": [], "bounded_by": "what limits the amount (cap, share math, fees, nothing)", "notes": ""}
+  ],
+
+  "main_functions": [
+    {"function": "", "why_everything_depends_on_it": "", "state_it_touches": []}
+  ],
+
+  "passes": [
+    {"pass": 1, "lens": "e.g. flow gap / trust gap / numerical gap / fork attack", "scope": "", "hypotheses": [], "result": "", "evidence": ""}
+  ],
+
+  "status": {
+    "done": false,
+    "sections_closed": 0,
+    "sections_total": 0,
+    "open_questions": [],
+    "blocked_on": "credential / unfunded env / unknown address / nothing"
+  }
+}

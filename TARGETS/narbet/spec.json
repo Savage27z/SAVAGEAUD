@@ -1,0 +1,121 @@
+{
+  "_note": "First target spec produced under AUDIT_PROTOCOL.md. Written AFTER ~6 passes of work, so it is partly reconstructed from findings F01-F06 — the honest consequence of not having produced it up front is recorded in status.note.",
+  "target": {
+    "name": "nar.bet",
+    "app": "https://nar.bet",
+    "chain": "Monad",
+    "chain_id": 143,
+    "opened": "2026-09-12",
+    "source": {
+      "verified": false,
+      "route": "unknown — Sourcify has nothing for chainId 143; api.monadscan.com says 'use Etherscan V2' (needs any Etherscan key)",
+      "note": "No verified source. Full JSON ABI recovered from the frontend bundle (130 fns / 80 events / 57 errors); everything else is black-box + bytecode. Source-level review is BLOCKED on an explorer key."
+    },
+    "contracts": [
+      {"address": "0x71dc4a726C92E6bf506F2Afc2Cee8B63A89B29EC", "role": "BankRoll share pool", "impl": "0xf53441ef835df1106198038ef71d8459f389ec15", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0x3014d056Db789984552084Db359D7C56A620549b", "role": "Mines", "impl": "0x116ad93f4dcb9c1d7c2c7214cccb50118ab0d196", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0xb82360d08784f0Ff24A740ADaD6b1AC2391C8D57", "role": "CoinFlip", "impl": "0xbe4d58428ae13e0b8edbab92e7994e4c7f0073ee", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0x4A050DD00c08856cc3d7C5BD152E4e601ffDaa35", "role": "Roulette", "impl": "0xe976fbe7210878c203f1770b44bf15bf7edf399a", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0x5859E2926750F3981f95bbA16b86d8e69cf4334B", "role": "Plinko", "impl": "0x3eba1cecfc04f74b831e9a8e695f741649990be5", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0xd6F08aF222C8aa69F99B6099F93C6d96897d378f", "role": "Slots", "impl": "0x10e7375ed7c77ea3b7328beb0852ef69e95d53b7", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0xb9e0b5447B92eb5CF246693F7b533d5c84AA8dC5", "role": "Limbo", "impl": "0x69aaec5a6edd0ce0533c08d749e7d25b781a5a62", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0xb86A1955E96147665d7bdd70E50bD6Af38E086d1", "role": "VideoPoker", "impl": "0x016ad1852ca89181c45e543f42570cad8b0f4d80", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0x843D62ad75F5d0b383f8520e23d19174b7961b8E", "role": "RockPaperScissors", "impl": "0x8d2026407da5324bf955ba7f21962816cb477bfc", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0x8261A173DC96e206b8D8621ca1231a3E7bcB851E", "role": "Baccarat", "impl": "0x862f403a4c0fd667e868b12ca085e18133d72e0a", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0xbbE3FA39912355C49Aa3ccdD02C51d989Fb33E79", "role": "FishPrawnCrab", "impl": "0x03f6c356978c57cd577d465a6b7821ee4abeb02c", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0x0B1E533e33f9E82849E71fb5c0a33F38462D5eD4", "role": "Range game (NOT a config base — recon mislabel corrected)", "impl": "0xdba35808de5e89e5e0ca28605d7d3f0292579404", "proxy_kind": "ERC-1967", "known": true},
+      {"address": "0xd458261e832415cfd3bae5e416fdf3230ce6f134", "role": "Pyth Entropy wrapper (ERC-1967 proxy)", "impl": "0x1235841f8df7b47b2b35c9654a13bb3be57ee9c6", "proxy_kind": "ERC-1967", "known": true}
+    ],
+    "coverage_gap": "9 of 19 games have NO mapped address and are UNAUDITED: HiLo, Keno, Crash, Dice, DragonTiger, Range(separate from 0x0B1E533e?), SicBo, War, WheelOfFortune. HiLo is the sharpest (HiLo_Play takes a PLAYER-SUPPLIED uint8 currentCard while randomness arrives afterwards, guarded by InvalidCurrentCard(uint8)). A topic-discovery scan failed silently (every chunk errored and was skipped) — needs a fixed scan with chunk-error surfacing and a positive control."
+  },
+
+  "integrations": [
+    {"name": "Pyth Entropy (via wrapper 0xd458261e, impl 0x1235841f)", "kind": "oracle / randomness", "trusted": true, "notes": "Game contracts accept _entropyCallback(uint64,address,bytes32) only from the entropy address. Provider 0x52deaa1c…; reveal relayer observed at 0x9a436862…. Reveal latency measured: min 2 / p50 5 / max 9 blocks (n=315)."},
+    {"name": "Frontend bundle", "kind": "off-chain", "trusted": true, "notes": "Source of the recovered ABI; client-side edge constants listed per game."}
+  ],
+
+  "actors": [
+    {"name": "Owner (games + BankRoll)", "address": "0x4aD0d8f0A100A74547e4B66C008CaE6e91Ef6d8b", "authority": "EOA + EIP-7702 delegation", "can": ["withdrawNativeFunds / withdrawFunds (UNCAPPED — drained 100% of the pool on fork)", "suspend self only", "permantlyBan self only", "setEdgeFactor/setRiskCap/setWagerNumber/setWhiteList", "upgradeTo/upgradeToAndCall (UUPS)"], "cannot": ["suspend or ban ANOTHER player (suspend/permantlyBan take no address and act on msg.sender)"], "verified_how": "eth_getCode = 0xef0100<delegate 0x63c0c19a…>; drain executed on fork; suspend tests on fork"},
+    {"name": "Owner (3 minimal 149-byte proxies)", "address": "0xb34f876ccf1d422bdc5a52aa83a96afe251faf68", "authority": "unknown", "can": [], "cannot": [], "verified_how": "different owner from the BankRoll/games owner — NOT yet investigated"},
+    {"name": "Player", "address": "any", "authority": "EOA", "can": ["Play (payable, wager + 1.4 MON entropy fee)", "Refund after 2001 blocks, 80% back, two-step", "self-suspend/self-ban", "multi-step play: Mines_Start/Reveal/End, VideoPoker_Start/Replace"], "cannot": ["choose randomness", "deposit (every amount reverts)", "refund to dodge a loss", "reuse/steal a commitment", "double-spend a refunded bet"], "verified_how": "fork attacks v2-v11"},
+    {"name": "LP", "address": "unknown (no LP address recoverable — BankRoll emits no logs)", "authority": "EOA", "can": ["withdraw (subject to unlockTimestamp)", "NOT deposit (closed)"], "cannot": [], "verified_how": "unlockTimestamp(address,address)=0xb84e8289 identified by dictionary match"}
+  ],
+
+  "assumptions": [
+    {"id": "ASM-1", "statement": "The owner is trusted (can upgrade the implementation)", "accepted_by_design": true, "breaks_if": "the owner key is compromised — it is a single EOA with a 7702 delegation, no multisig, no timelock"},
+    {"id": "ASM-2", "statement": "Pyth Entropy supplies honest randomness", "accepted_by_design": true, "breaks_if": "provider compromised"},
+    {"id": "ASM-3", "statement": "house edge exists", "accepted_by_design": true, "breaks_if": "n/a — 5% declared, but Mines' own table implies ~2.5% (F06 §3)"}
+  ],
+
+  "invariants": [
+    {"id": "INV-1", "statement": "A player cannot escape a losing bet by choosing to refund after seeing the outcome", "where": "game:*_Refund / _entropyCallback", "check": "fork: probe Refund() at +0..+40 and after settle; measure reveal latency census", "checked": true, "result": "HOLDS", "evidence": "F01 (315 cycles, p50 5 blocks vs 2001-block gate), F02 (timing irrelevant — refund cannot be claimed inside a normal bet)"},
+    {"id": "INV-2", "statement": "Refunding a bet never also pays the bet", "where": "game:_entropyCallback", "check": "fork: refund a request, then deliver a KNOWN WINNING random", "checked": true, "result": "HOLDS", "evidence": "F02 §2 shape 4 — callback status 0x1, payout +0.0000, no logs, GetState stays zeroed"},
+    {"id": "INV-3", "statement": "A refund commitment cannot be created or reused outside its own pending request", "where": "game:*_Refund", "check": "fork: idle commit attempt; commit on A then reuse on B", "checked": true, "result": "HOLDS", "evidence": "F02 §2 shapes 2-3 — clock binds to the request (want = betBlock+2001) and resets per request"},
+    {"id": "INV-4", "statement": "A suspended player's in-flight funds remain retrievable", "where": "BankRoll.suspend + game payout/refund", "check": "fork: self-suspend with a bet in flight, then settle a WIN and run the refund path", "checked": true, "result": "HOLDS", "evidence": "F03 §2 — payout +19.00 MON landed while suspended; refund +7.9998 MON"},
+    {"id": "INV-5", "statement": "No game configuration lets a player bet at positive EV", "where": "Mines.GetMultipliers", "check": "enumerate all 225 valid (numMines, numRevealed) cells via the view and compare to C(25,r)/C(25-m,r)", "checked": true, "result": "HOLDS (max RTP 0.9780, zero cells > 1.0)", "evidence": "F06 §2 + recon/mines-multiplier-table.json"},
+    {"id": "INV-6", "statement": "Player-supplied game state is rejected when out of range", "where": "Mines_Start (numMines), HiLo_Play (currentCard), Keno_Play (pickedNumbers)", "check": "fork: call with out-of-range values, decode the error", "checked": false, "result": "PARTIAL — Mines numMines verified (4..23, InvalidNumMines 0x822cb1a0). HiLo/Keno NOT testable: addresses unmapped", "evidence": "F06 §1; gap recorded in target.coverage_gap"},
+    {"id": "INV-7", "statement": "The pool always holds enough to pay every bet it has accepted", "where": "BankRoll / game payout path", "check": "fork A/B: settle a winning bet with the pool intact vs after an owner drain", "checked": true, "result": "VIOLATED BY THE OPERATOR — pool intact: +190.00 paid; drained: callback reverts, player +0.00, request stuck awaiting=1 forever", "evidence": "F04 §Receipts (recon/fork_v10_drain_ab.py)"},
+    {"id": "INV-8", "statement": "LP share value is not diluted or inflatable by donation", "where": "BankRoll.deposit/withdraw", "check": "fork: deposit, donate directly to the contract, deposit again; compare shares per MON", "checked": false, "result": "BLOCKED — deposit() reverts for every positive amount, so no LP position can be created to test with", "evidence": "F05 (deposit probe) — the blocker is itself the finding"}
+  ],
+
+  "never_should_happen": [
+    {"id": "NSH-1", "statement": "The operator can take LP principal in a single call", "attempt": "fork: withdrawNativeFunds(owner, poolBalance) as the owner", "result": "SUCCEEDED — 527,653.74 MON out, pool 0.00, 0 logs, status 0x1", "evidence": "F04"},
+    {"id": "NSH-2", "statement": "A winning bet cannot be settled", "attempt": "fork: drain the pool, then deliver a known winning outcome", "result": "SUCCEEDED (payout unavailable) — callback reverts, request stuck", "evidence": "F04 A/B"},
+    {"id": "NSH-3", "statement": "A player can pick the outcome of a bet", "attempt": "fork: supply extreme currentCard; enumerate the payout table for positive-EV cells", "result": "BLOCKED so far — Mines table has no positive-EV cell; HiLo untested (unmapped)", "evidence": "F06"},
+    {"id": "NSH-4", "statement": "A refund lets a player avoid a loss or be paid twice", "attempt": "fork: 4 attack shapes incl. a known-winning callback after refund", "result": "BLOCKED — all four negative", "evidence": "F02"},
+    {"id": "NSH-5", "statement": "A suspended player's funds are stranded", "attempt": "fork: self-suspend mid-bet, then pay out / refund", "result": "BLOCKED — money still moves", "evidence": "F03"}
+  ],
+
+  "sections": [
+    {"id": "S1", "name": "Randomness integration (Entropy request → reveal → callback)", "contracts": ["0xd458261e", "games"], "value_flows": [], "status": "closed", "evidence": "F01 + F02: latency census (n=315, 0/315 over the commit wait), gate order decoded, callback gated to the entropy address", "findings": []},
+    {"id": "S2", "name": "Bet lifecycle + refund state machine", "contracts": ["games"], "value_flows": ["wager in", "payout out", "80% refund out"], "status": "closed", "evidence": "F02: two-step refund, both gates decoded from revert args, 4 attack shapes negative", "findings": []},
+    {"id": "S3", "name": "BankRoll money path (deposit / withdraw / owner withdrawal / payout)", "contracts": ["0x71dc4a72"], "value_flows": ["LP in (BLOCKED)", "LP out", "owner out (UNCAPPED)", "payout out (can revert)"], "status": "in_progress", "evidence": "F04 (unbounded owner withdraw + drain A/B), F05 (deposits impossible); LP withdraw path and share math still open", "findings": ["F04", "F05"]},
+    {"id": "S4", "name": "Player-supplied game state (Mines/HiLo/Keno/VideoPoker inputs)", "contracts": ["0x3014d056"], "value_flows": [], "status": "in_progress", "evidence": "F06: Mines validated + 225-cell payout table enumerated (no positive-EV cell); HiLo and Keno blocked on unmapped addresses", "findings": []},
+    {"id": "S5", "name": "Suspension / ban / self-exclusion", "contracts": ["0x71dc4a72"], "value_flows": [], "status": "closed", "evidence": "F03: self-service semantics decoded, PlayerSuspended(uint256) enforcement, funds not stranded", "findings": []},
+    {"id": "S6", "name": "Upgrade + ownership surface (UUPS, proxy admins, the 7702 delegate)", "contracts": ["0x4aD0d8f0", "0x63c0c19a", "0xb34f876c"], "value_flows": [], "status": "not_started", "evidence": "", "findings": []},
+    {"id": "S7", "name": "9 unmapped game contracts", "contracts": [], "value_flows": [], "status": "not_started", "evidence": "addresses unknown — scan failed silently, must be re-run with error surfacing + positive control", "findings": []},
+    {"id": "S8", "name": "Client bundle constants vs on-chain config (edge drift)", "contracts": [], "value_flows": [], "status": "in_progress", "evidence": "F06 §3: Mines' table implies ~2.5% while edgeFactor()=9500 (5%); cross-game reconciliation not finished", "findings": []}
+  ],
+
+  "value_movers": [
+    {"function": "withdrawNativeFunds(address,uint256)", "contract": "BankRoll", "direction": "out", "caller_can_be": "owner", "guards": [], "bounded_by": "NOTHING — no cap, no fee bound, no reservation for in-flight bets, no event", "notes": "F04. accrued income (calculatedIncome) was 0 at the time 527k MON left"},
+    {"function": "withdrawFunds(address,address,uint256)", "contract": "BankRoll", "direction": "out", "caller_can_be": "owner", "guards": ["unknown — reverts with NATIVE (token variant)"], "bounded_by": "unverified", "notes": "ERC-20 twin of the above; no non-native token is whitelisted today"},
+    {"function": "deposit(address,uint256)", "contract": "BankRoll", "direction": "in", "caller_can_be": "anyone", "guards": ["amount > 0", "amount <= limit"], "bounded_by": "limit == 0 → every positive amount reverts 'Staking amount exceeds limit'", "notes": "F05. Only native is whitelisted (WMON → 'not whitelist token')"},
+    {"function": "transferPayout(address,uint256,address)", "contract": "BankRoll", "direction": "out", "caller_can_be": "registered games only (else InvalidGameAddress 0x9b8d1cd9)", "guards": ["caller is a game"], "bounded_by": "pool balance — reverts when the pool is empty, stranding the request", "notes": "F04 A/B — this is the path that fails after a drain"},
+    {"function": "X_Play(...)", "contract": "games", "direction": "in", "caller_can_be": "any player", "guards": ["isPlayerSuspended → PlayerSuspended(uint256)", "one pending request per player/game → AwaitingVRF", "WagerAboveLimit[given,limit]"], "bounded_by": "maxWager = houseLiquidity × riskCap(ppm)/1e6 ÷ maxPayoutMultiplier (RPS: 2,631.58 MON)", "notes": "F03 §1"},
+    {"function": "X_Refund()", "contract": "games", "direction": "out", "caller_can_be": "player", "guards": ["RefundTooEarly(have, requestBlock+2001)", "RefundClaimPending(have, commitBlock+21)", "NotAwaitingVRF"], "bounded_by": "pays 80% of the wager; clears the request", "notes": "F02"},
+    {"function": "_entropyCallback(uint64,address,bytes32)", "contract": "games", "direction": "out", "caller_can_be": "entropy contract only", "guards": ["msg.sender == entropy()"], "bounded_by": "no-op if the request was already refunded", "notes": "F02 shape 4"}
+  ],
+
+  "main_functions": [
+    {"function": "_entropyCallback", "why_everything_depends_on_it": "every game settles here; no other path pays a win", "state_it_touches": ["pending request", "board/outcome", "bankroll payout"]},
+    {"function": "BankRoll.withdrawNativeFunds", "why_everything_depends_on_it": "the only function that can move the pool's principal", "state_it_touches": ["native balance"]},
+    {"function": "BankRoll.transferPayout", "why_everything_depends_on_it": "all game payouts funnel through it", "state_it_touches": ["native/ERC20 balance"]},
+    {"function": "X_Play", "why_everything_depends_on_it": "all wager intake and request creation", "state_it_touches": ["pending request", "wager", "suspension check", "risk cap"]}
+  ],
+
+  "passes": [
+    {"pass": 1, "lens": "on-chain census (free reads + logs)", "scope": "Entropy latency, outcome reconciliation", "hypotheses": ["refund-after-reveal"], "result": "NEGATIVE", "evidence": "F01"},
+    {"pass": 2, "lens": "fork attack — refund/abort state machine", "scope": "RPS refund path end to end", "hypotheses": ["idle pre-commit", "stale commitment reuse", "double-spend"], "result": "NEGATIVE (4/4)", "evidence": "F02"},
+    {"pass": 3, "lens": "numerical / config", "scope": "riskCap semantics, max wager vs liquidity", "hypotheses": ["riskCap=100% is a misconfiguration"], "result": "NEGATIVE — ppm risk budget, formula matches to the wei", "evidence": "F03 §1"},
+    {"pass": 4, "lens": "trust gap — privileged actor × funds", "scope": "suspend/ban vs in-flight money", "hypotheses": ["funds_locked_dos"], "result": "NEGATIVE — self-service only", "evidence": "F03 §2"},
+    {"pass": 5, "lens": "value-flow / money path", "scope": "BankRoll deposit/withdraw/owner withdrawal", "hypotheses": ["share inflation", "unbounded owner withdrawal"], "result": "POSITIVE — F04 (unbounded, operator-only), F05 (deposits dead)", "evidence": "F04, F05"},
+    {"pass": 6, "lens": "player-supplied state + payout math", "scope": "Mines/HiLo inputs, multiplier table", "hypotheses": ["forgeable board state", "positive-EV cell"], "result": "NEGATIVE so far + a consistency finding (edge drift)", "evidence": "F06"}
+  ],
+
+  "status": {
+    "done": false,
+    "sections_closed": 3,
+    "sections_total": 8,
+    "open_questions": [
+      "What do the two owner-only unidentified BankRoll selectors do (0x4a9aa3c5, 0x7320ca26)? They exist in no recovered ABI and had no effect on suspension or playability.",
+      "Is the owner's EIP-7702 delegate (0x63c0c19a…, 11,185 bytes) exploitable by a third party — i.e. can someone else act as the owner and call the drain?",
+      "Who is the second owner 0xb34f876c… on the three minimal proxies?",
+      "Where does the 20% refund penalty go?",
+      "Why does the Mines table imply 2.5% while edgeFactor is 5%?",
+      "Has withdrawNativeFunds already been used historically? (needs a tx index — BankRoll emits no events)"
+    ],
+    "blocked_on": "Etherscan API key (source review + historical drain check); 9 unmapped game addresses (fixable without a credential via a corrected topic scan or the frontend bundle)",
+    "note": "This spec was reconstructed AFTER six passes instead of written up front. The cost is visible: sections S3/S4/S8 are still open in ways that up-front invariants would have caught earlier (INV-8 could never have been tested because deposits are dead, and that should have been discovered in 'Before' step 1, not in pass 5)."
+  }
+}

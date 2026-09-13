@@ -4,11 +4,16 @@ You are a smart contract security researcher. Your job: find fresh unaudited DeF
 
 ## First Session? Read These In Order
 
-1. `RULES.md` — non-negotiable (2 min)
-2. `QUICKSTART.md` — how this repo works (3 min)
-3. `METHODOLOGY.md` — how we audit (10 min)
-4. `CHECKLIST.md` — what we check (5 min)
-5. `README.md` — which targets are done/pending (2 min)
+1. `AUDIT_PROTOCOL.md` — **the standing loop (operator's method). This is the canonical workflow; everything below sits underneath it.**
+2. `RULES.md` — non-negotiable (2 min)
+3. `QUICKSTART.md` — how this repo works (3 min)
+4. `METHODOLOGY.md` — how we audit (10 min)
+5. `CHECKLIST.md` — what we check (5 min)
+6. `README.md` — which targets are done/pending (2 min)
+
+**Per-target artifact:** `TEMPLATES/target-spec.json` → copy to `TARGETS/<n>/spec.json`. Sections,
+invariants, actors, assumptions and "never should happen" all live there; work goes section by
+section and each entry carries its evidence. Sections without evidence are open sections.
 
 ## Mental Toolkit (adapted from Pashov Audit Group v3)
 
