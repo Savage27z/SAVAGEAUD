@@ -1,0 +1,36 @@
+{
+ "hilo_card_probe": [
+  {
+   "card": 0,
+   "err": "empty revert (execution reverted)"
+  },
+  {
+   "card": 1,
+   "err": "empty revert (execution reverted)"
+  },
+  {
+   "card": 8,
+   "err": "empty revert (execution reverted)"
+  },
+  {
+   "card": 13,
+   "err": "empty revert (execution reverted)"
+  },
+  {
+   "card": 52,
+   "err": "empty revert (execution reverted)"
+  },
+  {
+   "card": 53,
+   "err": "empty revert (execution reverted)"
+  },
+  {
+   "card": 60,
+   "err": "empty revert (execution reverted)"
+  },
+  {
+   "card": 255,
+   "err": "empty revert (execution reverted)"
+  }
+ ]
+}

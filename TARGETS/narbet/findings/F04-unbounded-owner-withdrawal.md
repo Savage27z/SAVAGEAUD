@@ -38,7 +38,11 @@ winning random):
   **`awaiting = 1`, i.e. the request never settles and never will.**
 
 The payout path itself fails in isolation too: simulating `transferPayout(player, 100 MON, native)`
-against the drained pool reverts with custom error `0x9b8d1cd9`.
+against the drained pool reverts with custom error `0x9b8d1cd9` — but that specific simulation
+**proves nothing and is retracted**: `0x9b8d1cd9` decodes to `InvalidGameAddress()`, i.e. the call
+was rejected because the *caller* was not a registered game contract, not because of the empty pool.
+The A/B test above does not depend on it: there, the real callback (sent from the Entropy address,
+which the game accepts) reverts against the drained pool and the request never settles.
 
 An upgrade-based rug requires deploying malicious code (and emits `Upgraded`); this requires **one
 already-present call** and tells the chain nothing.
