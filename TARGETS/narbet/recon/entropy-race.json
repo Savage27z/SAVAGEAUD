@@ -1,0 +1,113 @@
+{
+ "head": 104497757,
+ "days": 30,
+ "n_logs": 1364,
+ "chunk_errors": 41,
+ "topic_counts": {
+  "0xa4c85ab66677ced5caabbbba151714887944b9e0fee05f320e42a1b13a01fbc6": 341,
+  "0x209bbfee3369097c31c36ce42994bdcac394866c881f603fb6296f240d6c37db": 341,
+  "0x40be225f151772416d8785647e5641a0b53507623d0ee3fb88802b7d6bdbf728": 341,
+  "0x2231996cc9de260d163cd345089fea7819252b40215c738556aa144a0a11ed47": 341
+ },
+ "side_by_topic": {
+  "0xa4c85ab66677ced5caabbbba151714887944b9e0fee05f320e42a1b13a01fbc6": {
+   "request": 315,
+   "other:0xdb9b1e94": 10,
+   "other:0x5ff137d4": 8,
+   "other:0xe25aaba9": 3,
+   "other:0x0b1e533e": 3,
+   "other:0xb497999d": 1,
+   "other:0xc9aece5e": 1
+  },
+  "0x209bbfee3369097c31c36ce42994bdcac394866c881f603fb6296f240d6c37db": {
+   "request": 315,
+   "other:0xdb9b1e94": 10,
+   "other:0x5ff137d4": 8,
+   "other:0xe25aaba9": 3,
+   "other:0x0b1e533e": 3,
+   "other:0xb497999d": 1,
+   "other:0xc9aece5e": 1
+  },
+  "0x40be225f151772416d8785647e5641a0b53507623d0ee3fb88802b7d6bdbf728": {
+   "reveal": 341
+  },
+  "0x2231996cc9de260d163cd345089fea7819252b40215c738556aa144a0a11ed47": {
+   "reveal": 341
+  }
+ },
+ "n_cycles": 315,
+ "unpaired_requests": 0,
+ "latency_all": {
+  "n": 315,
+  "min": 2,
+  "p50": 5,
+  "p90": 8,
+  "p99": 9,
+  "max": 9,
+  "mean": 5.35,
+  "over_commit_wait": 0
+ },
+ "per_game": {
+  "RockPaperScissors": {
+   "n": 100,
+   "min": 2,
+   "p50": 5.0,
+   "p90": 8,
+   "p99": 9,
+   "max": 9,
+   "mean": 5.37,
+   "over_commit_wait": 0
+  },
+  "Slots": {
+   "n": 5,
+   "min": 3,
+   "p50": 5,
+   "p90": 6,
+   "p99": 6,
+   "max": 8,
+   "mean": 5,
+   "over_commit_wait": 0
+  },
+  "CoinFlip": {
+   "n": 97,
+   "min": 2,
+   "p50": 5,
+   "p90": 8,
+   "p99": 9,
+   "max": 9,
+   "mean": 5.31,
+   "over_commit_wait": 0
+  },
+  "Roulette": {
+   "n": 85,
+   "min": 2,
+   "p50": 5,
+   "p90": 8,
+   "p99": 9,
+   "max": 9,
+   "mean": 5.49,
+   "over_commit_wait": 0
+  },
+  "Plinko": {
+   "n": 26,
+   "min": 2,
+   "p50": 5.0,
+   "p90": 8,
+   "p99": 8,
+   "max": 8,
+   "mean": 5.15,
+   "over_commit_wait": 0
+  },
+  "Mines": {
+   "n": 2,
+   "min": 3,
+   "p50": 3.5,
+   "p90": 3,
+   "p99": 3,
+   "max": 4,
+   "mean": 3.5,
+   "over_commit_wait": 0
+  }
+ },
+ "commit_wait_blocks": 20
+}

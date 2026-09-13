@@ -3,7 +3,9 @@
 **Chain:** Monad mainnet, chainId **143** (`0x8f`), RPC `https://rpc.monad.xyz`
 **App:** https://nar.bet — "The Fairest Crypto Casino on Monad"
 **Date opened:** 2026-09-12
-**Status:** ⏳ Recon complete — black-box ABI recovered; audit starting
+**Status:** 🔬 Audit in progress — Next-Step #3 done (real outcome/Entropy census on-chain).
+Hypothesis #1 measured and **sharpened**; the one deciding fact needs the refund-claim bytecode.
+See `findings/F01-entropy-latency-census.md`.
 
 ## Why this target
 
@@ -173,8 +175,27 @@ TARGETS/narbet/recon/
 
 ## Next steps
 
-1. On-chain `owner()`, proxy admin, and whether a timelock sits behind upgrades (hypothesis 0)
-2. Read `REFUND_COMMIT_WAIT_BLOCKS()` / `REFUND_TIMEOUT_BLOCKS()` / `getRandomFee()` / `edgeFactor()`
-   — four free reads that either kill or sharpen hypotheses 1, 2, 7
-3. Reconcile settled games from `X_Outcome_Event` logs against the documented house edge
-4. Only then: any state-changing test, and only against a local fork or mock
+1. ~~On-chain `owner()`, proxy admin, and whether a timelock sits behind upgrades (hypothesis 0)~~
+2. ~~Read `REFUND_COMMIT_WAIT_BLOCKS()` / `REFUND_TIMEOUT_BLOCKS()` / `getRandomFee()` / `edgeFactor()`~~ — done in recon
+3. ~~Reconcile settled games from `X_Outcome_Event` logs against the documented house edge~~ — **done, and it
+   produced the latency census: `findings/F01-entropy-latency-census.md`.** 315 Entropy cycles measured,
+   p50 **5 blocks**, max **9**, **0/315** slower than the 20-block commit wait. The naive refund-race is
+   dead; the surviving shape is a **pre-matured commitment reused across bets**. No refund has ever been
+   used on-chain (30-day window: Play + Outcome logs only).
+4. **NOW:** read the RockPaperScissors impl `0x8d2026407da5324bf955ba7f21962816cb477bfc` (bytecode — no
+   verified source) for the refund-claim path. One question decides the target: **is the commitment bound
+   to the pending requestID, or only to the player + maturity?** Unbound ⇒ live free-option attack ⇒
+   mandatory fork-attack phase next. Bound ⇒ record the negative, pivot to refund × settlement ordering.
+5. Only then: any state-changing test, and only against a local fork or mock
+
+## RPC reality on Monad (cost real time — use this, don't rediscover it)
+
+- **Use `https://rpc2.monad.xyz` + a browser `User-Agent`.** Bare python-urllib gets 403/400 from it,
+  drpc, publicnode and thirdweb.
+- **Hard cap: 29,999 blocks per `getLogs`** (`-32012`). Chunk it — 81 chunks of a 14-day window ran in 4.7 s
+  with 10 workers.
+- **`rpc.monad.xyz` is unusable under load** — `413 Request Entity Too Large` on *tiny* requests and
+  `-32602 Invalid params` on a call that worked one minute earlier. Both are throttling artifacts.
+  Do not debug your own code against them.
+- `api.monadscan.com` 404s for everything, including WMON — explorer-side data is unavailable (an
+  uncalibrated negative, not evidence).
