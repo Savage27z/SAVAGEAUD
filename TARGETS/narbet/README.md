@@ -3,9 +3,10 @@
 **Chain:** Monad mainnet, chainId **143** (`0x8f`), RPC `https://rpc.monad.xyz`
 **App:** https://nar.bet — "The Fairest Crypto Casino on Monad"
 **Date opened:** 2026-09-12
-**Status:** 🔬 Audit in progress. Two hypothesis threads CLOSED NEGATIVE with fork evidence:
-`F01` (Entropy latency census) + `F02` (refund path fork attack — the refund is a two-step,
-correctly guarded mechanism; 20% penalty; no double-spend). Next: hypotheses #3–#7.
+**Status:** 🔬 Audit in progress. FOUR threads CLOSED NEGATIVE with fork evidence — `F01`
+(Entropy latency census), `F02` (refund path: two-step, guarded, no double-spend), `F03` (riskCap
+is parts-per-million risk budget; suspension is self-service with no operator ban and no funds
+lock). No confirmed vulnerability yet. Next: #4–#7.
 
 ## Why this target
 
@@ -42,7 +43,7 @@ resolver) implement **only** `owner()`.
 
 ```
 edgeFactor()                 = 9500        -> 5.00% house edge (global)
-riskCap()                    = 275         -> 2.75%
+riskCap()                    = 275         -> 275 PPM = 0.0275% (see F03 — NOT 2.75%; per-game)
 wagerNumber()                = 20
 REFUND_COMMIT_WAIT_BLOCKS()  = 20 blocks
 REFUND_TIMEOUT_BLOCKS()      = 2000 blocks

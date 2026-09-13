@@ -1,0 +1,102 @@
+{
+ "wager_probe": [
+  {
+   "wager": 1000000000000000000,
+   "result": "OK",
+   "args": []
+  },
+  {
+   "wager": 10000000000000000000,
+   "result": "OK",
+   "args": []
+  },
+  {
+   "wager": 100000000000000000000,
+   "result": "OK",
+   "args": []
+  },
+  {
+   "wager": 500000000000000000000,
+   "result": "OK",
+   "args": []
+  },
+  {
+   "wager": 1000000000000000000000,
+   "result": "OK",
+   "args": []
+  },
+  {
+   "wager": 5000000000000000000000,
+   "result": "WagerAboveLimit",
+   "args": [
+    5000000000000000000000,
+    2631578947368421052631
+   ]
+  },
+  {
+   "wager": 10000000000000000000000,
+   "result": "WagerAboveLimit",
+   "args": [
+    10000000000000000000000,
+    2631578947368421052631
+   ]
+  },
+  {
+   "wager": 100000000000000000000000,
+   "result": "WagerAboveLimit",
+   "args": [
+    100000000000000000000000,
+    2631578947368421052631
+   ]
+  },
+  {
+   "wager": 200000000000000000000000,
+   "result": "WagerAboveLimit",
+   "args": [
+    200000000000000000000000,
+    2631578947368421052631
+   ]
+  },
+  {
+   "wager": 500000000000000000000000,
+   "result": "WagerAboveLimit",
+   "args": [
+    500000000000000000000000,
+    2631578947368421052631
+   ]
+  },
+  {
+   "wager": 1000000000000000000000000,
+   "result": "WagerAboveLimit",
+   "args": [
+    1000000000000000000000000,
+    2631578947368421052631
+   ]
+  },
+  {
+   "wager": 1900000000000000000000000,
+   "result": "WagerAboveLimit",
+   "args": [
+    1900000000000000000000000,
+    2631578947368421052631
+   ]
+  }
+ ],
+ "big_bet": {
+  "wager": 1000000000000000000000,
+  "payout_net": 898.576030996483,
+  "bankroll_delta": -901.0,
+  "callback_status": "0x1"
+ },
+ "refund_while_suspended": {
+  "commit_status": "0x1",
+  "claim_status": "0x1",
+  "balance_delta": 7.999831586998821,
+  "claim_err": null
+ },
+ "suspension": {
+  "payout_while_suspended_status": "0x1",
+  "payout_delta": 15.599569116662218,
+  "bet_while_suspended": "0x1"
+ }
+}
