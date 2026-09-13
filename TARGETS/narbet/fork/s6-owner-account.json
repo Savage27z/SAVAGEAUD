@@ -1,0 +1,365 @@
+{
+ "execute_attempts": [
+  {
+   "mode": "7579-single-call",
+   "encoding": "7579 abi.encode(target,value,data)",
+   "call": "custom 0x0796d945",
+   "tx_status": "0x0",
+   "stranger_delta": -0.0023835397438674
+  },
+  {
+   "mode": "7579-single-call",
+   "encoding": "packed(target,value,data)",
+   "call": "custom 0x0796d945",
+   "tx_status": "0x0",
+   "stranger_delta": -0.0044164762589108
+  },
+  {
+   "mode": "zero-mode",
+   "encoding": "7579 abi.encode(target,value,data)",
+   "call": "custom 0x0796d945",
+   "tx_status": "0x0",
+   "stranger_delta": -0.00624556330248404
+  },
+  {
+   "mode": "zero-mode",
+   "encoding": "packed(target,value,data)",
+   "call": "custom 0x0796d945",
+   "tx_status": "0x0",
+   "stranger_delta": -0.00780628858094782
+  }
+ ],
+ "delegate_selector_probe": [
+  {
+   "sel": "0x2b3afd99",
+   "args": "noargs",
+   "result": "RETURNS 0xbc37962d8bd1d319c95199bdfda6d3f92baa8903"
+  },
+  {
+   "sel": "0x2b3afd99",
+   "args": "addr",
+   "result": "RETURNS 0xbc37962d8bd1d319c95199bdfda6d3f92baa8903"
+  },
+  {
+   "sel": "0x2b3afd99",
+   "args": "uint1",
+   "result": "RETURNS 0xbc37962d8bd1d319c95199bdfda6d3f92baa8903"
+  },
+  {
+   "sel": "0x3e1b0812",
+   "args": "addr",
+   "result": "RETURNS 0x000000003c44cdddb6a900fa2b585dd299e03d12"
+  },
+  {
+   "sel": "0x3e1b0812",
+   "args": "uint1",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0x445140b8",
+   "args": "addr",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0x445140b8",
+   "args": "uint1",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0x4a58db19",
+   "args": "noargs",
+   "result": "RETURNS 0x"
+  },
+  {
+   "sel": "0x4a58db19",
+   "args": "addr",
+   "result": "RETURNS 0x"
+  },
+  {
+   "sel": "0x4a58db19",
+   "args": "uint1",
+   "result": "RETURNS 0x"
+  },
+  {
+   "sel": "0x83ebb771",
+   "args": "noargs",
+   "result": "RETURNS 0x754cec991bd7b26a11416268fe4f0af584a6fcf0"
+  },
+  {
+   "sel": "0x83ebb771",
+   "args": "addr",
+   "result": "RETURNS 0x754cec991bd7b26a11416268fe4f0af584a6fcf0"
+  },
+  {
+   "sel": "0x83ebb771",
+   "args": "uint1",
+   "result": "RETURNS 0x754cec991bd7b26a11416268fe4f0af584a6fcf0"
+  },
+  {
+   "sel": "0x84b0196e",
+   "args": "noargs",
+   "result": "RETURNS 0x0f00000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0x84b0196e",
+   "args": "addr",
+   "result": "RETURNS 0x0f00000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0x84b0196e",
+   "args": "uint1",
+   "result": "RETURNS 0x0f00000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xa3f4df7e",
+   "args": "noargs",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xa3f4df7e",
+   "args": "addr",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xa3f4df7e",
+   "args": "uint1",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xacb8cc49",
+   "args": "noargs",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xacb8cc49",
+   "args": "addr",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xacb8cc49",
+   "args": "uint1",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xb0d691fe",
+   "args": "noargs",
+   "result": "RETURNS 0x0000000000000000000000000000000071727de2"
+  },
+  {
+   "sel": "0xb0d691fe",
+   "args": "addr",
+   "result": "RETURNS 0x0000000000000000000000000000000071727de2"
+  },
+  {
+   "sel": "0xb0d691fe",
+   "args": "uint1",
+   "result": "RETURNS 0x0000000000000000000000000000000071727de2"
+  },
+  {
+   "sel": "0xc399ec88",
+   "args": "noargs",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xc399ec88",
+   "args": "addr",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xc399ec88",
+   "args": "uint1",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xd03c7914",
+   "args": "addr",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xd03c7914",
+   "args": "uint1",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xd087d288",
+   "args": "noargs",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xd087d288",
+   "args": "addr",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xd087d288",
+   "args": "uint1",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xea4d3c9b",
+   "args": "noargs",
+   "result": "RETURNS 0x000000000000000000000000db9b1e94b5b69df7"
+  },
+  {
+   "sel": "0xea4d3c9b",
+   "args": "addr",
+   "result": "RETURNS 0x000000000000000000000000db9b1e94b5b69df7"
+  },
+  {
+   "sel": "0xea4d3c9b",
+   "args": "uint1",
+   "result": "RETURNS 0x000000000000000000000000db9b1e94b5b69df7"
+  },
+  {
+   "sel": "0xffa1ad74",
+   "args": "noargs",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xffa1ad74",
+   "args": "addr",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  },
+  {
+   "sel": "0xffa1ad74",
+   "args": "uint1",
+   "result": "RETURNS 0x0000000000000000000000000000000000000000"
+  }
+ ],
+ "rps_admin_slot": "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "rps_owner": null,
+ "stranger_upgrade_rps": "custom NotOwner(address,address)",
+ "stranger_upgrade_bankroll": "empty revert (execution reverted)",
+ "minimal_proxies": {
+  "root149": {
+   "impl": "0x97526a253dcae184cbab869f16004765693ff1f7",
+   "size": 15531,
+   "selectors": [
+    "0x01670ba9",
+    "0x01ffc9a7",
+    "0x0ca93b20",
+    "0x1785f53c",
+    "0x18784a5f",
+    "0x189b82c2",
+    "0x19d92e41",
+    "0x248a9ca3",
+    "0x24d7806c",
+    "0x2f2ff15d",
+    "0x31ae450b",
+    "0x36568abe",
+    "0x3f4ba83a",
+    "0x46510fe6",
+    "0x4e543b26",
+    "0x4f1ef286",
+    "0x52d1902d",
+    "0x5c975abb",
+    "0x668b1523",
+    "0x698019f9",
+    "0x70480275",
+    "0x709d06dd",
+    "0x715018a6",
+    "0x7b103999",
+    "0x80869853",
+    "0x8456cb59",
+    "0x8cb8ecec",
+    "0x8da5cb5b",
+    "0x91d14854",
+    "0xa217fddf",
+    "0xabf2b055",
+    "0xad3cb1cc",
+    "0xb17ff60c",
+    "0xb32430e8",
+    "0xc1839a7e",
+    "0xc447f2d6",
+    "0xcc2a9a5b",
+    "0xd547741f",
+    "0xd76b9b69",
+    "0xec9b5b3a",
+    "0xf2fde38b"
+   ],
+   "named": [
+    "0x7b103999=registry()",
+    "0x8da5cb5b=owner()"
+   ]
+  },
+  "registry149": {
+   "impl": "0xa3d8c3eea65bbd40d25191476b32c7f656f60519",
+   "size": 8717,
+   "selectors": [
+    "0x0178b8bf",
+    "0x02571be3",
+    "0x06ab5923",
+    "0x14ab9038",
+    "0x16a25cbd",
+    "0x17f9e547",
+    "0x18784a5f",
+    "0x1896f70a",
+    "0x3f4ba83a",
+    "0x485cc955",
+    "0x4f1ef286",
+    "0x52d1902d",
+    "0x5b0fc9c3",
+    "0x5c975abb",
+    "0x5ef2c7f0",
+    "0x715018a6",
+    "0x8456cb59",
+    "0x8da5cb5b",
+    "0xa22cb465",
+    "0xad3cb1cc",
+    "0xc1839a7e",
+    "0xcf408823",
+    "0xe2d4fb74",
+    "0xe985e9c5",
+    "0xf2fde38b"
+   ],
+   "named": [
+    "0x8da5cb5b=owner()"
+   ]
+  },
+  "resolver149": {
+   "impl": "0xc3274962e9d165b0d332701afaed52078942344c",
+   "size": 12846,
+   "selectors": [
+    "0x01ffc9a7",
+    "0x10f13a8c",
+    "0x124a319c",
+    "0x18784a5f",
+    "0x3603d758",
+    "0x3b3b57de",
+    "0x3f4ba83a",
+    "0x4f1ef286",
+    "0x52d1902d",
+    "0x59d1d43c",
+    "0x5c975abb",
+    "0x62c50a13",
+    "0x691f3431",
+    "0x715018a6",
+    "0x77372213",
+    "0x7b103999",
+    "0x8456cb59",
+    "0x8b95dd71",
+    "0x8da5cb5b",
+    "0x8dfa47da",
+    "0xa22cb465",
+    "0xa4b91a01",
+    "0xa9784b3e",
+    "0xac9650d8",
+    "0xad3cb1cc",
+    "0xaf92a693",
+    "0xba904eed",
+    "0xc1839a7e",
+    "0xd5fa2b00",
+    "0xd700ff33",
+    "0xe32954eb",
+    "0xe59d895d",
+    "0xe985e9c5",
+    "0xf1cb7e06",
+    "0xf2fde38b"
+   ],
+   "named": [
+    "0x7b103999=registry()",
+    "0x8da5cb5b=owner()"
+   ]
+  }
+ }
+}
