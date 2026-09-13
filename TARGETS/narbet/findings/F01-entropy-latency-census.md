@@ -124,3 +124,78 @@ TARGETS/narbet/recon/
   topic-labels.json        topic0 -> event name, computed
   entropy-race.json        THE RESULT: 315 cycles, p50 5 blocks, 0/315 over the commit wait
 ```
+
+---
+
+# ADDENDUM (same session, continued) — structural read of the refund path
+
+## 8. RETRACTION: `0x5614ffd9` is NOT a hidden entry point
+
+A `PUSH4 <4 bytes> EQ` sweep of the implementation bytecode listed `0x5614ffd9` as dispatched on
+RockPaperScissors, CoinFlip and the Range impl while appearing in **no** recovered-ABI function.
+I read that as a hidden/unlisted entry point — plausibly the refund-commit path. **That read was wrong.**
+
+Control that killed it — `eth_call` against the live proxy:
+
+| call | result | meaning |
+|---|---|---|
+| `Refund()` (known) | revert data `0x49050b30` | real custom error |
+| `REFUND_COMMIT_WAIT_BLOCKS()` | returns `20` | real getter |
+| `GetState(player)` | returns 6 words | real getter |
+| **`0x5614ffd9`** | revert data `0x` (empty) | — |
+| `0xdeadbeef` (bogus) | revert data `0x` (empty) | no such selector |
+| `0x12345678` (bogus) | revert data `0x` (empty) | no such selector |
+
+`0x5614ffd9` is **indistinguishable from two deliberately bogus selectors**. The `63…14` pattern also
+matches an ordinary data constant followed by `EQ`, so the sweep carries false positives. The 22/23
+hand-match rate was the thing that made it look trustworthy — a detector can be right 22 times and
+still lie on the 23rd. **Rule: a selector sweep proposes candidates; only a live `eth_call` (real
+decoded return, or a custom error that decodes against the ABI) confirms one.** Nothing is a "hidden
+entry point" until it answers.
+
+Everything else the sweep produced IS calibrated — the impl ABIs are strict subsets of the recovered
+ABI plus that one false positive:
+
+- **RPS impl** `0x8d202640…`: 23 dispatched — `RockPaperScissors_Play/Refund/GetState`,
+  `_entropyCallback(uint64,address,bytes32)`, `entropy()`, plus the shared UUPS/owner/config tail
+  (`initialize`, `upgradeTo`, `upgradeToAndCall`, `proxiableUUID`, `setEdgeFactor`, `setRiskCap`,
+  `setWagerNumber`, `setWhiteList`, `edgeFactor`, `riskCap`, `wagerNumber`, `whiteList`).
+- **CoinFlip impl** `0xbe4d58428…`: same 23, same shape, one game.
+- **`0x0B1E533e…` is NOT a "config base" — it is the Range game** (impl `0xdba35808…`: 11342 bytes;
+  carries `Range_Play(uint256,uint32,address,bool,uint32)`, `Range_Refund()`, `Range_GetState`,
+  `_entropyCallback`) *plus* the shared base. The recon address map's label was wrong: the Range
+  events we saw on that address were the range game playing, not a config contract emitting.
+- **BankRoll impl**: 37 dispatched, 23 matched, 14 unlisted — consistent with an ERC-20/share pool
+  carrying standard token surface the frontend never calls.
+
+## 9. NEW: `REFUND_COMMIT_WAIT_BLOCKS`-style config is PER-GAME, not global (README correction)
+
+The recon note recorded a single `riskCap() = 275 → 2.75%`. That was read from one proxy. Live, per game:
+
+| game | riskCap | | game | riskCap |
+|---|---|---|---|---|
+| RockPaperScissors | **10000** | | Limbo | 1460 |
+| Plinko | **10000** | | Slots | 1000 |
+| CoinFlip | 5000 | | Roulette | 3334 |
+| Range | 275 | | Mines | 270 |
+
+Every proxy agrees on `edgeFactor = 9500`, `wagerNumber = 20`, `REFUND_COMMIT_WAIT_BLOCKS = 20`,
+`REFUND_TIMEOUT_BLOCKS = 2000`, `getRandomFee = 1.4e18`. Only `riskCap` varies per game — so the
+global-config reading was wrong and there is **no config drift** between recon and now (I checked for
+drift first, because a 275→10000 jump in a day would have been a finding; it is not one).
+`riskCap = 10000` on RPS and Plinko (vs 270/275 on Mines/Range) is a **per-game risk parameter worth
+understanding** — what it caps is still unknown, and 100% vs 2.7% is a 37× difference between games.
+
+## 10. NEW: the refund path's first guard is identified
+
+`X_Refund()` called with no pending request reverts with the **ABI-decoded custom error
+`NotAwaitingVRF()`** (`0x49050b30`). So the first check in the refund path is *"does the caller have a
+request in flight"* — not "is there a commitment" and not maturity. Consequences for the hypothesis:
+
+- A player **cannot create a commitment while idle** — the commit is gated on a live pending request.
+  That removes the simplest "pre-mature a commitment, then go betting" route.
+- The surviving shape is therefore narrower and more specific: **a matured commitment that outlives
+  the request it was created for and is then reused against a later request.** For that to work, the
+  claim path must (a) not bind the commitment to the requestID it was created under, and (b) not clear
+  the commitment when that request settles.
+- Those two questions are the whole target now, and they are **bytecode facts, not log facts.**
