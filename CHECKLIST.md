@@ -353,3 +353,30 @@ Target: `TARGETS/narbet/`. Monad mainnet 143, Pyth Entropy V2, 19 games, UUPS, n
   setters; (e) **advertised house edge in the client bundle vs on-chain `edgeFactor()`** — a mismatch
   is the death.fun verifier-constant-drift bug family. Record the numbers, then reconcile against
   real `X_Outcome_Event` payouts.
+
+### Fork-attack lessons (nar.bet, 2026-09-13) — reusable, not target-specific
+
+- **Forge oracle outcomes by impersonating the ORACLE CONTRACT, not the player.** You cannot usually
+  fabricate the provider's own `reveal` tx (commitment/hash-chain checks), but you can
+  `anvil_impersonateAccount(<ORACLE_CONTRACT>)` + `anvil_setBalance` and call the *consumer's*
+  callback directly, so `msg.sender == oracle` holds and the outcome is yours to choose. On nar.bet:
+  `_entropyCallback(uint64,address,bytes32)` on the game proxy, sequence read from `GetState`.
+- **Read state machines out of the revert data.** Block-number guard errors are a free spec:
+  `RefundTooEarly(have,want)` → `want = requestBlock + 2001`; `RefundClaimPending(have,want)` →
+  `want = commitBlock + 21`. That decoded a **two-step** refund gated by **two different constants**,
+  after reading the two constants alone had suggested one gate. Probe at increasing block offsets
+  until the error name changes; decode `(uint256,uint256)` args with `eth_abi.decode`.
+- **A revert decoder that reports "OK" for everything is the silent-wrong detector of this workflow.**
+  If `rpc()` already unwrapped the JSON-RPC envelope, a revert arrives as a bare `{code,message,data}`
+  object — checking for a nested `res["error"]` key returns success for every revert and produces a
+  complete, plausible, false timeline. Print one RAW response before believing any row.
+- **`anvil_mine(count)` silently under-mines** (asked 2002, got 1058) → the test never reached the code
+  under test. Mine in ~100-block chunks and verify `eth_blockNumber` reached the target.
+- **Fee-aware balance classification.** Where a per-bet oracle fee exists (1.4 MON on nar.bet), a
+  *winning* bet nets negative; `delta > 0` marks every bet a loss. Recover payout as
+  `delta + wager + fee` and compare against the wager.
+- **Guard order can hide the mechanism.** Every early probe returned the *timeout* error, making the
+  20-block commit wait look irrelevant; only walking the path one gate at a time exposed that the
+  refund is two calls. Probe at multiple block offsets, not one.
+- **Verify "no verified source" before accepting it as a constraint.** `api.monadscan.com` returns a
+  *deprecation* message, not a 404 — read the response body, not just the status code.
