@@ -1,0 +1,268 @@
+{
+ "start_block": 104496600,
+ "timeline_before_settle": [
+  {
+   "block": 104496601,
+   "blocks_after_bet": 0,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496601,
+    104498602
+   ],
+   "state": [
+    1000000000000000000,
+    349915,
+    0,
+    104496601,
+    1,
+    0
+   ]
+  },
+  {
+   "block": 104496606,
+   "blocks_after_bet": 5,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496606,
+    104498602
+   ],
+   "state": [
+    1000000000000000000,
+    349915,
+    0,
+    104496601,
+    1,
+    0
+   ]
+  },
+  {
+   "block": 104496611,
+   "blocks_after_bet": 10,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496611,
+    104498602
+   ],
+   "state": [
+    1000000000000000000,
+    349915,
+    0,
+    104496601,
+    1,
+    0
+   ]
+  },
+  {
+   "block": 104496616,
+   "blocks_after_bet": 15,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496616,
+    104498602
+   ],
+   "state": [
+    1000000000000000000,
+    349915,
+    0,
+    104496601,
+    1,
+    0
+   ]
+  },
+  {
+   "block": 104496620,
+   "blocks_after_bet": 19,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496620,
+    104498602
+   ],
+   "state": [
+    1000000000000000000,
+    349915,
+    0,
+    104496601,
+    1,
+    0
+   ]
+  },
+  {
+   "block": 104496621,
+   "blocks_after_bet": 20,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496621,
+    104498602
+   ],
+   "state": [
+    1000000000000000000,
+    349915,
+    0,
+    104496601,
+    1,
+    0
+   ]
+  },
+  {
+   "block": 104496622,
+   "blocks_after_bet": 21,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496622,
+    104498602
+   ],
+   "state": [
+    1000000000000000000,
+    349915,
+    0,
+    104496601,
+    1,
+    0
+   ]
+  },
+  {
+   "block": 104496626,
+   "blocks_after_bet": 25,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496626,
+    104498602
+   ],
+   "state": [
+    1000000000000000000,
+    349915,
+    0,
+    104496601,
+    1,
+    0
+   ]
+  },
+  {
+   "block": 104496631,
+   "blocks_after_bet": 30,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496631,
+    104498602
+   ],
+   "state": [
+    1000000000000000000,
+    349915,
+    0,
+    104496601,
+    1,
+    0
+   ]
+  },
+  {
+   "block": 104496641,
+   "blocks_after_bet": 40,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496641,
+    104498602
+   ],
+   "state": [
+    1000000000000000000,
+    349915,
+    0,
+    104496601,
+    1,
+    0
+   ]
+  }
+ ],
+ "after_settle": {
+  "state": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "refund": [
+   "NotAwaitingVRF",
+   []
+  ]
+ },
+ "reuse_probe": [
+  {
+   "block": 104496668,
+   "blocks_after_betB": 0,
+   "blocks_after_betA": 67,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496668,
+    104498669
+   ]
+  },
+  {
+   "block": 104496673,
+   "blocks_after_betB": 5,
+   "blocks_after_betA": 72,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496673,
+    104498669
+   ]
+  },
+  {
+   "block": 104496680,
+   "blocks_after_betB": 12,
+   "blocks_after_betA": 79,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496680,
+    104498669
+   ]
+  },
+  {
+   "block": 104496688,
+   "blocks_after_betB": 20,
+   "blocks_after_betA": 87,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496688,
+    104498669
+   ]
+  },
+  {
+   "block": 104496689,
+   "blocks_after_betB": 21,
+   "blocks_after_betA": 88,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496689,
+    104498669
+   ]
+  },
+  {
+   "block": 104496690,
+   "blocks_after_betB": 22,
+   "blocks_after_betA": 89,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496690,
+    104498669
+   ]
+  },
+  {
+   "block": 104496698,
+   "blocks_after_betB": 30,
+   "blocks_after_betA": 97,
+   "revert": "RefundTooEarly",
+   "args": [
+    104496698,
+    104498669
+   ]
+  }
+ ],
+ "refund_against_B": [
+  "RefundTooEarly",
+  [
+   104496698,
+   104498669
+  ]
+ ]
+}

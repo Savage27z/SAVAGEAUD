@@ -1,0 +1,37 @@
+{
+ "fork_block": 104496600,
+ "wager": 500000000000000000,
+ "bet_block": 104496601,
+ "seq": 349915,
+ "refund1": {
+  "tx": "0x1ee4deaab02be52198a2db0dde21a973e57834105ea67cd80a6bc35abd9b98da",
+  "status": "0x1",
+  "logs": [
+   {
+    "topic": "0x1b792f56de2d6a5cc4eb68a6f5ce1a0681ab5a40043fb6e07dd55878ebf21988",
+    "event": "RefundCommitmentCreated",
+    "address": "0x843d62ad75f5d0b383f8520e23d19174b7961b8e"
+   }
+  ],
+  "balance_after": -1.9240476766372536
+ },
+ "refund2": {
+  "tx": "0x83930eb58d481ed78a82db38dd0609e84e61b5abd0f76d44e68a9a9b940cfd5e",
+  "status": "0x1",
+  "logs": [
+   {
+    "topic": "0x1b240de49ea18064198efe2f74c6cc4fa4139464ff393208f8fa6aa81b07adb2",
+    "event": "RockPaperScissors_Refund_Event",
+    "address": "0x843d62ad75f5d0b383f8520e23d19174b7961b8e"
+   }
+  ],
+  "balance_after": 0.39991135599937955
+ },
+ "callback_after_refund": {
+  "tx": "0xbea6362e3886b1079dda56c37503af3977a85dc11a43ef614b0ff372c4f042c6",
+  "status": "0x1",
+  "balance_delta": 0.0,
+  "logs": []
+ },
+ "net": -1.524136320637874
+}

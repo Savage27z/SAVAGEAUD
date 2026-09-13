@@ -1,0 +1,23 @@
+{
+ "control_refund_immediate": "REVERT RefundTooEarly(uint256,uint256)",
+ "commit_tx": {
+  "tx": "0x738a49840dba1315bc37bfc2953252defe24f83399d354cd7bc91b21bf281463",
+  "err": null,
+  "block": 104496574,
+  "logs": []
+ },
+ "attack": {
+  "start_balance": 10000000000000000000000,
+  "final_balance": 9997579369882312515523,
+  "net_mon": -2.4206301176874843,
+  "refund_immediate_after_settle": "REVERT RefundTooEarly(uint256,uint256)",
+  "refund_against_bet_B": "REVERT RefundTooEarly(uint256,uint256)",
+  "claim_tx_status": "0x0",
+  "claim_tx_logs": [],
+  "commit_block": 104496574,
+  "total_wagered": 2e+18
+ },
+ "control": {
+  "refund_immediate": "REVERT RefundTooEarly(uint256,uint256)"
+ }
+}

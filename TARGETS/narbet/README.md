@@ -3,9 +3,9 @@
 **Chain:** Monad mainnet, chainId **143** (`0x8f`), RPC `https://rpc.monad.xyz`
 **App:** https://nar.bet — "The Fairest Crypto Casino on Monad"
 **Date opened:** 2026-09-12
-**Status:** 🔬 Audit in progress — Next-Step #3 done (real outcome/Entropy census on-chain).
-Hypothesis #1 measured and **sharpened**; the one deciding fact needs the refund-claim bytecode.
-See `findings/F01-entropy-latency-census.md`.
+**Status:** 🔬 Audit in progress. Two hypothesis threads CLOSED NEGATIVE with fork evidence:
+`F01` (Entropy latency census) + `F02` (refund path fork attack — the refund is a two-step,
+correctly guarded mechanism; 20% penalty; no double-spend). Next: hypotheses #3–#7.
 
 ## Why this target
 
@@ -182,7 +182,13 @@ TARGETS/narbet/recon/
    p50 **5 blocks**, max **9**, **0/315** slower than the 20-block commit wait. The naive refund-race is
    dead; the surviving shape is a **pre-matured commitment reused across bets**. No refund has ever been
    used on-chain (30-day window: Play + Outcome logs only).
-4. **NOW:** read the RockPaperScissors impl `0x8d2026407da5324bf955ba7f21962816cb477bfc` (bytecode — no
+4. ~~Read the RockPaperScissors impl for the refund-claim path~~ — **DONE, and the question is
+   answered: the commitment IS bound to the request** (`findings/F02-refund-path-fork-attack.md`).
+   The refund is two-step (2000-block timeout gate, then a 20-block commit wait), pays 80% of the
+   wager, clears the request, and a late callback on a refunded request pays nothing. Hypotheses #1
+   and #2 closed negative. Next target: #3 ban × in-flight funds, #4 Mines/VideoPoker guards,
+   #5 BankRoll shares, #6 client-supplied state, #7 edge drift.
+5. Obsolete stub: read the RockPaperScissors impl `0x8d2026407da5324bf955ba7f21962816cb477bfc` (bytecode — no
    verified source) for the refund-claim path. One question decides the target: **is the commitment bound
    to the pending requestID, or only to the player + maturity?** Unbound ⇒ live free-option attack ⇒
    mandatory fork-attack phase next. Bound ⇒ record the negative, pivot to refund × settlement ordering.

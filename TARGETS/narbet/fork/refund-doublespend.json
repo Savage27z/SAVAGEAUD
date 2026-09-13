@@ -1,0 +1,27 @@
+{
+ "fork_block": 104496600,
+ "calibration": {
+  "wins": [
+   "0x0101010101010101010101010101010101010101010101010101010101010101"
+  ],
+  "losses": [],
+  "ties": []
+ },
+ "double_spend": {
+  "bet_block": 104496703,
+  "seq": 349916,
+  "refund_status": "0x1",
+  "refund_tx": "0x1ee4deaab02be52198a2db0dde21a973e57834105ea67cd80a6bc35abd9b98da",
+  "state_after_refund": [
+   1000000000000000000,
+   349916,
+   0,
+   104496703,
+   1,
+   0
+  ],
+  "callback_after_refund_status": "0x1",
+  "balance_delta_total": -0.5003422488397241,
+  "winning_random_used": "0x0101010101010101010101010101010101010101010101010101010101010101"
+ }
+}
