@@ -104,7 +104,7 @@
         "known": true
       }
     ],
-    "coverage_gap": "9 of 19 games have NO mapped address and are UNAUDITED: HiLo, Keno, Crash, Dice, DragonTiger, Range(separate from 0x0B1E533e?), SicBo, War, WheelOfFortune. HiLo is the sharpest (HiLo_Play takes a PLAYER-SUPPLIED uint8 currentCard while randomness arrives afterwards, guarded by InvalidCurrentCard(uint8)). A topic-discovery scan failed silently (every chunk errored and was skipped) \u2014 needs a fixed scan with chunk-error surfacing and a positive control."
+    "coverage_gap": "NONE on mainnet for contract mapping: 12 distinct addresses (11 game proxies + bankroll), all mapped. The previously-recorded '9 unmapped games' was WRONG - 7 of them are not deployed on mainnet (bundle registry + eth_getCode). Remaining real gap: per-game behavior of the deployed multi-step games (Mines reveal path, VideoPoker replace) and individual impl sweeps for 6 single-step games."
   },
   "integrations": [
     {
@@ -356,13 +356,13 @@
     },
     {
       "id": "S4",
-      "name": "Player-supplied game state (Mines/HiLo/Keno/VideoPoker inputs)",
+      "name": "Player-supplied game state (deployed games only: Mines, VideoPoker, and the 8 unswept single-step games)",
       "contracts": [
         "0x3014d056"
       ],
       "value_flows": [],
       "status": "in_progress",
-      "evidence": "F06: Mines validated + 225-cell payout table enumerated (no positive-EV cell); HiLo and Keno blocked on unmapped addresses",
+      "evidence": "F06: Mines numMines range-checked + all 225 payout cells enumerated (no positive-EV cell). HiLo/Keno are NOT on mainnet (F07) so their player inputs are out of scope. STILL OPEN: the multi-step reveal path on deployed Mines (Reveal(bool[25]) / double-reveal / board consistency) and VideoPoker_Replace(bool[5]), plus per-game impl sweeps for Slots/Plinko/Baccarat/Roulette/FishPrawnCrab/Limbo.",
       "findings": []
     },
     {
@@ -391,12 +391,14 @@
     },
     {
       "id": "S7",
-      "name": "9 unmapped game contracts",
+      "name": "Undeployed/testnet-only games + the bundle's game registry",
       "contracts": [],
       "value_flows": [],
-      "status": "not_started",
-      "evidence": "addresses unknown \u2014 scan failed silently, must be re-run with error surfacing + positive control",
-      "findings": []
+      "status": "closed",
+      "evidence": "RESOLVED, and it RETRACTS the earlier coverage gap. The frontend bundle carries the per-chain game registry: on mainnet, HiLo/War/DragonTiger/Keno/WheelOfFortune/SicBo/Crash are configured as \"0x\" (not deployed), and their testnet addresses have 0 bytes of code on mainnet (eth_getCode verified). So 13 registry entries resolve to 12 distinct mainnet addresses = 11 game proxies + the bankroll, ALL already mapped. HiLo's player-supplied currentCard is NOT on mainnet and therefore presents no outsider risk. NEW FINDING: Dice is mapped to the RANGE contract 0x0B1E533e (Dice_Play/Dice_GetState/Dice_Refund are absent there - empty reverts - while Range_GetState is present), so the app routes Dice players to a contract that cannot play Dice. See F07.",
+      "findings": [
+        "F07"
+      ]
     },
     {
       "id": "S8",
@@ -599,11 +601,21 @@
       ],
       "result": "NEGATIVE \u2014 NotEntryPointOrSelf(); the drain stays operator-only",
       "evidence": "Fork S6"
+    },
+    {
+      "pass": 8,
+      "lens": "config/registry source of truth (frontend bundle)",
+      "scope": "which games exist on mainnet",
+      "hypotheses": [
+        "9 games are unmapped = unaudited"
+      ],
+      "result": "RETRACTED - they are not deployed on mainnet; found a Dice->Range registry collision instead",
+      "evidence": "F07"
     }
   ],
   "status": {
     "done": false,
-    "sections_closed": 4,
+    "sections_closed": 5,
     "sections_total": 8,
     "open_questions": [
       "What do the two owner-only unidentified BankRoll selectors do (0x4a9aa3c5, 0x7320ca26)? They exist in no recovered ABI and had no effect on suspension or playability (still unidentified \u2014 they accept one static arg and one of them reverts when passed NATIVE).",
@@ -611,7 +623,7 @@
       "Where does the 20% refund penalty go?",
       "Why does the Mines table imply ~2.5% while edgeFactor() is 5%? (F06 \u00a73)",
       "Has withdrawNativeFunds already been used historically? (needs a tx index \u2014 BankRoll emits no events)",
-      "The 9 unmapped game contracts \u2014 addresses unknown, and HiLo (player-supplied currentCard) is the sharpest untested player input."
+      "Dice is mapped to the Range contract on mainnet (F07) - is the game reachable at all, and does the UI fail loudly?"
     ],
     "blocked_on": "Etherscan API key (source review + historical drain check); 9 unmapped game addresses (fixable without a credential via a corrected topic scan or the frontend bundle)",
     "note": "This spec was reconstructed AFTER six passes instead of written up front. The cost is visible: sections S3/S4/S8 are still open in ways that up-front invariants would have caught earlier (INV-8 could never have been tested because deposits are dead, and that should have been discovered in 'Before' step 1, not in pass 5)."
