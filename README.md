@@ -64,7 +64,8 @@ audit/
 | 31 | Moocon (no-loss lottery) | Solana | $14K | Jul 2026 | ⏸ In progress | 🟡 TMAAR done — recon via BPF string extraction, no source/IDL published | Sep 9 |
 | 32 | Run Money (ClubPool) | Base | $3K | ~93 epochs live | ✅ Complete | 🔴 F01 (Medium, Confirmed — attacker earned ~100x victim's bonus) + F02 (High, Confirmed — no-attacker-needed accounting corruption) | Sep 9 |
 | 33 | death.fun (DeathFun) | Abstract | $44K | Active daily | ✅ Complete | 🔴 F01 (High, **Confirmed on zkEVM fork** — 1 wei paid → 35 ETH recorded bet via signature replay) | Sep 9 |
-|| | **Next target** | TBD | — | — | ⏳ Ready when you are | — | — |
+| 35 | Longbow (curated Morpho lending) | Robinhood Chain | $2.49M at oracle prices ($48.5K lendable USDG) | Sep 7 | 🔬 Audit in progress | 🟡 Recon complete — 0 findings yet | Sep 13 |
+| | **Next target** | TBD | — | — | ⏳ Ready when you are | — | — |
 
 ## Get Started
 

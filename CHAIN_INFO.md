@@ -70,6 +70,28 @@ main contract.
 - Rate limit on `eth_call` — add `sleep(2)` between calls
 - Use `keccak256` from `pycryptodome` (NOT `hashlib.sha3_256`) for correct selectors
 
+### Source acquisition (measured 2026-09-13, Longbow audit — this is the whole ballgame)
+
+| Route | Verdict |
+|---|---|
+| `robinhoodchain.blockscout.com/api/v2/smart-contracts/<addr>` **via real headless Chrome** | ✅ **Use this.** Full verified source + ABI. Script + pitfalls: `TOOLS/cfetch.md` (local copy `~/.hermes/scripts/cfetch.sh`) |
+| Same API via `curl` (even with a browser User-Agent) | ❌ **403 "Just a moment…"** — Cloudflare bot check on this datacenter IP. A UA string is not enough; the JS challenge must actually run |
+| Etherscan V2 (`chainid=4663`) | ⚠️ works in principle as an Etherscan-family chain, but **needs a key** we don't have |
+
+**Verification must be read from the response FIELD, never the HTTP status.** The v2 endpoint returns a
+**36-key object including `is_verified`** for a verified contract, and a **6-key object** (with
+`creation_bytecode`, no `name`/`abi`) for an unverified one. A `500 "Internal server error"` appeared
+**intermittently for BOTH** — a control re-fetch of a known-verified contract returned the same 500 that a
+known-unverified address did. Reading verification off the error made me call an unverified contract
+"unverified" for the wrong reason and then retract it. Always fetch a known-verified control in the same
+batch and compare the **shape of the JSON**, not the status code.
+
+### Contract-identity trick (cheap, high-yield)
+`cast codesize` a family of related addresses: identical sizes ⇒ same implementation, different
+**immutables** (that is why 28 oracle instances had 28 *different* code hashes but all 1,277 bytes).
+A size that deviates from its siblings is the flag that something custom is there — that is exactly how
+Longbow's two hand-written oracle feeds (5,207 B and 23,186 B vs. 9,571 B for Chainlink proxies) were found.
+
 ---
 
 ## Monad
