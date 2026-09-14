@@ -380,3 +380,22 @@ Target: `TARGETS/narbet/`. Monad mainnet 143, Pyth Entropy V2, 19 games, UUPS, n
   refund is two calls. Probe at multiple block offsets, not one.
 - **Verify "no verified source" before accepting it as a constraint.** `api.monadscan.com` returns a
   *deprecation* message, not a 404 — read the response body, not just the status code.
+- **A shell helper that doesn't forward `"$@"` silently calls the function with NO arguments.** In the
+  Longbow oracle-vs-DEX sweep, `c() { cast call "$1" "$2" ...; }` dropped every extra argument, so every
+  call that takes a parameter (`supplyQueue(uint256)`, `getPool(...,uint24)`) was invoked with none and
+  returned empty — and because stderr was sent to `/dev/null`, the whole 28-market sweep produced a
+  beautifully formatted table of blanks that my first parser then read as "no pool, no price". Nothing was
+  wrong with the chain; the harness lied. **Two rules from it:** (1) forward arguments explicitly
+  (`local to=$1 sig=$2; shift 2; cast call "$to" "$sig" "$@"`), and (2) never swallow stderr in a data
+  collector without ALSO asserting a known-good control returns a non-empty value in the same run.
+- **`cast` annotations corrupt `awk` field indices.** `cast call` prints `24073181425 [2.407e10]`, so
+  `tr '\n' ' '` + `awk '{print $3}'` silently picks the *comment* of field 2, not field 3. Strip the
+  annotation (`awk '{print $1}'` per line) before joining, or the "borrowAssets" you read is supplyShares.
+- **`cast codesize` a family of sibling contracts before reading any of them.** Identical sizes ⇒ same
+  source with different immutables (28 oracle instances, 28 distinct code hashes, all 1,277 bytes); a
+  deviating size is where the custom code is (found Longbow's 5,207-byte TWAP adapter among 26 9,571-byte
+  Chainlink proxies). But *deviating size means "different", not "the protocol wrote it"* — the 23,186-byte
+  outlier turned out to be Chainlink's own contract, and I attributed it to the team before checking.
+- **Cloudflare `403 "Just a moment…"` ≠ no source.** A browser User-Agent is not enough; real headless
+  Chrome is (see `TOOLS/cfetch.md`). Test the explorer route BEFORE committing to a target — Monad has no
+  free JSON API at all (its explorer is an SPA), which is what disqualified an otherwise-better candidate.

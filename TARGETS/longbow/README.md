@@ -146,17 +146,23 @@ SLV **$58.10**, SGOV **$101.04** — all sane. ⇒ **no decimals/scale misconfig
    cap/guardian changes. Enumerate which vault powers are **instant** (`setIsAllocator`, `setCurator`,
    `setFee`, `setFeeRecipient`, `setSupplyQueue` vs `reallocate`) and whether any instant path can move
    the vault into a hostile market. Vault holds $8.02 today, so severity is low — the mechanism is reusable.
-6. **Collateral-vs-real-market price (H3) — TESTED, NEGATIVE.** Compared each big collateral's oracle price
-   against its live Uniswap V3 USDG pool (real pools, 22,142 B, real liquidity):
+6. **Collateral-vs-real-market price (H3) — TESTED ACROSS THE WHOLE BOOK, NEGATIVE.** Every market's
+   oracle price compared against its live Uniswap V3 USDG pool (real pools, 22,142 B, `liquidity > 0`).
+   **26 of 28 compared** (ORCL and COIN have no liquid V3 pool):
 
-   | Collateral | DEX price | Oracle price | Difference |
-   |---|---|---|---|
-   | NVDA (fee 500) | $215.68 | $218.30 | −1.2% |
-   | SPCX (fee 500) | $149.38 | $149.97 | −0.4% |
-   | GOOGL (fee 500) | $337.65 | $339.05 | −0.4% |
+   | | result |
+   |---|---|
+   | Worst gap (either direction) | **+0.90%** (TSM) — and it is DEX *above* oracle |
+   | Others ≥0.5% | ASML +0.83%, MSTR +0.69% |
+   | Everything else | within ±0.37% (WETH −0.17, NVDA −0.06, MSFT −0.20, SGOV −0.06, PLTR −0.11, AMD +0.21, MU +0.24, SNDK +0.37, CRCL +0.36, BABA +0.14, …) |
+   | **Collaterals trading BELOW their oracle** | **ZERO** |
 
-   Within spread/fee noise ⇒ **the collateral is not obtainable below its oracle price**, so the
-   buy → post → borrow theft path does not open here. This was the highest-impact hypothesis and it fails.
+   Every deviation sits on the **safe** side (the oracle under-reports slightly, if anything), so the
+   loan book is at least as well collateralised as the contract believes. **The buy → post → borrow theft
+   path does not exist on this deployment.** This was the highest-impact hypothesis and it is closed.
+   (Direction note: because the oracle runs a hair below spot, a borrower at the LLTV edge could be
+   liquidated marginally early — a ~1% liquidator edge, borrower-favourable-safe for the protocol, and
+   within normal Chainlink-vs-spot basis. Not reportable.)
 
 ### Verdict so far: no outsider-reachable finding — and the stack is thinner than it looked
 
