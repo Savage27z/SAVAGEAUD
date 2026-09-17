@@ -399,3 +399,21 @@ Target: `TARGETS/narbet/`. Monad mainnet 143, Pyth Entropy V2, 19 games, UUPS, n
 - **Cloudflare `403 "Just a moment…"` ≠ no source.** A browser User-Agent is not enough; real headless
   Chrome is (see `TOOLS/cfetch.md`). Test the explorer route BEFORE committing to a target — Monad has no
   free JSON API at all (its explorer is an SPA), which is what disqualified an otherwise-better candidate.
+- **A verified PROXY is not a verified CONTRACT — always resolve to the implementation.** On Arcus pTokens
+  (2026-09-17) every pToken returned `is_verified: true`, which reads as "we have source". Those were
+  2.3KB OpenZeppelin `BeaconProxy` shells. Read the ERC-1967 beacon slot
+  (`0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50`), `eth_call`
+  `implementation()` on the beacon (selector `0x5c60da1b`), then `eth_getCode` and re-fetch the source for
+  *that* address. Here the implementation was **31,386 bytes of live code with no source anywhere**
+  (Blockscout 6-key `creation_bytecode` only, Sourcify 403/404, no GitHub) — so the whole leveraged-token
+  primitive was a black box while the explorer implied otherwise. **Pre-vet question to ask every time:
+  "is the address I just verified the one that holds the logic, or a shell?"**
+- **`is_verified_via_admin_panel: true` is a weaker signal than a real verification.** Gage's token carries
+  it yet still 404s `/api/v2/smart-contracts/<addr>`, so the endpoint and the search index disagree — treat
+  the search result as a lead, and confirm on the smart-contracts endpoint (or `eth_getCode` + a source
+  fetch) before believing it.
+- **The 6-key response is the unverified signature, and it is stable — don't dismiss it as a flake.**
+  `CHAIN_INFO.md` warns that a 500 can appear intermittently for both states, which tempts you to retry an
+  unverified result away. Retry to be sure, but if the same `creation_bytecode`-only body comes back on
+  repeated fetches, that is the real answer. Confirm in parallel with `eth_getCode`: 126KB of bytecode in
+  the payload ⇒ there is a contract there, and the absence of `source_code` in it is the finding.

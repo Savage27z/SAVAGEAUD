@@ -65,7 +65,9 @@ audit/
 | 32 | Run Money (ClubPool) | Base | $3K | ~93 epochs live | ✅ Complete | 🔴 F01 (Medium, Confirmed — attacker earned ~100x victim's bonus) + F02 (High, Confirmed — no-attacker-needed accounting corruption) | Sep 9 |
 | 33 | death.fun (DeathFun) | Abstract | $44K | Active daily | ✅ Complete | 🔴 F01 (High, **Confirmed on zkEVM fork** — 1 wei paid → 35 ETH recorded bet via signature replay) | Sep 9 |
 | 35 | Longbow (curated Morpho lending) | Robinhood Chain | $2.49M at oracle prices ($48.5K lendable USDG) | Sep 7 | 🔬 Audit in progress | 🟡 Recon complete — 0 findings yet | Sep 13 |
-| | **Next target** | TBD | — | — | ⏳ Ready when you are | — | — |
+| 36 | **backed.is ($BACKED)** | Robinhood Chain | $51.8K reserve | ~mid-Jul | ✅ Complete | 🟢 Clean-with-notes (F1–F6 informational) — **README previously said "scaffolded, pending go"; the Phase 1 read + anvil-fork verification of buy/redeem both actually ran on 2026-09-03** | Sep 3 |
+| 37 | **Arcus pTokens** | Robinhood Chain | $632K | Aug 26 | ❌ Rejected at pre-vet | ⚫ **Core logic UNVERIFIED** — proxies verify, the 31,386-byte implementation behind the beacon has no source anywhere. See `TARGETS/_prevet-sweep-2026-09-17.md` | Sep 17 |
+| | **Next target** | — | — | — | ⏳ Pre-vet sweep 2026-09-17 came back DRY — 4 fresh non-DEX candidates checked, all unverified (Arcus pTokens, HASHCATS, Gage, Flock Credit). See `TARGETS/_prevet-sweep-2026-09-17.md` | — |
 
 ## Get Started
 
