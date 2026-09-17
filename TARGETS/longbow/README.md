@@ -143,9 +143,21 @@ SLV **$58.10**, SGOV **$101.04** — all sane. ⇒ **no decimals/scale misconfig
    `maxAnswer ≈ 9.58e52`. So the one guard Morpho declines to make is, in practice, not made by the feed
    either. Normal Chainlink practice, but it means nothing stands between a bad report and a bad borrow.
 5. **Curator is a single EOA** (`owner` = `curator`, codesize 0) with 10% fee and a 1-day timelock on
-   cap/guardian changes. Enumerate which vault powers are **instant** (`setIsAllocator`, `setCurator`,
-   `setFee`, `setFeeRecipient`, `setSupplyQueue` vs `reallocate`) and whether any instant path can move
-   the vault into a hostile market. Vault holds $8.02 today, so severity is low — the mechanism is reusable.
+   cap/guardian changes. ✅ **S9 CLOSED + NSH-4 ATTEMPTED 2026-09-17 on a pinned fork** (block 64,972,513;
+   `fork/FORK_ATTACK_NSH4.md`). **Instant (no timelock), fork-proven:** `setCurator(attacker)` status 1 →
+   curator read back as attacker; `setFee(0.5e18)` status 1 and 0.60/0.75/0.90/1.00e18 all revert
+   `MaxFeeExceeded` ⇒ **MAX_FEE = 50%, reachable in one call**; `setSupplyQueue([one market])` status 1 →
+   `supplyQueueLength` **28 → 1**. Also instant by source: `setIsAllocator`, `setName/Symbol`,
+   `setSkimRecipient`, and `reallocate`/`updateWithdrawQueue` (the attacker-curator passed the
+   `onlyAllocatorRole` gate, failing only on liquidity). **Timelocked 24h:** cap *increases* —
+   `acceptCap` immediately after `submitCap` reverts custom error `0x6677a596` = **`TimelockNotElapsed()`**
+   (selector computed locally), and succeeds after `evm_increaseTime` ⇒ time is the only barrier.
+   Cap *decreases* are instant by design. **NSH-4 = BLOCKED** on the new-market path, with a separate
+   guardian able to `revokePendingCap`; not outsider-reachable. Two weakenings recorded (not exploitable
+   today): the 24h timelock is bypassed *in effect* because role/fee/routing are all instant and
+   guardian-unvetoable, and `withdrawQueueLength` = 30 = `MAX_QUEUE_LENGTH` with all 30 markets already
+   enabled and capped, so no new market is addable at all until one is removed. Vault holds **8.022515
+   USDG** ⇒ **Informational**; the mechanism is reusable at scale ⇒ recommend a multisig/timelock owner.
 6. **Collateral-vs-real-market price (H3) — TESTED ACROSS THE WHOLE BOOK, NEGATIVE.** Every market's
    oracle price compared against its live Uniswap V3 USDG pool (real pools, 22,142 B, `liquidity > 0`).
    **26 of 28 compared** (ORCL and COIN have no liquid V3 pool):
@@ -168,9 +180,11 @@ SLV **$58.10**, SGOV **$101.04** — all sane. ⇒ **no decimals/scale misconfig
 
 Everything load-bearing is upstream: Morpho Blue + `MetaMorphoV1_1` + MorphoChainlinkOracleV2 + Chainlink
 feeds. Longbow's original code reduces to **one unverified oracle adapter for a memecoin in a $5 market**,
-plus configuration choices (LLTVs, caps) and a single-EOA curator. There is **no fork-attack pass yet**, so
-this is **not** a clean verdict — the mandatory fork phase (impersonate/forge reports, try to borrow past
-LLTV, try to displace a liquidation) has not run.
+plus configuration choices (LLTVs, caps) and a single-EOA curator. The fork phase is now **partially run**
+(2026-09-17, block 64,972,513): **NSH-4 attempted and BLOCKED** — the hostile-market path is timelocked
+(`TimelockNotElapsed`) and guardian-vetoable, while role/fee/routing proved instant and un-vetoable
+(`fork/FORK_ATTACK_NSH4.md`, S9 closed). **NSH-2 (stale/frozen feed) and NSH-3 (manipulable liquidation
+price) remain NOT attempted**, so this is still **not** a clean verdict.
 
 
 ## Open questions / blocked

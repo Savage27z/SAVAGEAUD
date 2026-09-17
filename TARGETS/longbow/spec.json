@@ -1,6 +1,5 @@
 {
   "_README": "Produced from the Before steps of AUDIT_PROTOCOL.md. Every claim carries evidence; a section with an empty evidence string is OPEN regardless of how convincing it reads. Recon done 2026-09-13.",
-
   "target": {
     "name": "Longbow",
     "app": "https://www.longbow.cash",
@@ -11,114 +10,676 @@
     "audits": "0 (DefiLlama audits=0, no audit_links)",
     "source": {
       "verified": true,
-      "route": "robinhoodchain.blockscout.com /api/v2/smart-contracts/<addr> via real headless Chrome (~/.hermes/scripts/cfetch.sh) — curl is 403'd by Cloudflare from this datacenter IP",
-      "note": "Base protocol + both curator vaults + 26 of 28 oracle feeds are fully source-readable. TWO of the 28 oracle feeds are Longbow's own and one is UNVERIFIED (CASHCAT adapter) — those cap at bytecode/black-box work."
+      "route": "robinhoodchain.blockscout.com /api/v2/smart-contracts/<addr> via real headless Chrome (~/.hermes/scripts/cfetch.sh) \u2014 curl is 403'd by Cloudflare from this datacenter IP",
+      "note": "Base protocol + both curator vaults + 26 of 28 oracle feeds are fully source-readable. TWO of the 28 oracle feeds are Longbow's own and one is UNVERIFIED (CASHCAT adapter) \u2014 those cap at bytecode/black-box work."
     },
     "contracts": [
-      {"address": "0x9D53d5E3bd5E8d4Cbfa6DB1ca238AEA02E651010", "role": "Morpho Blue singleton (base lending protocol)", "impl": "self", "proxy_kind": "none", "code_size": 15582, "known": true},
-      {"address": "0x8cb8AA35228c96C1C4E956E69AbAEBCc2aA7Dcfe", "role": "MetaMorphoV1_1 curator vault (USDG)", "impl": "self", "proxy_kind": "none", "code_size": 20180, "known": true},
-      {"address": "0x93777a9b917be3c8259c84456222f43a01dd6492", "role": "MetaMorphoV1_1 curator vault (WETH, empty)", "impl": "self", "proxy_kind": "none", "code_size": 20180, "known": true},
-      {"address": "0x61B7e5650328764B076A108EFF5fa7282a1B9aD2", "role": "SHARED quote feed for all 28 markets (\"USDG / USD\", 8dp)", "impl": "Chainlink-style aggregator proxy", "proxy_kind": "aggregator-proxy", "code_size": 9571, "known": true},
-      {"address": "0x709400Edf8709212412B5ae4981a7B0BB6eD82Ff", "role": "CASHCAT market oracle feed, description \"Uniswap V3 Pool Price in USD\", 18dp, roundId 0", "impl": "UNVERIFIED (5,207B)", "proxy_kind": "none", "code_size": 5207, "known": false},
-      {"address": "0x4a9aBC759e0B7b0ba98b5fd39c419A5D3e962aAf", "role": "ORCL market oracle feed, verified name DualAggregator, 8dp, roundId 1956", "impl": "DualAggregator", "proxy_kind": "none", "code_size": 23186, "known": true},
-      {"address": "0x060595638692de6CCd47ca04094F1772D3D39728", "role": "Morpho Blue owner", "impl": "unknown (171B)", "proxy_kind": "safe-proxy-shape", "code_size": 171, "known": false},
-      {"address": "0x2BD3d5965B26B51814AC95127B2b80dD6CcC0fa1", "role": "IRM used by all 28 markets", "impl": "unknown", "proxy_kind": "none", "code_size": null, "known": true}
+      {
+        "address": "0x9D53d5E3bd5E8d4Cbfa6DB1ca238AEA02E651010",
+        "role": "Morpho Blue singleton (base lending protocol)",
+        "impl": "self",
+        "proxy_kind": "none",
+        "code_size": 15582,
+        "known": true
+      },
+      {
+        "address": "0x8cb8AA35228c96C1C4E956E69AbAEBCc2aA7Dcfe",
+        "role": "MetaMorphoV1_1 curator vault (USDG)",
+        "impl": "self",
+        "proxy_kind": "none",
+        "code_size": 20180,
+        "known": true
+      },
+      {
+        "address": "0x93777a9b917be3c8259c84456222f43a01dd6492",
+        "role": "MetaMorphoV1_1 curator vault (WETH, empty)",
+        "impl": "self",
+        "proxy_kind": "none",
+        "code_size": 20180,
+        "known": true
+      },
+      {
+        "address": "0x61B7e5650328764B076A108EFF5fa7282a1B9aD2",
+        "role": "SHARED quote feed for all 28 markets (\"USDG / USD\", 8dp)",
+        "impl": "Chainlink-style aggregator proxy",
+        "proxy_kind": "aggregator-proxy",
+        "code_size": 9571,
+        "known": true
+      },
+      {
+        "address": "0x709400Edf8709212412B5ae4981a7B0BB6eD82Ff",
+        "role": "CASHCAT market oracle feed, description \"Uniswap V3 Pool Price in USD\", 18dp, roundId 0",
+        "impl": "UNVERIFIED (5,207B)",
+        "proxy_kind": "none",
+        "code_size": 5207,
+        "known": false
+      },
+      {
+        "address": "0x4a9aBC759e0B7b0ba98b5fd39c419A5D3e962aAf",
+        "role": "ORCL market oracle feed, verified name DualAggregator, 8dp, roundId 1956",
+        "impl": "DualAggregator",
+        "proxy_kind": "none",
+        "code_size": 23186,
+        "known": true
+      },
+      {
+        "address": "0x060595638692de6CCd47ca04094F1772D3D39728",
+        "role": "Morpho Blue owner",
+        "impl": "unknown (171B)",
+        "proxy_kind": "safe-proxy-shape",
+        "code_size": 171,
+        "known": false
+      },
+      {
+        "address": "0x2BD3d5965B26B51814AC95127B2b80dD6CcC0fa1",
+        "role": "IRM used by all 28 markets",
+        "impl": "unknown",
+        "proxy_kind": "none",
+        "code_size": null,
+        "known": true
+      }
     ],
-    "coverage_gap": "28 per-market oracle instances enumerated and classified (26 Chainlink proxies + 2 custom). NOT yet read: the DualAggregator source, the CASHCAT adapter internals, the 26 per-asset Chainlink aggregators behind the proxies, Morpho Blue's owner contract (171B), the 28-callback lifecycle. The 25 collateral tokens are only identified by symbol/decimals — none audited as tokens (issuer trust, out of scope by default)."
+    "coverage_gap": "28 per-market oracle instances enumerated and classified (26 Chainlink proxies + 2 custom). NOT yet read: the DualAggregator source, the CASHCAT adapter internals, the 26 per-asset Chainlink aggregators behind the proxies, Morpho Blue's owner contract (171B), the 28-callback lifecycle. The 25 collateral tokens are only identified by symbol/decimals \u2014 none audited as tokens (issuer trust, out of scope by default)."
   },
-
   "integrations": [
-    {"name": "Morpho Blue", "kind": "base protocol (audited, immutable)", "trusted": true, "notes": "15582B verified v0.8.19; no upgrade path; feeRecipient 0x0"},
-    {"name": "MorphoChainlinkOracleV2", "kind": "oracle", "trusted": true, "notes": "Morpho's own oracle code (GPL-2.0, v0.8.21), verified source read. price() validates answer>0 only — no updatedAt/staleness guard in the price path"},
-    {"name": "Chainlink-interface equity feeds (26)", "kind": "oracle", "trusted": true, "notes": "9,571B aggregator proxies, 8dp, phase-encoded roundIds ('RHNVDA / USD' etc.). Equity feeds FREEZE outside market hours: NVDA updatedAt measured 44.1h old while ETH feed was live"},
-    {"name": "CASHCAT Uniswap V3 feed", "kind": "oracle", "trusted": false, "notes": "Longbow's own, UNVERIFIED. Bytecode has observe(uint32[]) (0x883bdbfd) and NOT slot0() ⇒ TWAP not spot. Window/depth unknown"},
-    {"name": "DualAggregator (ORCL feed)", "kind": "oracle", "trusted": true, "notes": "RETRACTED as Longbow code: it is CHAINLINK's — a port of OCR2Aggregator (BUSL 1.1, imports @chainlink/contracts, typeAndVersion 'DualAggregator 1.0.0') with a secondary-report source + cutoffTime window. 23,186B is just a bigger Chainlink contract. So 27 of 28 feeds are Chainlink infra (26 proxies + this), and only the CASHCAT adapter is Longbow's own"},
-    {"name": "feed ownership (all 27 Chainlink feeds)", "kind": "trust anchor", "trusted": false, "notes": "ONE address owns the DualAggregator and the aggregators behind the proxies (checked ETH/NVDA/SPCX): 0xeE27D5Ae494300902D90454e8630A3F1C68c9C52, a 171-byte contract (Safe-proxy shape). The whole collateral side is priced by feeds under a single owner"},
-    {"name": "off-chain oracle watchdog + keeper", "kind": "off-chain", "trusted": false, "notes": "Docs claim a watchdog compares each oracle to live DEX price and an armed keeper liquidates. Off-chain mitigation is not an on-chain guarantee"}
+    {
+      "name": "Morpho Blue",
+      "kind": "base protocol (audited, immutable)",
+      "trusted": true,
+      "notes": "15582B verified v0.8.19; no upgrade path; feeRecipient 0x0"
+    },
+    {
+      "name": "MorphoChainlinkOracleV2",
+      "kind": "oracle",
+      "trusted": true,
+      "notes": "Morpho's own oracle code (GPL-2.0, v0.8.21), verified source read. price() validates answer>0 only \u2014 no updatedAt/staleness guard in the price path"
+    },
+    {
+      "name": "Chainlink-interface equity feeds (26)",
+      "kind": "oracle",
+      "trusted": true,
+      "notes": "9,571B aggregator proxies, 8dp, phase-encoded roundIds ('RHNVDA / USD' etc.). Equity feeds FREEZE outside market hours: NVDA updatedAt measured 44.1h old while ETH feed was live"
+    },
+    {
+      "name": "CASHCAT Uniswap V3 feed",
+      "kind": "oracle",
+      "trusted": false,
+      "notes": "Longbow's own, UNVERIFIED. Bytecode has observe(uint32[]) (0x883bdbfd) and NOT slot0() \u21d2 TWAP not spot. Window/depth unknown"
+    },
+    {
+      "name": "DualAggregator (ORCL feed)",
+      "kind": "oracle",
+      "trusted": true,
+      "notes": "RETRACTED as Longbow code: it is CHAINLINK's \u2014 a port of OCR2Aggregator (BUSL 1.1, imports @chainlink/contracts, typeAndVersion 'DualAggregator 1.0.0') with a secondary-report source + cutoffTime window. 23,186B is just a bigger Chainlink contract. So 27 of 28 feeds are Chainlink infra (26 proxies + this), and only the CASHCAT adapter is Longbow's own"
+    },
+    {
+      "name": "feed ownership (all 27 Chainlink feeds)",
+      "kind": "trust anchor",
+      "trusted": false,
+      "notes": "ONE address owns the DualAggregator and the aggregators behind the proxies (checked ETH/NVDA/SPCX): 0xeE27D5Ae494300902D90454e8630A3F1C68c9C52, a 171-byte contract (Safe-proxy shape). The whole collateral side is priced by feeds under a single owner"
+    },
+    {
+      "name": "off-chain oracle watchdog + keeper",
+      "kind": "off-chain",
+      "trusted": false,
+      "notes": "Docs claim a watchdog compares each oracle to live DEX price and an armed keeper liquidates. Off-chain mitigation is not an on-chain guarantee"
+    }
   ],
-
   "actors": [
-    {"name": "Curator/owner (both vaults)", "address": "0x1bf704707e9F3f407EbC9364fDAeD08C39893770", "authority": "EOA (codesize 0)", "can": ["setCurator", "setIsAllocator", "setFee", "setFeeRecipient", "setName/setSymbol", "setSkimRecipient", "submitCap/acceptCap (timelocked)", "submitGuardian/acceptGuardian", "submitMarketRemoval (timelocked)", "submitTimelock/acceptTimelock", "setSupplyQueue", "reallocate (as allocator)"], "cannot": ["move vault funds outside Morpho markets it is enabled for", "change caps instantly (acceptCap requires timelock=1d)"], "verified_how": "cast call on both vaults; cast codesize = 0"},
-    {"name": "Guardian", "address": "0x67f79ccc109667CEBd25a1E2F8C365345EB3e918", "authority": "unknown", "can": ["revokePendingCap", "revokePendingGuardian", "revokePendingMarketRemoval", "revokePendingTimelock"], "cannot": ["add caps / reallocate"], "verified_how": "cast call guardian()"},
-    {"name": "Morpho Blue owner", "address": "0x060595638692de6CCd47ca04094F1772D3D39728", "authority": "contract, 171B (Safe-proxy shape)", "can": ["enableIrm", "enableLltv", "setFee/setFeeRecipient", "setOwner"], "cannot": ["touch user funds / markets directly"], "verified_how": "cast call owner() on Morpho"},
-    {"name": "Anyone (borrower)", "address": "n/a", "authority": "permissionless", "can": ["supply/borrow/repay/liquidate in any market", "supply collateral of any listed token"], "cannot": ["create markets (owner-only)", "enable new LLTV/IRM"], "verified_how": "Morpho Blue is permissionless for supply/borrow/liquidate on existing markets"}
+    {
+      "name": "Curator/owner (both vaults)",
+      "address": "0x1bf704707e9F3f407EbC9364fDAeD08C39893770",
+      "authority": "EOA (codesize 0)",
+      "can": [
+        "setCurator",
+        "setIsAllocator",
+        "setFee",
+        "setFeeRecipient",
+        "setName/setSymbol",
+        "setSkimRecipient",
+        "submitCap/acceptCap (timelocked)",
+        "submitGuardian/acceptGuardian",
+        "submitMarketRemoval (timelocked)",
+        "submitTimelock/acceptTimelock",
+        "setSupplyQueue",
+        "reallocate (as allocator)"
+      ],
+      "cannot": [
+        "move vault funds outside Morpho markets it is enabled for",
+        "change caps instantly (acceptCap requires timelock=1d)"
+      ],
+      "verified_how": "cast call on both vaults; cast codesize = 0"
+    },
+    {
+      "name": "Guardian",
+      "address": "0x67f79ccc109667CEBd25a1E2F8C365345EB3e918",
+      "authority": "unknown",
+      "can": [
+        "revokePendingCap",
+        "revokePendingGuardian",
+        "revokePendingMarketRemoval",
+        "revokePendingTimelock"
+      ],
+      "cannot": [
+        "add caps / reallocate"
+      ],
+      "verified_how": "cast call guardian()"
+    },
+    {
+      "name": "Morpho Blue owner",
+      "address": "0x060595638692de6CCd47ca04094F1772D3D39728",
+      "authority": "contract, 171B (Safe-proxy shape)",
+      "can": [
+        "enableIrm",
+        "enableLltv",
+        "setFee/setFeeRecipient",
+        "setOwner"
+      ],
+      "cannot": [
+        "touch user funds / markets directly"
+      ],
+      "verified_how": "cast call owner() on Morpho"
+    },
+    {
+      "name": "Anyone (borrower)",
+      "address": "n/a",
+      "authority": "permissionless",
+      "can": [
+        "supply/borrow/repay/liquidate in any market",
+        "supply collateral of any listed token"
+      ],
+      "cannot": [
+        "create markets (owner-only)",
+        "enable new LLTV/IRM"
+      ],
+      "verified_how": "Morpho Blue is permissionless for supply/borrow/liquidate on existing markets"
+    }
   ],
-
   "assumptions": [
-    {"id": "ASM-1", "statement": "The 26 Chainlink-interface equity feeds report honestly and advance while their market is open", "accepted_by_design": true, "breaks_if": "an aggregator freezes/dies — nothing on-chain distinguishes frozen from fresh"},
-    {"id": "ASM-2", "statement": "Each tokenized-equity collateral is worth its oracle price per 18-dec unit", "accepted_by_design": false, "breaks_if": "a token is obtainable far below the oracle price, or represents a fraction of a share while priced as one ⇒ buy → post → borrow is direct theft of lender USDG"},
-    {"id": "ASM-3", "statement": "The CASHCAT Uniswap TWAP window is long enough to be manipulation-resistant on this chain's liquidity", "accepted_by_design": false, "breaks_if": "short window + thin pool ⇒ sustained push inflates collateral; bounded by Morpho market isolation (market 5 has ~$5 USDG, so impact should be near zero — verify the bound)"},
-    {"id": "ASM-4", "statement": "DualAggregator picks a source that is safe (not 'the higher' / not a stale fallback)", "accepted_by_design": false, "breaks_if": "source-selection logic can be steered or falls back without a freshness test"},
-    {"id": "ASM-5", "statement": "The single-EOA curator behaves honestly; the 1-day timelock bounds its power", "accepted_by_design": true, "breaks_if": "an instant (non-timelocked) power can reallocate the vault into a hostile market"}
+    {
+      "id": "ASM-1",
+      "statement": "The 26 Chainlink-interface equity feeds report honestly and advance while their market is open",
+      "accepted_by_design": true,
+      "breaks_if": "an aggregator freezes/dies \u2014 nothing on-chain distinguishes frozen from fresh"
+    },
+    {
+      "id": "ASM-2",
+      "statement": "Each tokenized-equity collateral is worth its oracle price per 18-dec unit",
+      "accepted_by_design": false,
+      "breaks_if": "a token is obtainable far below the oracle price, or represents a fraction of a share while priced as one \u21d2 buy \u2192 post \u2192 borrow is direct theft of lender USDG"
+    },
+    {
+      "id": "ASM-3",
+      "statement": "The CASHCAT Uniswap TWAP window is long enough to be manipulation-resistant on this chain's liquidity",
+      "accepted_by_design": false,
+      "breaks_if": "short window + thin pool \u21d2 sustained push inflates collateral; bounded by Morpho market isolation (market 5 has ~$5 USDG, so impact should be near zero \u2014 verify the bound)"
+    },
+    {
+      "id": "ASM-4",
+      "statement": "DualAggregator picks a source that is safe (not 'the higher' / not a stale fallback)",
+      "accepted_by_design": false,
+      "breaks_if": "source-selection logic can be steered or falls back without a freshness test"
+    },
+    {
+      "id": "ASM-5",
+      "statement": "The single-EOA curator behaves honestly; the 1-day timelock bounds its power",
+      "accepted_by_design": true,
+      "breaks_if": "an instant (non-timelocked) power can reallocate the vault into a hostile market"
+    }
   ],
-
   "invariants": [
-    {"id": "INV-1", "statement": "sum over markets of (suppliedAssets - borrowedAssets) == USDG balance held by Morpho Blue", "where": "Morpho Blue / USDG token", "check": "token balanceOf ground truth", "checked": true, "result": "Morpho holds 48,525.483821025 USDG ($48,525.48) — the entire lendable side", "evidence": "cast call USDG.balanceOf(0x9D53d5E3…) = 48525483821025"},
-    {"id": "INV-2", "statement": "For every market: borrowedUSD <= collateralUSD * LLTV", "where": "Morpho Blue market(id)", "check": "per-market position walk", "checked": false, "result": "", "evidence": "OPEN — my 6-field market() decode gave inconsistent share/asset ratios (supply pair 1e6, borrow pair 1.139e6, impossible for Morpho virtual shares); reconcile before quoting per-market debt"},
-    {"id": "INV-3", "statement": "For every market: the Morpho collateral balance * oracle price equals the tokens' real tradable value", "where": "each oracle feed", "check": "compare oracle price vs on-chain DEX price per collateral token (Uniswap V3 USDG pools via factory.getPool + slot0 + liquidity)", "checked": true, "result": "PASS, FULL SWEEP — 26 of 28 collaterals compared (ORCL and COIN have no liquid V3 pool). EVERY one tracks its oracle within 0.90%, and every deviation is on the SAFE side (DEX at or ABOVE the oracle): WETH −0.17%, NVDA −0.06%, AMZN +0.33%, SLV +0.33%, GOOGL +0.04%, CASHCAT +0.21%, SPCX +0.13%, SPY +0.01%, QQQ +0.06%, GME +0.05%, USO +0.04%, MSFT −0.20%, SGOV −0.06%, USAR +0.13%, TSLA +0.06%, META +0.03%, AMD +0.21%, MU +0.24%, PLTR −0.11%, INTC +0.09%, SNDK +0.37%, TSM +0.90%, MSTR +0.69%, CRCL +0.36%, ASML +0.83%, BABA +0.14%. ZERO collaterals are obtainable below their oracle price ⇒ the buy→post→borrow theft path does NOT exist on this deployment", "evidence": "TARGETS/longbow/sweep_oracle_vs_dex.sh + sweep2 + /tmp/lb/sweep*.tsv; pools confirmed real (22,142B, liquidity>0) except the two flagged"},
-    {"id": "INV-4", "statement": "Oracle price is non-zero and non-stale enough to liquidate correctly", "where": "MorphoChainlinkOracleV2.price() → ChainlinkDataFeedLib.getPrice()", "check": "read Morpho's public source (done); fork test deferred", "checked": true, "result": "WITHDRAWN AS A FINDING — the missing staleness/bounds check is Morpho's DOCUMENTED design, not a Longbow defect: the source comments say 'Staleness is not checked because it's assumed that the Chainlink feed keeps its promises on this. The price is not checked to be in the min/max bounds because it's assumed that the Chainlink feed keeps its promises.' The live staleness itself is real (NVDA feed updatedAt 44.1h old while ETH's was current — equities are 24/5), but vanilla deployment of a documented upstream assumption is not reportable. Consequence worth recording for the trust model instead: the min/max guard Morpho declines to make is ALSO effectively absent here (every feed: minAnswer=1, maxAnswer≈9.58e52)", "evidence": "morpho-org/morpho-blue-oracles src/morpho-chainlink/libraries/ChainlinkDataFeedLib.sol; cast call minAnswer()/maxAnswer() on 0x4a9aBC75… and the aggregators behind 0x78F3556b…/0x379EC4f7…/0x42a95341…"},
-    {"id": "INV-7", "statement": "No single address can unilaterally change the price of the collateral backing the loan book", "where": "all 27 Chainlink feeds", "check": "owner() on the DualAggregator and on the aggregators behind the proxies", "checked": true, "result": "FAILS BY CONCENTRATION — one owner address (0xeE27D5Ae…, 171-byte contract) sits above every feed checked. Inherited from Chainlink's deployment, not chosen by Longbow, but it means the entire collateral side depends on one owner being honest and operationally correct", "evidence": "cast call owner() on 0x4a9aBC75…, 0x6091E64e…(ETH agg), 0xC9d16E4f…(NVDA agg), 0x5eaa223c…(SPCX agg)"},
-    {"id": "INV-5", "statement": "All 28 oracles price in the same unit (1e36 * 10^(loanDec-collDec)) — no market can be over-borrowed purely from a scaling error", "where": "all 28 oracles", "check": "read SCALE_FACTOR + decode price() for each", "checked": true, "result": "PASS — SCALE_FACTOR 1e24 == 10**(36+6+8-18-8) for the stock markets; decoded prices sane (WETH 2503.0, NVDA 218.32, SPY 765.35, TSLA 365.95, SLV 58.10, SGOV 101.04)", "evidence": "cast call price()/SCALE_FACTOR() on markets 0,1,3,7,12,14"},
-    {"id": "INV-6", "statement": "The vault cannot be made to hold a market's bad debt as a first-loss position", "where": "MetaMorphoV1_1 + Morpho isolation", "check": "fork: create loss in one market, check other markets' suppliers unaffected", "checked": false, "result": "", "evidence": "OPEN"}
+    {
+      "id": "INV-1",
+      "statement": "sum over markets of (suppliedAssets - borrowedAssets) == USDG balance held by Morpho Blue",
+      "where": "Morpho Blue / USDG token",
+      "check": "token balanceOf ground truth",
+      "checked": true,
+      "result": "Morpho holds 48,525.483821025 USDG ($48,525.48) \u2014 the entire lendable side",
+      "evidence": "cast call USDG.balanceOf(0x9D53d5E3\u2026) = 48525483821025"
+    },
+    {
+      "id": "INV-2",
+      "statement": "For every market: borrowedUSD <= collateralUSD * LLTV",
+      "where": "Morpho Blue market(id)",
+      "check": "per-market position walk",
+      "checked": false,
+      "result": "",
+      "evidence": "OPEN \u2014 my 6-field market() decode gave inconsistent share/asset ratios (supply pair 1e6, borrow pair 1.139e6, impossible for Morpho virtual shares); reconcile before quoting per-market debt"
+    },
+    {
+      "id": "INV-3",
+      "statement": "For every market: the Morpho collateral balance * oracle price equals the tokens' real tradable value",
+      "where": "each oracle feed",
+      "check": "compare oracle price vs on-chain DEX price per collateral token (Uniswap V3 USDG pools via factory.getPool + slot0 + liquidity)",
+      "checked": true,
+      "result": "PASS, FULL SWEEP \u2014 26 of 28 collaterals compared (ORCL and COIN have no liquid V3 pool). EVERY one tracks its oracle within 0.90%, and every deviation is on the SAFE side (DEX at or ABOVE the oracle): WETH \u22120.17%, NVDA \u22120.06%, AMZN +0.33%, SLV +0.33%, GOOGL +0.04%, CASHCAT +0.21%, SPCX +0.13%, SPY +0.01%, QQQ +0.06%, GME +0.05%, USO +0.04%, MSFT \u22120.20%, SGOV \u22120.06%, USAR +0.13%, TSLA +0.06%, META +0.03%, AMD +0.21%, MU +0.24%, PLTR \u22120.11%, INTC +0.09%, SNDK +0.37%, TSM +0.90%, MSTR +0.69%, CRCL +0.36%, ASML +0.83%, BABA +0.14%. ZERO collaterals are obtainable below their oracle price \u21d2 the buy\u2192post\u2192borrow theft path does NOT exist on this deployment",
+      "evidence": "TARGETS/longbow/sweep_oracle_vs_dex.sh + sweep2 + /tmp/lb/sweep*.tsv; pools confirmed real (22,142B, liquidity>0) except the two flagged"
+    },
+    {
+      "id": "INV-4",
+      "statement": "Oracle price is non-zero and non-stale enough to liquidate correctly",
+      "where": "MorphoChainlinkOracleV2.price() \u2192 ChainlinkDataFeedLib.getPrice()",
+      "check": "read Morpho's public source (done); fork test deferred",
+      "checked": true,
+      "result": "WITHDRAWN AS A FINDING \u2014 the missing staleness/bounds check is Morpho's DOCUMENTED design, not a Longbow defect: the source comments say 'Staleness is not checked because it's assumed that the Chainlink feed keeps its promises on this. The price is not checked to be in the min/max bounds because it's assumed that the Chainlink feed keeps its promises.' The live staleness itself is real (NVDA feed updatedAt 44.1h old while ETH's was current \u2014 equities are 24/5), but vanilla deployment of a documented upstream assumption is not reportable. Consequence worth recording for the trust model instead: the min/max guard Morpho declines to make is ALSO effectively absent here (every feed: minAnswer=1, maxAnswer\u22489.58e52)",
+      "evidence": "morpho-org/morpho-blue-oracles src/morpho-chainlink/libraries/ChainlinkDataFeedLib.sol; cast call minAnswer()/maxAnswer() on 0x4a9aBC75\u2026 and the aggregators behind 0x78F3556b\u2026/0x379EC4f7\u2026/0x42a95341\u2026"
+    },
+    {
+      "id": "INV-7",
+      "statement": "No single address can unilaterally change the price of the collateral backing the loan book",
+      "where": "all 27 Chainlink feeds",
+      "check": "owner() on the DualAggregator and on the aggregators behind the proxies",
+      "checked": true,
+      "result": "FAILS BY CONCENTRATION \u2014 one owner address (0xeE27D5Ae\u2026, 171-byte contract) sits above every feed checked. Inherited from Chainlink's deployment, not chosen by Longbow, but it means the entire collateral side depends on one owner being honest and operationally correct",
+      "evidence": "cast call owner() on 0x4a9aBC75\u2026, 0x6091E64e\u2026(ETH agg), 0xC9d16E4f\u2026(NVDA agg), 0x5eaa223c\u2026(SPCX agg)"
+    },
+    {
+      "id": "INV-5",
+      "statement": "All 28 oracles price in the same unit (1e36 * 10^(loanDec-collDec)) \u2014 no market can be over-borrowed purely from a scaling error",
+      "where": "all 28 oracles",
+      "check": "read SCALE_FACTOR + decode price() for each",
+      "checked": true,
+      "result": "PASS \u2014 SCALE_FACTOR 1e24 == 10**(36+6+8-18-8) for the stock markets; decoded prices sane (WETH 2503.0, NVDA 218.32, SPY 765.35, TSLA 365.95, SLV 58.10, SGOV 101.04)",
+      "evidence": "cast call price()/SCALE_FACTOR() on markets 0,1,3,7,12,14"
+    },
+    {
+      "id": "INV-6",
+      "statement": "The vault cannot be made to hold a market's bad debt as a first-loss position",
+      "where": "MetaMorphoV1_1 + Morpho isolation",
+      "check": "fork: create loss in one market, check other markets' suppliers unaffected",
+      "checked": false,
+      "result": "",
+      "evidence": "OPEN"
+    }
   ],
-
   "never_should_happen": [
-    {"id": "NSH-1", "statement": "An outsider borrows more USDG than their collateral is really worth, and walks", "attempt": "compared every big collateral's oracle price against its live Uniswap V3 USDG pool price (the precondition for buy→post→borrow)", "result": "blocked (for the 3 biggest lines)", "evidence": "NVDA DEX $215.68 vs oracle $218.30; SPCX $149.38 vs $149.97; GOOGL $337.65 vs $339.05 — all at or BELOW the oracle, so collateral cannot be obtained cheaply. Coverage: 3 of 25 tokens"},
-    {"id": "NSH-2", "statement": "A market prices its collateral off a frozen feed while the real asset has moved", "attempt": "to run: anvil fork, freeze the aggregator (impersonate), move the real asset, borrow at the stale price", "result": "not_attempted", "evidence": "staleness measured on live feeds (INV-4); exploitability not yet shown — needs a fork"},
-    {"id": "NSH-3", "statement": "A liquidation is executed at a manipulable or stale price that a third party can steer", "attempt": "to run: identify the liquidation trigger price source and try to front-run it", "result": "not_attempted", "evidence": ""},
-    {"id": "NSH-4", "statement": "The single-EOA curator moves vault funds into a hostile/malicious market", "attempt": "enumerate instant vault powers (setIsAllocator/setCurator/setFee/setSupplyQueue) vs timelocked ones, then attempt on a fork", "result": "not_attempted", "evidence": "vault holds $8.02 today ⇒ low severity, but the mechanism is reusable"}
+    {
+      "id": "NSH-1",
+      "statement": "An outsider borrows more USDG than their collateral is really worth, and walks",
+      "attempt": "compared every big collateral's oracle price against its live Uniswap V3 USDG pool price (the precondition for buy\u2192post\u2192borrow)",
+      "result": "blocked (for the 3 biggest lines)",
+      "evidence": "NVDA DEX $215.68 vs oracle $218.30; SPCX $149.38 vs $149.97; GOOGL $337.65 vs $339.05 \u2014 all at or BELOW the oracle, so collateral cannot be obtained cheaply. Coverage: 3 of 25 tokens"
+    },
+    {
+      "id": "NSH-2",
+      "statement": "A market prices its collateral off a frozen feed while the real asset has moved",
+      "attempt": "to run: anvil fork, freeze the aggregator (impersonate), move the real asset, borrow at the stale price",
+      "result": "not_attempted",
+      "evidence": "staleness measured on live feeds (INV-4); exploitability not yet shown \u2014 needs a fork"
+    },
+    {
+      "id": "NSH-3",
+      "statement": "A liquidation is executed at a manipulable or stale price that a third party can steer",
+      "attempt": "to run: identify the liquidation trigger price source and try to front-run it",
+      "result": "not_attempted",
+      "evidence": ""
+    },
+    {
+      "id": "NSH-4",
+      "statement": "The single-EOA curator moves vault funds into a hostile/malicious market",
+      "attempt": "Impersonated the owner/curator EOA on an anvil fork: setCurator(attacker) [instant, succeeded], setFee(0.5e18) [instant, succeeded], setSupplyQueue([one market]) [instant, succeeded, 28->1], then submitCap + acceptCap immediately [reverted TimelockNotElapsed] and acceptCap after +25h [succeeded].",
+      "result": "blocked",
+      "evidence": "fork block 64972513 (fork/FORK_ATTACK_NSH4.md). BLOCKED on the new-market path: a hostile new market needs submitCap -> 24h -> acceptCap, and acceptCap immediately after submitCap reverts 0x6677a596 = TimelockNotElapsed(); acceptCap succeeds only after evm_increaseTime. Separate guardian 0x67f79ccc... can revokePendingCap inside that window. Not outsider-reachable: every power above needs owner/curator/allocator. Two weakenings recorded (not exploitable today): (1) the 24h timelock is bypassed in effect because setCurator + setFee(50%) + setSupplyQueue are all instant and not guardian-vetoable, so a compromised owner key has immediate role/fee/routing control; (2) withdrawQueueLength=30=MAX_QUEUE_LENGTH with all 30 markets enabled and non-zero cap, so _setCap cannot push another market (MaxQueueLengthExceeded) until one is removed. No drain path reached: H3 was NEGATIVE for every comparable collateral. Impact bounded by this vault holding 8.022515 USDG -> Informational; mechanism reusable at scale -> recommend multisig."
+    }
   ],
-
   "sections": [
-    {"id": "S1", "name": "Base protocol + vaults identified (Morpho Blue, 2x MetaMorphoV1_1, roles)", "contracts": ["0x9D53d5E3…", "0x8cb8AA35…", "0x93777a9b…"], "depends_on": [], "value_flows": ["LP deposit/withdraw via vault", "supply/borrow/repay/liquidate on Morpho"], "status": "closed", "evidence": "verified source fetched for all four; owner/curator/guardian/fee/timelock reads; vault totalAssets 8.02 USDG and 0; supplyQueueLength=28", "findings": []},
-    {"id": "S2", "name": "Market enumeration (28 markets, collaterals, LLTV, per-market oracle)", "contracts": ["0x8cb8AA35…", "0x9D53d5E3…"], "depends_on": ["S1"], "value_flows": [], "status": "closed", "evidence": "/tmp/lb/markets.txt: 28 supplyQueue entries → idToMarketParams for loan/collateral/oracle/irm/lltv; all loanToken=USDG, single IRM", "findings": []},
-    {"id": "S3", "name": "Oracle layer classification (which feeds are custom vs Chainlink)", "contracts": ["28 oracles", "0x61B7e565…"], "depends_on": ["S2"], "value_flows": [], "status": "closed", "evidence": "codesize sweep: 26 feeds at 9,571B (Chainlink proxies), CASHCAT 5,207B (custom, unverified), ORCL 23,186B (DualAggregator, verified)", "findings": []},
-    {"id": "S4", "name": "Oracle arithmetic correctness (decimals / scale factor / decoded prices)", "contracts": ["28 oracles"], "depends_on": ["S3"], "value_flows": [], "status": "closed", "evidence": "INV-5 PASS — SCALE_FACTOR 1e24 consistent with 6dp USDG / 18dp collateral / 8dp feeds; decoded prices match reality", "findings": []},
-    {"id": "S5", "name": "ORCL feed source review", "contracts": ["0x4a9aBC75…"], "depends_on": ["S3"], "value_flows": [], "status": "closed", "evidence": "CLOSED AS UPSTREAM: DualAggregator is Chainlink's OCR2Aggregator port (BUSL 1.1, imports @chainlink/contracts) with a secondary-report source and s_cutoffTime window validity (lines 541/562/572); owner + min/max are Chainlink's. Not Longbow's code ⇒ auditing it is upstream work, not reportable here. RETRACTION recorded: I had flagged the 23,186B size as 'Longbow's own'.", "findings": []},
-    {"id": "S6", "name": "CASHCAT Uniswap adapter (unverified — reverse-engineer: TWAP window, pool, immutables, manipulation cost)", "contracts": ["0x709400Ed…"], "depends_on": ["S3"], "value_flows": [], "status": "in_progress", "evidence": "Confirmed TWAP via observe(uint32[]) present / slot0() absent. Both CASHCAT/USDG V3 pools (fee 500 0xf3a57982…, fee 3000 0x525dD86C…) show liquidity=0, and neither matches the adapter's $0.16459 (slot0-implied $0.1175 / $0.2549) ⇒ which pool it reads is still unknown. Impact capped by market isolation (~$5 USDG in market 5).", "findings": []},
-    {"id": "S7", "name": "Staleness/liveness on a 24/5 equity feed", "contracts": ["MorphoChainlinkOracleV2", "27 feeds"], "depends_on": ["S4"], "value_flows": [], "status": "closed", "evidence": "CLOSED NEGATIVE — WITHDRAWN AS A FINDING. Source read from morpho-org/morpho-blue-oracles proves the absence of a staleness/bounds check is deliberate and documented by Morpho ('assumed that the Chainlink feed keeps its promises'). Vanilla use of an upstream documented assumption is not a Longbow defect.", "findings": []},
-    {"id": "S8", "name": "Collateral valuation vs real tradable price", "contracts": ["25 collateral tokens", "their feeds"], "depends_on": ["S3"], "value_flows": [], "status": "closed", "evidence": "CLOSED NEGATIVE for the three biggest collateral lines (NVDA −1.2%, SPCX −0.4%, GOOGL −0.4% vs their real Uniswap V3 USDG pools) ⇒ no buy→post→borrow theft path. Coverage caveat: 3 of 25 tokens tested; the memecoin (CASHCAT) is handled in S6.", "findings": []},
-    {"id": "S9", "name": "Curator powers / instant vs timelocked paths", "contracts": ["0x8cb8AA35…", "0x93777a9b…"], "depends_on": ["S1"], "value_flows": ["vault reallocate/supplyQueue"], "status": "not_started", "evidence": "", "findings": []},
-    {"id": "S10", "name": "Liquidation path end-to-end (who triggers, at what price, who receives collateral)", "contracts": ["0x9D53d5E3…"], "depends_on": ["S7", "S8"], "value_flows": ["liquidate() collateral swap → bad debt to that market's suppliers"], "status": "not_started", "evidence": "", "findings": []}
+    {
+      "id": "S1",
+      "name": "Base protocol + vaults identified (Morpho Blue, 2x MetaMorphoV1_1, roles)",
+      "contracts": [
+        "0x9D53d5E3\u2026",
+        "0x8cb8AA35\u2026",
+        "0x93777a9b\u2026"
+      ],
+      "depends_on": [],
+      "value_flows": [
+        "LP deposit/withdraw via vault",
+        "supply/borrow/repay/liquidate on Morpho"
+      ],
+      "status": "closed",
+      "evidence": "verified source fetched for all four; owner/curator/guardian/fee/timelock reads; vault totalAssets 8.02 USDG and 0; supplyQueueLength=28",
+      "findings": []
+    },
+    {
+      "id": "S2",
+      "name": "Market enumeration (28 markets, collaterals, LLTV, per-market oracle)",
+      "contracts": [
+        "0x8cb8AA35\u2026",
+        "0x9D53d5E3\u2026"
+      ],
+      "depends_on": [
+        "S1"
+      ],
+      "value_flows": [],
+      "status": "closed",
+      "evidence": "/tmp/lb/markets.txt: 28 supplyQueue entries \u2192 idToMarketParams for loan/collateral/oracle/irm/lltv; all loanToken=USDG, single IRM",
+      "findings": []
+    },
+    {
+      "id": "S3",
+      "name": "Oracle layer classification (which feeds are custom vs Chainlink)",
+      "contracts": [
+        "28 oracles",
+        "0x61B7e565\u2026"
+      ],
+      "depends_on": [
+        "S2"
+      ],
+      "value_flows": [],
+      "status": "closed",
+      "evidence": "codesize sweep: 26 feeds at 9,571B (Chainlink proxies), CASHCAT 5,207B (custom, unverified), ORCL 23,186B (DualAggregator, verified)",
+      "findings": []
+    },
+    {
+      "id": "S4",
+      "name": "Oracle arithmetic correctness (decimals / scale factor / decoded prices)",
+      "contracts": [
+        "28 oracles"
+      ],
+      "depends_on": [
+        "S3"
+      ],
+      "value_flows": [],
+      "status": "closed",
+      "evidence": "INV-5 PASS \u2014 SCALE_FACTOR 1e24 consistent with 6dp USDG / 18dp collateral / 8dp feeds; decoded prices match reality",
+      "findings": []
+    },
+    {
+      "id": "S5",
+      "name": "ORCL feed source review",
+      "contracts": [
+        "0x4a9aBC75\u2026"
+      ],
+      "depends_on": [
+        "S3"
+      ],
+      "value_flows": [],
+      "status": "closed",
+      "evidence": "CLOSED AS UPSTREAM: DualAggregator is Chainlink's OCR2Aggregator port (BUSL 1.1, imports @chainlink/contracts) with a secondary-report source and s_cutoffTime window validity (lines 541/562/572); owner + min/max are Chainlink's. Not Longbow's code \u21d2 auditing it is upstream work, not reportable here. RETRACTION recorded: I had flagged the 23,186B size as 'Longbow's own'.",
+      "findings": []
+    },
+    {
+      "id": "S6",
+      "name": "CASHCAT Uniswap adapter (unverified \u2014 reverse-engineer: TWAP window, pool, immutables, manipulation cost)",
+      "contracts": [
+        "0x709400Ed\u2026"
+      ],
+      "depends_on": [
+        "S3"
+      ],
+      "value_flows": [],
+      "status": "in_progress",
+      "evidence": "Confirmed TWAP via observe(uint32[]) present / slot0() absent. Both CASHCAT/USDG V3 pools (fee 500 0xf3a57982\u2026, fee 3000 0x525dD86C\u2026) show liquidity=0, and neither matches the adapter's $0.16459 (slot0-implied $0.1175 / $0.2549) \u21d2 which pool it reads is still unknown. Impact capped by market isolation (~$5 USDG in market 5).",
+      "findings": []
+    },
+    {
+      "id": "S7",
+      "name": "Staleness/liveness on a 24/5 equity feed",
+      "contracts": [
+        "MorphoChainlinkOracleV2",
+        "27 feeds"
+      ],
+      "depends_on": [
+        "S4"
+      ],
+      "value_flows": [],
+      "status": "closed",
+      "evidence": "CLOSED NEGATIVE \u2014 WITHDRAWN AS A FINDING. Source read from morpho-org/morpho-blue-oracles proves the absence of a staleness/bounds check is deliberate and documented by Morpho ('assumed that the Chainlink feed keeps its promises'). Vanilla use of an upstream documented assumption is not a Longbow defect.",
+      "findings": []
+    },
+    {
+      "id": "S8",
+      "name": "Collateral valuation vs real tradable price",
+      "contracts": [
+        "25 collateral tokens",
+        "their feeds"
+      ],
+      "depends_on": [
+        "S3"
+      ],
+      "value_flows": [],
+      "status": "closed",
+      "evidence": "CLOSED NEGATIVE for the three biggest collateral lines (NVDA \u22121.2%, SPCX \u22120.4%, GOOGL \u22120.4% vs their real Uniswap V3 USDG pools) \u21d2 no buy\u2192post\u2192borrow theft path. Coverage caveat: 3 of 25 tokens tested; the memecoin (CASHCAT) is handled in S6.",
+      "findings": []
+    },
+    {
+      "id": "S9",
+      "name": "Curator powers / instant vs timelocked paths",
+      "contracts": [
+        "0x8cb8AA35\u2026",
+        "0x93777a9b\u2026"
+      ],
+      "depends_on": [
+        "S1"
+      ],
+      "value_flows": [
+        "vault reallocate/supplyQueue"
+      ],
+      "status": "closed",
+      "evidence": "fork block 64972513, scripts attack_nsh4.sh + attack_nsh4_part2.sh, full write-up fork/FORK_ATTACK_NSH4.md. owner()==curator()==0x1bf704707e9F3f407EbC9364fDAeD08C39893770 (eth_getCode=0 bytes, bare EOA); timelock()=86400; guardian()=0x67f79ccc...; fee()=1e17 live. INSTANT proven: setCurator(attacker) tx status 1 -> curator() read back as attacker; setFee(0.5e18) tx status 1 and 0.60/0.75/0.90/1.00e18 all revert MaxFeeExceeded so MAX_FEE=50%; setSupplyQueue([idx2]) tx status 1 -> supplyQueueLength 28->1. TIMELOCKED proven: submitCap(1e12) status 1, then acceptCap IMMEDIATELY reverts custom error 0x6677a596 = TimelockNotElapsed() (selector computed locally); after evm_increaseTime 90000 + mine, acceptCap succeeds -> time is the only barrier. Cap DECREASE is instant by design (submitCap branches to _setCap directly when newSupplyCap < supplyCap). Source: vault.sol onlyOwner set for setName/setSymbol/setCurator/setIsAllocator/setSkimRecipient/setFee/setFeeRecipient (no timelock); onlyAllocatorRole setSupplyQueue/updateWithdrawQueue/reallocate.",
+      "findings": [
+        "F-LB-1 (Informational, trust/config): single EOA is both owner and curator; roles, fee (to 50%) and supply routing are all instant and NOT gated by the vault's own 24h timelock, and the guardian cannot veto them \u2014 only cap increases and market removals wait."
+      ]
+    },
+    {
+      "id": "S10",
+      "name": "Liquidation path end-to-end (who triggers, at what price, who receives collateral)",
+      "contracts": [
+        "0x9D53d5E3\u2026"
+      ],
+      "depends_on": [
+        "S7",
+        "S8"
+      ],
+      "value_flows": [
+        "liquidate() collateral swap \u2192 bad debt to that market's suppliers"
+      ],
+      "status": "not_started",
+      "evidence": "",
+      "findings": []
+    }
   ],
-
   "value_movers": [
-    {"function": "withdraw / redeem (ERC-4626)", "contract": "MetaMorphoV1_1 (both)", "direction": "out", "caller_can_be": "anyone (share holder)", "guards": ["maxWithdraw limited by available liquidity in allocated markets", "reallocate chain"], "bounded_by": "market liquidity; vault holds $8.02", "notes": "Not a theft path — but 'idle = 0' exits can freeze redeems when markets are fully utilised"},
-    {"function": "reallocate(MarketAllocation[])", "contract": "MetaMorphoV1_1", "direction": "both", "caller_can_be": "owner / isAllocator", "guards": ["market must be in supplyQueue and enabled", "amount bounded by market cap", "curator/allocator roles"], "bounded_by": "per-market cap (timelocked to raise)", "notes": "The single most powerful instant action a curator has; S9 tests whether cap bounds are airtight"},
-    {"function": "supply / withdraw (Morpho core)", "contract": "Morpho Blue", "direction": "in / out", "caller_can_be": "anyone", "guards": ["withdraw limited by market liquidity and by HEALTH check for collateralised positions"], "bounded_by": "market accounting", "notes": "Trustless; the only place lender USDG leaves is here"},
-    {"function": "borrow(marketParams, assets, shares, onBehalf, receiver)", "contract": "Morpho Blue", "direction": "out", "caller_can_be": "anyone (onBehalf of self)", "guards": ["health check: borrowed/price vs collateral*LLTV", "oracle price()", "isLltvEnabled"], "bounded_by": "LLTV x oracle price x collateral", "notes": "★ THIS is the outsider lever: it is bounded by the ORACLE, so every oracle defect is a borrow defect"},
-    {"function": "liquidate(...)", "contract": "Morpho Blue", "direction": "both", "caller_can_be": "anyone", "guards": ["position must be unhealthy per oracle price", "LLTV", "bad-debt socialisation to that market's suppliers only"], "bounded_by": "oracle price + position size", "notes": "If the oracle under-reports, honest positions get liquidated; if it over-reports, bad debt lands on suppliers"},
-    {"function": "price()", "contract": "the 28 oracle feeds", "direction": "none (read)", "caller_can_be": "anyone", "guards": ["answer > 0 only (no staleness/round validation in the V2 price path)"], "bounded_by": "nothing", "notes": "★ Single most load-bearing read in the system — 28 markets, all borrowing/liquidation bound by it"},
-    {"function": "setIsAllocator / setCurator / setFee / setFeeRecipient / setSupplyQueue", "contract": "MetaMorphoV1_1", "direction": "none (authority)", "caller_can_be": "owner (EOA)", "guards": ["onlyOwner; timelock applies to caps/guardian/removal, need to confirm for each"], "bounded_by": "owner key", "notes": "S9"}
+    {
+      "function": "withdraw / redeem (ERC-4626)",
+      "contract": "MetaMorphoV1_1 (both)",
+      "direction": "out",
+      "caller_can_be": "anyone (share holder)",
+      "guards": [
+        "maxWithdraw limited by available liquidity in allocated markets",
+        "reallocate chain"
+      ],
+      "bounded_by": "market liquidity; vault holds $8.02",
+      "notes": "Not a theft path \u2014 but 'idle = 0' exits can freeze redeems when markets are fully utilised"
+    },
+    {
+      "function": "reallocate(MarketAllocation[])",
+      "contract": "MetaMorphoV1_1",
+      "direction": "both",
+      "caller_can_be": "owner / isAllocator",
+      "guards": [
+        "market must be in supplyQueue and enabled",
+        "amount bounded by market cap",
+        "curator/allocator roles"
+      ],
+      "bounded_by": "per-market cap (timelocked to raise)",
+      "notes": "The single most powerful instant action a curator has; S9 tests whether cap bounds are airtight"
+    },
+    {
+      "function": "supply / withdraw (Morpho core)",
+      "contract": "Morpho Blue",
+      "direction": "in / out",
+      "caller_can_be": "anyone",
+      "guards": [
+        "withdraw limited by market liquidity and by HEALTH check for collateralised positions"
+      ],
+      "bounded_by": "market accounting",
+      "notes": "Trustless; the only place lender USDG leaves is here"
+    },
+    {
+      "function": "borrow(marketParams, assets, shares, onBehalf, receiver)",
+      "contract": "Morpho Blue",
+      "direction": "out",
+      "caller_can_be": "anyone (onBehalf of self)",
+      "guards": [
+        "health check: borrowed/price vs collateral*LLTV",
+        "oracle price()",
+        "isLltvEnabled"
+      ],
+      "bounded_by": "LLTV x oracle price x collateral",
+      "notes": "\u2605 THIS is the outsider lever: it is bounded by the ORACLE, so every oracle defect is a borrow defect"
+    },
+    {
+      "function": "liquidate(...)",
+      "contract": "Morpho Blue",
+      "direction": "both",
+      "caller_can_be": "anyone",
+      "guards": [
+        "position must be unhealthy per oracle price",
+        "LLTV",
+        "bad-debt socialisation to that market's suppliers only"
+      ],
+      "bounded_by": "oracle price + position size",
+      "notes": "If the oracle under-reports, honest positions get liquidated; if it over-reports, bad debt lands on suppliers"
+    },
+    {
+      "function": "price()",
+      "contract": "the 28 oracle feeds",
+      "direction": "none (read)",
+      "caller_can_be": "anyone",
+      "guards": [
+        "answer > 0 only (no staleness/round validation in the V2 price path)"
+      ],
+      "bounded_by": "nothing",
+      "notes": "\u2605 Single most load-bearing read in the system \u2014 28 markets, all borrowing/liquidation bound by it"
+    },
+    {
+      "function": "setIsAllocator / setCurator / setFee / setFeeRecipient / setSupplyQueue",
+      "contract": "MetaMorphoV1_1",
+      "direction": "none (authority)",
+      "caller_can_be": "owner (EOA)",
+      "guards": [
+        "onlyOwner; timelock applies to caps/guardian/removal, need to confirm for each"
+      ],
+      "bounded_by": "owner key",
+      "notes": "S9"
+    }
   ],
-
   "main_functions": [
-    {"function": "Morpho Blue.borrow", "why_everything_depends_on_it": "the only path by which an outsider extracts lender USDG; bounded entirely by the oracle", "state_it_touches": ["market", "position", "USDG balances"]},
-    {"function": "oracle.price()", "why_everything_depends_on_it": "every borrow, withdraw-health check and liquidation resolves through it", "state_it_touches": ["external feed state"]},
-    {"function": "Morpho Blue.liquidate", "why_everything_depends_on_it": "converts a mispriced oracle into realised bad debt for that market's suppliers", "state_it_touches": ["market", "position", "collateral + loan token balances"]},
-    {"function": "MetaMorphoV1_1.reallocate", "why_everything_depends_on_it": "moves the vault's liquidity between markets; caps are its only bound", "state_it_touches": ["allocation", "supplyQueue", "market positions"]}
+    {
+      "function": "Morpho Blue.borrow",
+      "why_everything_depends_on_it": "the only path by which an outsider extracts lender USDG; bounded entirely by the oracle",
+      "state_it_touches": [
+        "market",
+        "position",
+        "USDG balances"
+      ]
+    },
+    {
+      "function": "oracle.price()",
+      "why_everything_depends_on_it": "every borrow, withdraw-health check and liquidation resolves through it",
+      "state_it_touches": [
+        "external feed state"
+      ]
+    },
+    {
+      "function": "Morpho Blue.liquidate",
+      "why_everything_depends_on_it": "converts a mispriced oracle into realised bad debt for that market's suppliers",
+      "state_it_touches": [
+        "market",
+        "position",
+        "collateral + loan token balances"
+      ]
+    },
+    {
+      "function": "MetaMorphoV1_1.reallocate",
+      "why_everything_depends_on_it": "moves the vault's liquidity between markets; caps are its only bound",
+      "state_it_touches": [
+        "allocation",
+        "supplyQueue",
+        "market positions"
+      ]
+    }
   ],
-
   "passes": [
-    {"pass": 1, "lens": "recon / architecture", "scope": "enumerate contracts, roles, markets, oracles, money", "hypotheses": ["team's 'only oracle adapters are ours' claim holds"], "result": "CONFIRMED, and narrower than first reported: 27 of 28 feeds are Chainlink infrastructure; exactly ONE feed is Longbow's own (the UNVERIFIED CASHCAT Uniswap adapter). An earlier version of this pass said '2 of 28' — retracted in pass 5", "evidence": "TARGETS/longbow/README.md tables; codesize sweep"},
-    {"pass": 2, "lens": "numerical gap", "scope": "oracle scaling across all markets", "hypotheses": ["decimals/scale mismatch inflates collateral"], "result": "NEGATIVE — SCALE_FACTOR 1e24 correct for 6dp/18dp/8dp; decoded prices sane for 6 markets", "evidence": "INV-5"},
-    {"pass": 3, "lens": "trust gap", "scope": "staleness of 24/5 equity feeds vs on-chain liquidation", "hypotheses": ["no updatedAt guard ⇒ frozen feed indistinguishable from live"], "result": "HYPOTHESIS WITHDRAWN on reading the source — the missing check is Morpho's documented upstream design ('assumed that the Chainlink feed keeps its promises'), so vanilla deployment is not a Longbow finding. Live staleness confirmed as a condition (NVDA 44.1h stale) but not reportable", "evidence": "morpho-blue-oracles ChainlinkDataFeedLib.sol"},
-    {"pass": 4, "lens": "oracle vs reality (numerical/economic)", "scope": "is any collateral obtainable below its oracle price, and does anything bound a bad report?", "hypotheses": ["H3 collateral mispricing", "min/max circuit breaker protects against a bad report"], "result": "H3 NEGATIVE for the 3 biggest lines (NVDA −1.2%, SPCX −0.4%, GOOGL −0.4% vs live USDG pools). NEW TRUST FACTS: every feed has one owner (0xeE27D5Ae…, 171B contract) and effectively no circuit breaker (minAnswer=1, maxAnswer≈9.58e52), so the guard Morpho delegates to Chainlink is absent in practice", "evidence": "Uniswap V3 factory getPool + slot0 math; owner()/minAnswer()/maxAnswer()"},
-    {"pass": 5, "lens": "retraction sweep (own artifacts)", "scope": "re-check every promoted claim against primary data", "hypotheses": ["'DualAggregator is Longbow's code'", "'500 error means unverified'"], "result": "BOTH RETRACTED — DualAggregator is Chainlink's OCR2 port; the 500 was intermittent for verified and unverified alike. Recorded rather than quietly dropped", "evidence": "DualAggregator.sol header (BUSL 1.1 / @chainlink/contracts); control-refetch test"}
+    {
+      "pass": 1,
+      "lens": "recon / architecture",
+      "scope": "enumerate contracts, roles, markets, oracles, money",
+      "hypotheses": [
+        "team's 'only oracle adapters are ours' claim holds"
+      ],
+      "result": "CONFIRMED, and narrower than first reported: 27 of 28 feeds are Chainlink infrastructure; exactly ONE feed is Longbow's own (the UNVERIFIED CASHCAT Uniswap adapter). An earlier version of this pass said '2 of 28' \u2014 retracted in pass 5",
+      "evidence": "TARGETS/longbow/README.md tables; codesize sweep"
+    },
+    {
+      "pass": 2,
+      "lens": "numerical gap",
+      "scope": "oracle scaling across all markets",
+      "hypotheses": [
+        "decimals/scale mismatch inflates collateral"
+      ],
+      "result": "NEGATIVE \u2014 SCALE_FACTOR 1e24 correct for 6dp/18dp/8dp; decoded prices sane for 6 markets",
+      "evidence": "INV-5"
+    },
+    {
+      "pass": 3,
+      "lens": "trust gap",
+      "scope": "staleness of 24/5 equity feeds vs on-chain liquidation",
+      "hypotheses": [
+        "no updatedAt guard \u21d2 frozen feed indistinguishable from live"
+      ],
+      "result": "HYPOTHESIS WITHDRAWN on reading the source \u2014 the missing check is Morpho's documented upstream design ('assumed that the Chainlink feed keeps its promises'), so vanilla deployment is not a Longbow finding. Live staleness confirmed as a condition (NVDA 44.1h stale) but not reportable",
+      "evidence": "morpho-blue-oracles ChainlinkDataFeedLib.sol"
+    },
+    {
+      "pass": 4,
+      "lens": "oracle vs reality (numerical/economic)",
+      "scope": "is any collateral obtainable below its oracle price, and does anything bound a bad report?",
+      "hypotheses": [
+        "H3 collateral mispricing",
+        "min/max circuit breaker protects against a bad report"
+      ],
+      "result": "H3 NEGATIVE for the 3 biggest lines (NVDA \u22121.2%, SPCX \u22120.4%, GOOGL \u22120.4% vs live USDG pools). NEW TRUST FACTS: every feed has one owner (0xeE27D5Ae\u2026, 171B contract) and effectively no circuit breaker (minAnswer=1, maxAnswer\u22489.58e52), so the guard Morpho delegates to Chainlink is absent in practice",
+      "evidence": "Uniswap V3 factory getPool + slot0 math; owner()/minAnswer()/maxAnswer()"
+    },
+    {
+      "pass": 5,
+      "lens": "retraction sweep (own artifacts)",
+      "scope": "re-check every promoted claim against primary data",
+      "hypotheses": [
+        "'DualAggregator is Longbow's code'",
+        "'500 error means unverified'"
+      ],
+      "result": "BOTH RETRACTED \u2014 DualAggregator is Chainlink's OCR2 port; the 500 was intermittent for verified and unverified alike. Recorded rather than quietly dropped",
+      "evidence": "DualAggregator.sol header (BUSL 1.1 / @chainlink/contracts); control-refetch test"
+    },
+    {
+      "pass": 6,
+      "lens": "trust gap + fork attack (NSH-4 / S9)",
+      "scope": "MetaMorphoV1_1 curator/owner powers and the hostile-market path, on a pinned anvil fork",
+      "hypotheses": [
+        "a single-EOA owner can instantaneously take the curator role (proven true)",
+        "the owner can raise the fee without the 24h timelock (proven true, ceiling exactly 50%)",
+        "the curator can reroute all deposits instantly (proven true, supplyQueue 28->1)",
+        "vault funds can be pushed into a hostile NEW market without waiting (FALSE \u2014 TimelockNotElapsed)"
+      ],
+      "result": "S9 CLOSED. Instant: setCurator, setFee(MAX 50%), setIsAllocator, setSupplyQueue, updateWithdrawQueue, reallocate, setName/Symbol, setSkimRecipient. Timelocked 24h: cap increases (proven), timelock/guardian changes, market removal. NSH-4 BLOCKED (new-market path is timelocked and guardian-vetoable); no outsider path; residual single-EOA trust, Informational on an 8.02 USDG vault.",
+      "evidence": "fork/FORK_ATTACK_NSH4.md"
+    }
   ],
-
   "status": {
     "done": false,
-    "sections_closed": 7,
+    "sections_closed": 8,
     "sections_total": 10,
     "open_questions": [
       "S6: which pool does the CASHCAT adapter read, what TWAP window, and can the empty-liquidity pools be initialized/steered? (impact capped at ~$5 by isolation)",
-      "S9: which vault powers are instant vs timelocked, and is the per-market cap bound airtight?",
-      "S10: liquidation path end-to-end — who triggers, what price, and can a third party displace/steer it?",
+      "S10: liquidation path end-to-end \u2014 who triggers, what price, and can a third party displace/steer it?",
       "INV-2: reconcile the market() field decode before quoting per-market debt",
       "Coverage: only 3 of 25 collateral tokens compared against real market prices",
-      "MANDATORY before any clean verdict: fork-attack phase has NOT run (impersonate/forge a feed report, try to borrow past LLTV, try to displace a liquidation)"
+      "S10 (liquidation path end-to-end) still not_started \u2014 who triggers, at what price, can a third party displace/steer it. NSH-2 (stale/frozen feed) and NSH-3 (manipulable liquidation price) still not_attempted.",
+      "FORK PHASE PARTIALLY RUN (2026-09-17): NSH-4 attempted and blocked. NSH-2 and NSH-3 still NOT attempted, so no clean verdict is available for this target yet."
     ],
-    "blocked_on": "nothing — all next steps are free reads; only the CASHCAT adapter is unverified (bytecode route available)"
+    "blocked_on": "nothing \u2014 fork harness is live and free (anvil fork at 64972513 on :8546). Remaining: S10 read + NSH-2/NSH-3 fork attacks. CASHCAT adapter (S6) only via bytecode."
   }
 }
