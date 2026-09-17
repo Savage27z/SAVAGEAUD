@@ -303,9 +303,9 @@
     {
       "id": "NSH-2",
       "statement": "A market prices its collateral off a frozen feed while the real asset has moved",
-      "attempt": "to run: anvil fork, freeze the aggregator (impersonate), move the real asset, borrow at the stale price",
-      "result": "not_attempted",
-      "evidence": "staleness measured on live feeds (INV-4); exploitability not yet shown \u2014 needs a fork"
+      "attempt": "Measured freshness of all 30 collateral feeds on the LIVE chain rather than trying to freeze one (an outsider cannot freeze a Chainlink feed). Read each oracle's BASE_FEED_1 latestRoundData().updatedAt and compared against the head timestamp.",
+      "result": "blocked (negative - no stale feed exists)",
+      "evidence": "LIVE RPC sweep (not a fork), block head 2026-09-17 01:38:31 UTC. All 30 withdrawQueue markets read (30/30, no failures). For every market: idToMarketParams -> collateral + oracle, then the oracle's BASE_FEED_1 latestRoundData(). ALL 30 oracles are MorphoChainlinkOracleV2 (BASE_FEED_1 resolves on every one, incl. CASHCAT and ORCL - so the '2 custom' oracles are v2 instances with custom feeds, not custom oracle code). Feed age vs head: 0.0h to 5.5h (GME worst at 5.5h). ZERO feeds older than 24h. No frozen-feed condition exists. NSH-2 NEGATIVE."
     },
     {
       "id": "NSH-3",
@@ -666,6 +666,17 @@
       ],
       "result": "S9 CLOSED. Instant: setCurator, setFee(MAX 50%), setIsAllocator, setSupplyQueue, updateWithdrawQueue, reallocate, setName/Symbol, setSkimRecipient. Timelocked 24h: cap increases (proven), timelock/guardian changes, market removal. NSH-4 BLOCKED (new-market path is timelocked and guardian-vetoable); no outsider path; residual single-EOA trust, Informational on an 8.02 USDG vault.",
       "evidence": "fork/FORK_ATTACK_NSH4.md"
+    },
+    {
+      "pass": 7,
+      "lens": "fork attack (NSH-2 stale/frozen feed) + adversarial self-check",
+      "scope": "feed freshness across all 30 markets, live RPC",
+      "hypotheses": [
+        "some collateral is priced off a frozen feed while the real price moved (FALSE - all feeds 0-5.5h fresh)",
+        "the 2 custom oracles (CASHCAT/ORCL) are structurally different (FALSE - both resolve BASE_FEED_1, i.e. MorphoChainlinkOracleV2)"
+      ],
+      "result": "NSH-2 NEGATIVE. No stale feed anywhere in the book. NOTE: an earlier reading in this same session showed 'all feeds ~50-55h stale' - that was an artifact of my own evm_increaseTime time-warp on the NSH-4 fork, caught before it was reported. See CHECKLIST.md.",
+      "evidence": "live RPC sweep, head 2026-09-17 01:38:31 UTC; 30/30 markets"
     }
   ],
   "status": {
@@ -677,9 +688,9 @@
       "S10: liquidation path end-to-end \u2014 who triggers, what price, and can a third party displace/steer it?",
       "INV-2: reconcile the market() field decode before quoting per-market debt",
       "Coverage: only 3 of 25 collateral tokens compared against real market prices",
-      "S10 (liquidation path end-to-end) still not_started \u2014 who triggers, at what price, can a third party displace/steer it. NSH-2 (stale/frozen feed) and NSH-3 (manipulable liquidation price) still not_attempted.",
-      "FORK PHASE PARTIALLY RUN (2026-09-17): NSH-4 attempted and blocked. NSH-2 and NSH-3 still NOT attempted, so no clean verdict is available for this target yet."
+      "S10 (liquidation path end-to-end) still not_started \u2014 who triggers, at what price, can a third party displace/steer it. NSH-3 (manipulable liquidation price) still not_attempted.",
+      "FORK PHASE: NSH-2 attempted (NEGATIVE, no stale feed) and NSH-4 attempted (BLOCKED, timelocked). NSH-3 still NOT attempted \u2192 no clean verdict yet."
     ],
-    "blocked_on": "nothing \u2014 fork harness is live and free (anvil fork at 64972513 on :8546). Remaining: S10 read + NSH-2/NSH-3 fork attacks. CASHCAT adapter (S6) only via bytecode."
+    "blocked_on": "WARNING for future fork work on this chain: the Robinhood Chain public RPC is NOT archival \u2014 a pinned anvil fork fails 'historical state ... is not available' for any address not already cached, which silently truncated a 30-market sweep to 12. Run read sweeps against the LIVE RPC; reserve the fork for state-changing attacks. Remaining: S10 read + NSH-3 fork attack."
   }
 }

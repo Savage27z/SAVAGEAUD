@@ -417,3 +417,22 @@ Target: `TARGETS/narbet/`. Monad mainnet 143, Pyth Entropy V2, 19 games, UUPS, n
   unverified result away. Retry to be sure, but if the same `creation_bytecode`-only body comes back on
   repeated fetches, that is the real answer. Confirm in parallel with `eth_getCode`: 126KB of bytecode in
   the payload ⇒ there is a contract there, and the absence of `source_code` in it is the finding.
+- **`evm_increaseTime` poisons every later time-based read on that fork — including freshness checks.**
+  While attacking Longbow's 24h cap timelock I called `evm_increaseTime 90000` twice (once per script) on a
+  pinned fork. The fork's clock then sat **50 hours ahead of the real chain**, and a subsequent sweep of all
+  28 collateral feeds read "every feed is 180k–199k seconds stale (~50–55h)". That is a *dramatically*
+  plausible story — a weekend 24/5 market closure fits it exactly, and I nearly filed it as NSH-2 proof
+  ("collaterals priced off frozen feeds"). It was entirely my own time warp. **Rule: never measure
+  staleness/freshness/expiry on a fork you have time-travelled. Compare the fork head timestamp to the live
+  head FIRST (`cast block latest --field timestamp`) — if the delta is not ~0, every age you compute is
+  fiction. Run read-only sweeps against the LIVE RPC instead; keep the fork for state-changing attacks.**
+  The tell that saved it: the live head was *Thu Sep 17 01:38*, the fork claimed *Sat Sep 19 03:32*.
+- **A pinned fork on a non-archival RPC fails SILENTLY and truncates sweeps.** Robinhood Chain's public RPC
+  is not archival: `anvil --fork-block-number <n>` serves addresses it has already cached, but any cold
+  address fails `failed to get storage ... historical state <hash> is not available`. A 30-market sweep
+  returned 12 rows and 18 blanks — and because the failure is per-address, it looked like a *property of
+  those markets* (I briefly read it as "the custom oracles behave differently") rather than a harness fault.
+  Same trap family as the empty-scan lesson above: **an empty result and a broken reader look identical from
+  inside.** Confirm by reading the same address against the LIVE RPC — if live works and the fork fails, the
+  fork is at fault, not the target. Chain-specific: for Monad, `rpc2.monad.xyz` was verified archival, which
+  is why fork pinning worked there and was then assumed to work here.

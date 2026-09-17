@@ -180,11 +180,17 @@ SLV **$58.10**, SGOV **$101.04** — all sane. ⇒ **no decimals/scale misconfig
 
 Everything load-bearing is upstream: Morpho Blue + `MetaMorphoV1_1` + MorphoChainlinkOracleV2 + Chainlink
 feeds. Longbow's original code reduces to **one unverified oracle adapter for a memecoin in a $5 market**,
-plus configuration choices (LLTVs, caps) and a single-EOA curator. The fork phase is now **partially run**
-(2026-09-17, block 64,972,513): **NSH-4 attempted and BLOCKED** — the hostile-market path is timelocked
+plus configuration choices (LLTVs, caps) and a single-EOA curator. The fork phase is now **largely run**
+(2026-09-17): **NSH-4 attempted and BLOCKED** — the hostile-market path is timelocked
 (`TimelockNotElapsed`) and guardian-vetoable, while role/fee/routing proved instant and un-vetoable
-(`fork/FORK_ATTACK_NSH4.md`, S9 closed). **NSH-2 (stale/frozen feed) and NSH-3 (manipulable liquidation
-price) remain NOT attempted**, so this is still **not** a clean verdict.
+(`fork/FORK_ATTACK_NSH4.md`, S9 closed). **NSH-2 attempted and NEGATIVE** — every one of the 30 markets'
+collateral feeds is 0–5.5h fresh against the live head, so no collateral is priced off a frozen feed.
+**NSH-3 (manipulable liquidation price) remains NOT attempted**, so this is still **not** a clean verdict.
+
+> ⚠️ Harness caveat for anyone continuing on this chain: the Robinhood Chain public RPC is **not archival**,
+> so a pinned anvil fork silently fails `historical state not available` on cold addresses (it truncated a
+> 30-market sweep to 12). Run read sweeps against the LIVE RPC; use the fork only for state-changing
+> attacks. And never measure freshness on a fork you have `evm_increaseTime`-d. Both traps are in `CHECKLIST.md`.
 
 
 ## Open questions / blocked
