@@ -436,3 +436,40 @@ Target: `TARGETS/narbet/`. Monad mainnet 143, Pyth Entropy V2, 19 games, UUPS, n
   inside.** Confirm by reading the same address against the LIVE RPC — if live works and the fork fails, the
   fork is at fault, not the target. Chain-specific: for Monad, `rpc2.monad.xyz` was verified archival, which
   is why fork pinning worked there and was then assumed to work here.
+
+---
+
+## Cross-domain pattern import — Arsen Security newsletter (added 2026-09-21)
+
+Source is a Solana/Bitcoin-facing newsletter; both patterns are chain-agnostic and hit *our* surface
+(off-chain infra, bridges, relayers, light clients). Full extract + attribution caveats:
+`POSTMORTEMS/technique-extract-arsen-2026-09.md`. Note the author's bounty claims are **unverified**
+(see file) — the mechanisms stand on their own, the résumé numbers do not.
+
+### P-A: provenance/identity read as POSITION in an attacker-appendable collection
+- [ ] Every off-chain reader (indexer, backfill, keeper, subgraph consumer) — grep `.first()`,
+      `.last()`, `[0]`, `orderBy`, `sort`, `min(`/`max(` over returned lists.
+- [ ] For each hit: **who else can write into that collection?** If anyone → it is user input, and any
+      value derived from its order is attacker-chosen. Cost to poison can be ~1 wei / one dust tx.
+- [ ] `getLogs` backfills that assume log order == logical creation order; "first event in range" as
+      creation proof; reorg handling that can resurface a different element.
+- [ ] On-chain arrays/queues where element 0 is treated as canonical while the array is publicly
+      pushable. `.last()` is not a fix — it is a different wrong answer (pagination caps mean "oldest
+      of the page", not "oldest ever").
+- [ ] **Preferred fix shape:** put the answer in state (explicit flag/mapping/keyed lookup) and delete
+      the traversal. Ordering the read is strictly worse than eliminating it.
+
+### P-B: structural commitment "verified" by substring/presence search
+- [ ] Grep `contains(`, `indexOf`, `includes(`, `toHexString`, `to_string`, `toString`, `String(`, and
+      `abi.encodePacked(` over user-influenced values.
+- [ ] For every commitment check, ask four things: bytes↔bytes (not string-of-bytes)? offset specified
+      **and enforced**? marker/prefix checked? occurrence count == 1 enforced?
+- [ ] **Who writes the searched field?** Relayer / submitter / miner / keeper → attacker input. A
+      presence check over an attacker-filled field admits two contradictory commitments at once.
+- [ ] Type/render mismatch audit: `bytes32` vs string, checksum/`toLowerCase` compares, endianness on
+      packed commitments, `abi.encodePacked` collision. A check can be wrong in *both* directions at
+      once — admitting false positives and rejecting honest submissions.
+- [ ] Fuzz property: same field carrying two valid commitments must revert. If the harness cannot
+      construct that case, the check is unverified by construction.
+- [ ] Record which fix shipped: structural parse+offset vs access control (only-relayer-submits).
+      Access control closes the door without fixing the lock — different bounty/triage weight.
