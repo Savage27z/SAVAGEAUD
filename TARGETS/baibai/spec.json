@@ -1,0 +1,126 @@
+{
+  "_README": "TARGETS/baibai/spec.json — artifact the protocol loop turns on. Sections close only with evidence. A section with an empty evidence field is OPEN.",
+
+  "target": {
+    "name": "BaiBai",
+    "app": "https://app.baibai.cx (marketing: https://www.baibai.cx, docs: https://docs.baibai.cx)",
+    "chain": "Base",
+    "chain_id": 8453,
+    "opened": "2026-09-22",
+    "product": "PropAMM exchange + aggregator. PropAMM quotes from its own pricing logic/inventory; aggregates Uniswap/Aerodrome etc. Built on 'Pylon', an appchain framework, synchronously composable with Base (L2 <-> L3 split).",
+    "source": {
+      "verified": "PARTIAL — see per-contract 'verified' flags. Two independent registries checked plus one control.",
+      "route": "Blockscout v2 API base.blockscout.com/api/v2/smart-contracts/<addr> + Sourcify sourcify.dev/server/v2/contract/8453/<addr>. Basescan NOT readable (Cloudflare JS challenge) and not defeated by design.",
+      "note": "The three Base contracts that matter for user funds are EIP-1967 proxies whose IMPLEMENTATIONS have no published source in either readable registry. The L2 contracts' implementations ARE verified, which proves the registries index this project correctly and makes the absence meaningful rather than an indexing artefact."
+    },
+    "contracts": [
+      {"address": "0x98c1D9E102Eb2806D902b13186BDc7892aC4fFBa", "role": "BaibaiEntrypoint — swaps + ERC-20 APPROVAL TARGET", "impl": "0x8fEF5FDEfCf738997B8833A28378fCB2F9DFD29A", "proxy_kind": "ERC-1967", "code_size": 176, "impl_code_size": 7958, "impl_verified": false, "known": true},
+      {"address": "0x604d9b9eB1e1571C78661a6C1088427EC9c8c6E5", "role": "BaibaiCurveBook — pricing and depth", "impl": "0xBfF02E9E504B88c84f41205f561E45c2FADdf203", "proxy_kind": "ERC-1967", "code_size": 176, "impl_code_size": 16815, "impl_verified": false, "known": true},
+      {"address": "0xAaC48FEB93c5C97E0fb3c7C57E1633922A4ACDa3", "role": "BaibaiCustodian — MAKER INVENTORY (the vault)", "impl": "0x997b2D1B539DFccC9D42f2d10Fe804F0Ac9b3076", "proxy_kind": "ERC-1967", "code_size": 176, "impl_code_size": 8992, "impl_verified": false, "known": true},
+      {"address": "0x3348cA6E00224043Ec20089fdadfafec2f5Dc314", "role": "L2Bridge", "impl": "0xa1Adf0d568F8FAF91b8896f02C0A957ca4eab014", "proxy_kind": "ERC-1967", "impl_code_size": 17941, "impl_verified": true, "known": true},
+      {"address": "0xbf8E65Fe0711F6B2424372A65070b7A4F2B26567", "role": "L2Router", "impl": "0xD59BC89FEdD4F5d241fc9087a706F2a622d4e238", "proxy_kind": "ERC-1967", "impl_code_size": 17381, "impl_verified": true, "known": true},
+      {"address": "0x28BAd3f46B73Bb95E6224C12AA24A60fD5E3861e", "role": "L2BaibaiAdmin", "impl": "0xc7c12b4f7a6b5c9497dc36db9aa78ff8beb82140", "proxy_kind": "ERC-1967", "code_size": 122, "impl_code_size": 9223, "impl_verified": false, "known": true},
+      {"address": "0xBDC7409057419cFB88944F24067b943b74bE9bA7", "role": "L3Bridge", "impl": null, "proxy_kind": "unknown", "code_size": null, "impl_verified": null, "known": false},
+      {"address": "0x39132c23578384827854b22460bAAB1c7930AC94", "role": "TokenFactory (L3)", "impl": null, "proxy_kind": "unknown", "code_size": null, "impl_verified": null, "known": false},
+      {"address": "0x18f5F6425aF65A955ad1d11D1a76bb34BAd483F3", "role": "Registry (L3)", "impl": null, "proxy_kind": "unknown", "code_size": null, "impl_verified": null, "known": false},
+      {"address": "0xD4A37eBa748b507257B6c028c027427285ae7B9F", "role": "Router (L3)", "impl": null, "proxy_kind": "unknown", "code_size": null, "impl_verified": null, "known": false},
+      {"address": "0xf2BDB1F76F5Ea6A67C0977982f2f85C47a6FE45d", "role": "L3RouterWrapper", "impl": null, "proxy_kind": "unknown", "code_size": null, "impl_verified": null, "known": false},
+      {"address": "0xA2d1378e1571293753c6248B514B4152e7B328bD", "role": "Oracle (L3)", "impl": null, "proxy_kind": "unknown", "code_size": null, "impl_verified": null, "known": false},
+      {"address": "0x0e7A5C6A6e8E3219e6DEbB96C9756876c0D9801B", "role": "VaultFactory (L3)", "impl": null, "proxy_kind": "unknown", "code_size": null, "impl_verified": null, "known": false},
+      {"address": "0x9E31AF1C8e20b1B1B997e50D9622fF9e23ef3A94", "role": "L3BaibaiAdmin", "impl": null, "proxy_kind": "unknown", "code_size": null, "impl_verified": null, "known": false}
+    ],
+    "coverage_gap": "SEVEN published L3 addresses (L3Bridge, TokenFactory, Registry, Router, L3RouterWrapper, Oracle, VaultFactory, L3BaibaiAdmin) are entirely unmapped: no code size, no impl resolution, no verification status, no source. Until mapped, no verdict on this target is permitted by the protocol."
+  },
+
+  "integrations": [
+    {"name": "Base settlement (chain 8453)", "kind": "chain", "trusted": true, "notes": "L2 contracts live here; users hold normal Base balances, no bridging required per docs."},
+    {"name": "Pylon appchain (L3)", "kind": "off-chain / appchain", "trusted": true, "notes": "Handles market-maker updates and execution logic. 'The appchain remains entirely behind the scenes.' Synchronous composability with Base. Opaque by design — sequence/ordering decisions live off the audited surface."},
+    {"name": "External aggregators / DEXs (Uniswap, Aerodrome)", "kind": "routing", "trusted": true, "notes": "Routing compares PropAMM vs external sources; a manipulation of the comparison is a pricing finding."},
+    {"name": "Maker order API (Hyperliquid-compatible)", "kind": "off-chain API", "trusted": false, "notes": "Makers place/modify/cancel orders via Hyperliquid-compatible endpoints; API wallets + signing + nonces documented (docs/makers/authentication.md). Signature surface."},
+    {"name": "Gasless swap REST API", "kind": "off-chain relayer", "trusted": false, "notes": "quote -> sign -> submit flow (docs/developers/aggregators-integration.md). The money layer for wallet/aggregator integrations."}
+  ],
+
+  "actors": [
+    {"name": "BaiBai owner (upgrade authority)", "address": "0xb1f4e4d67e330cc505e526488bae0388e616a907", "authority": "Safe multisig, masterCopy 0x29fcb43b46531bca003ddc8fcb67ffe91900c762, THRESHOLD 1 of 3 owners", "can": ["owner() of BaibaiEntrypoint", "owner() of BaibaiCurveBook", "owner() of BaibaiCustodian", "upgradeToAndCall on all three (UUPS, unverified impls)"], "cannot": [], "verified_how": "eth_call owner() on all three proxies returned this address; eth_getCode=171 bytes; getThreshold()=1; getOwners()->3 slots; masterCopy()=Safe v1.4.1 singleton"},
+    {"name": "L2BaibaiAdmin owner", "address": "0x5c55dd20186cc62d709d897e58cb697da874f026", "authority": "EOA (code_size 0)", "can": ["owner() of L2Router", "owner() of L2BaibaiAdmin"], "cannot": [], "verified_how": "eth_call owner() on 0x28BAd3f4.. and L2Router returned this; eth_getCode size 0 = EOA"},
+    {"name": "L2 admin pending owner", "address": "0xe6419b6df836aa33e642f8e9663ad003f996306c", "authority": "Safe multisig, THRESHOLD 3 of 9 owners", "can": ["acceptOwnership() when called (transfer in flight)"], "cannot": [], "verified_how": "pendingOwner() on L2BaibaiAdmin returned this; getThreshold()=3; getOwners()->9 slots"}
+  ],
+
+  "assumptions": [
+    {"id": "ASM-1", "statement": "The three Base implementations are upgradeable by a 1-of-3 Safe, so 'the contracts are audited' does not bind future behaviour.", "accepted_by_design": false, "breaks_if": "any single owner key is compromised or acts maliciously; the audited/observed logic is replaced."},
+    {"id": "ASM-2", "statement": "Docs describe 0x98c1D9E1.. / 0x604d9b9e.. / 0xAaC48FEB.. only as 'Verified proxy address' and never disclose that an owner exists or that the logic is upgradeable.", "accepted_by_design": false, "breaks_if": "users grant a token allowance to the Entrypoint believing its logic is fixed."},
+    {"id": "ASM-3", "statement": "The L3 appchain is trusted to make routing/ordering decisions that the L2 surface cannot verify.", "accepted_by_design": true, "breaks_if": "appchain sequencing is compromised or operator-favourable."},
+    {"id": "ASM-4", "statement": "Custodian.withdrawDelay() = 600s (10 min) is the maker withdrawal reservation window.", "accepted_by_design": true, "breaks_if": "a maker cannot exit within the disclosed semantics, or the delay is owner-mutable without disclosure."}
+  ],
+
+  "invariants": [
+    {"id": "INV-1", "statement": "custodian token balance >= sum of maker claimable inventory", "where": "BaibaiCustodian", "check": "not yet tested — needs maker accounting surface (deposit/totalClaimable/claim)", "checked": false, "result": "", "evidence": ""},
+    {"id": "INV-2", "statement": "entrypoint.quoteFor(..) >= entrypoint.quote(..) net of fee; a swap never pays less than quoteFor reported for the same state", "where": "BaibaiEntrypoint.swapExactAmountIn", "check": "not yet tested — needs a funded fork call", "checked": false, "result": "", "evidence": ""},
+    {"id": "INV-3", "statement": "a curve marked expired (validUntil / ttl) can never be consumed by a swap", "where": "BaibaiCurveBook.validUntil + Entrypoint swap", "check": "not yet tested — docs explicitly flag 'A quote can expire between reading and execution'", "checked": false, "result": "", "evidence": ""},
+    {"id": "INV-4", "statement": "swap reverts entirely if minAmountOut is not met, and never partially fills", "where": "swapExactAmountIn", "check": "not yet tested", "checked": false, "result": "", "evidence": ""}
+  ],
+
+  "never_should_happen": [
+    {"id": "NSH-1", "statement": "A taker's approved balance can be moved by the Entrypoint other than as payment for an executed swap", "attempt": "not yet attempted", "result": "", "evidence": ""},
+    {"id": "NSH-2", "statement": "Any address other than the owner can call upgradeToAndCall on Entrypoint/CurveBook/Custodian", "attempt": "not yet attempted (fork, impersonation — fork-attack phase is mandatory before any clean verdict)", "result": "", "evidence": ""},
+    {"id": "NSH-3", "statement": "A stale or expired curve can be executed at its stale price", "attempt": "not yet attempted", "result": "", "evidence": ""},
+    {"id": "NSH-4", "statement": "A maker can withdraw more than their credited inventory, or exit outside withdrawDelay", "attempt": "not yet attempted", "result": "", "evidence": ""}
+  ],
+
+  "sections": [
+    {"id": "S1", "name": "Base taker surface — Entrypoint / CurveBook / Custodian trust model", "contracts": ["0x98c1D9E102Eb2806D902b13186BDc7892aC4fFBa","0x604d9b9eB1e1571C78661a6C1088427EC9c8c6E5","0xAaC48FEB93c5C97E0fb3c7C57E1633922A4ACDa3"], "depends_on": [], "value_flows": ["user token approval -> Entrypoint", "swap input -> Custodian", "Custodian -> recipient output", "maker deposit/withdraw"], "status": "in_progress", "evidence": "pre_vet.py + interface_map.py + read_privileged.py: all three are ERC-1967 proxies, impls UNVERIFIED in Blockscout AND Sourcify (L2Bridge impl verified = control), UUPS upgradeable, identical owner = 0xb1f4e4d6.. (Safe, threshold 1 of 3), wiring cross-checked (entrypoint<->curveBook<->custodian all agree), quoteToken=USDC, withdrawDelay=600s", "findings": ["F1","F2","F3"]},
+    {"id": "S2", "name": "Custodian money path — deposit / requestWithdraw / claim / totalClaimable", "contracts": ["0xAaC48FEB93c5C97E0fb3c7C57E1633922A4ACDa3"], "depends_on": ["S1"], "value_flows": ["maker inventory in/out"], "status": "not_started", "evidence": "", "findings": []},
+    {"id": "S3", "name": "L2 verified surface — L2Bridge / L2Router source review", "contracts": ["0x3348cA6E00224043Ec20089fdadfafec2f5Dc314","0xbf8E65FE0711F6B2424372A65070b7A4F2B26567","0x28BAd3f46B73Bb95E6224C12AA24A60fD5E3861e"], "depends_on": [], "value_flows": ["L2<->L3 messaging"], "status": "not_started", "evidence": "L2Bridge + L2Router impls are source-verified → classic review possible", "findings": []},
+    {"id": "S4", "name": "Gasless swap API — quote / sign / submit", "contracts": [], "depends_on": ["S1"], "value_flows": ["user signature -> relayer -> on-chain swap"], "status": "not_started", "evidence": "", "findings": []},
+    {"id": "S5", "name": "Maker order API + EIP-712 signing (CurveBook exposes eip712Domain())", "contracts": [], "depends_on": [], "value_flows": ["maker order -> curve update"], "status": "not_started", "evidence": "eip712Domain() selector 0x84b0196e present in CurveBook impl bytecode → EIP-712 signature surface exists", "findings": []},
+    {"id": "S6", "name": "Points program + app surface (app.baibai.cx /points)", "contracts": [], "depends_on": [], "value_flows": [], "status": "not_started", "evidence": "", "findings": []},
+    {"id": "S7", "name": "Unmapped L3 address set (8 contracts)", "contracts": [], "depends_on": [], "value_flows": [], "status": "not_started", "evidence": "", "findings": []}
+  ],
+
+  "value_movers": [
+    {"function": "swapExactAmountIn(address,address,uint256,uint256,address)", "contract": "BaibaiEntrypoint 0x98c1D9E1..", "direction": "in/out", "caller_can_be": "anyone", "guards": ["recipient nonzero", "minAmountOut", "non-reentrant", "curve state (seq/fillSeq)", "curve expiry"], "bounded_by": "curve depth; no per-caller cap documented", "notes": "Pulls input from msg.sender into the Custodian, pays output from the Custodian to `to`. Entrypoint is the token APPROVAL target."},
+    {"function": "upgradeToAndCall(address,bytes)", "contract": "Entrypoint / CurveBook / Custodian impls (UUPS)", "direction": "control", "caller_can_be": "owner only (0xb1f4e4d6.., Safe threshold 1/3)", "guards": ["onlyOwner (unverified code)", "_authorizeUpgrade (unverified code)"], "bounded_by": "one multisig signer", "notes": "F1. Replaces the logic of all three contracts. Not disclosed in docs."},
+    {"function": "deposit(address,uint256)", "contract": "BaibaiCustodian impl", "direction": "in", "caller_can_be": "unknown (unverified)", "guards": ["unverified"], "bounded_by": "unverified", "notes": "Undocumented in taker docs."},
+    {"function": "requestWithdraw(address,uint256)", "contract": "BaibaiCustodian impl", "direction": "out (reserve)", "caller_can_be": "unknown (unverified)", "guards": ["withdrawDelay=600s"], "bounded_by": "credited inventory (unverified)", "notes": "Undocumented. Maker exit path."},
+    {"function": "claim(address,address)", "contract": "BaibaiCustodian impl", "direction": "out", "caller_can_be": "unknown (unverified)", "guards": ["unverified", "withdraw reservation"], "bounded_by": "unverified", "notes": "Undocumented. Completion of a withdrawal."}
+  ],
+
+  "main_functions": [
+    {"function": "swapExactAmountIn", "why_everything_depends_on_it": "the only documented user-facing value-moving entry point; wraps the approval target", "state_it_touches": ["Custodian token balances", "CurveBook seq/fillSeq", "taker balances via transferFrom"]},
+    {"function": "quoteFor / quote", "why_everything_depends_on_it": "the price every taker and integrator relies on; the guarantee claim rests on it", "state_it_touches": ["curve state (knots, spread, ttl, validUntil)"]},
+    {"function": "upgradeToAndCall", "why_everything_depends_on_it": "can replace the logic of all three contracts at once", "state_it_touches": ["implementation slot of all three proxies"]}
+  ],
+
+  "passes": [
+    {"pass": 1, "lens": "pre-vet + interface recovery (blockchain class)", "scope": "verification status via 2 registries + control; bytecode selector enumeration; 4byte resolution; on-chain owner/wiring reads", "hypotheses": ["H1 the 'verified proxy' hides an unverified impl", "H2 privileged surface exists but is undocumented"], "result": "BOTH CONFIRMED", "evidence": "F1/F2/F3 below"},
+    {"pass": 2, "lens": "custodian money path (flow gap)", "scope": "S2", "hypotheses": ["withdraw reservation vs claim ordering", "per-maker accounting vs totalClaimable"], "result": "not started", "evidence": ""}
+  ],
+
+  "status": {
+    "done": false,
+    "sections_closed": 0,
+    "sections_total": 7,
+    "open_questions": [
+      "Basescan verification status of 0x8fEF5FDE / 0xBfF02E9E / 0x997b2D1B — UNREAD (Cloudflare challenge, not defeated). Two other registries say unverified; confirm with the team rather than assume.",
+      "Are the OZ and Sherlock reports retrievable? The two PDF links published in docs/developers/audits.md both return 404 as published (2026-09-22).",
+      "What are the 3 owners of 0xb1f4e4d6.. and why is the threshold 1?",
+      "Why is L2BaibaiAdmin mid-transfer from an EOA (0x5c55dd20..) to a 3-of-9 Safe — and does the same change apply to 0xb1f4e4d6..?",
+      "Is CurveBook's EIP-712 surface used for maker curve updates, and how are nonces/domains handled?",
+      "8 L3 addresses entirely unmapped."
+    ],
+    "blocked_on": "nothing (public-surface only). A fork-attack phase needs a Base RPC with headroom — public endpoints 429 under load (rotate: llamarpc / publicnode / 1rpc / drpc)."
+  },
+
+  "findings": [
+    {"id": "F1", "title": "All three user-facing Base contracts are UUPS-upgradeable by a single-signer Safe, and the docs disclose none of it", "severity": "Medium (centralisation / transparency) — NOT an exploitable bug", "impact": "A single signer (1-of-3 Safe) can replace the logic of the swap Entrypoint (the token approval target) and the Custodian (maker inventory) at will, bypassing the audited behaviour.", "likelihood": "Requires owner malicious action or one key compromise; permitted by the design.", "evidence": "eth_call owner() on all three proxies = 0xb1f4e4d6..; that address is a Safe (masterCopy 0x29fcb43b..) with getThreshold()=1 and 3 owners; upgradeToAndCall/UPGRADE_INTERFACE_VERSION/proxiableUUID present in all three impl bytecodes; implementations unverified in Blockscout AND Sourcify; docs mention only 'Verified proxy address'."},
+    {"id": "F2", "title": "Implementations of all three Base contracts have no published source", "severity": "Low/Informational (process + auditability)", "impact": "Classic source review is impossible for the contracts that hold user approvals and maker inventory; every finding on them is bytecode/black-box derived.", "likelihood": "N/A — state of the world.", "evidence": "Blockscout v2 returns bytecode-only (no abi/compiler_version/source_code) for the three impls, while the L2Bridge impl control returns abi + 28,487 chars of source; Sourcify returns 404 for the three impls with the same control present. Basescan unread (Cloudflare)."},
+    {"id": "F3", "title": "Undocumented privileged + money interface on the Custodian and CurveBook", "severity": "Informational (documentation/trust-model gap)", "impact": "The docs publish a read ABI and describe the Custodian only as a read target, while the bytecode exposes deposit/requestWithdraw/claim/totalClaimable/withdrawDelay(600s)/initialize on the Custodian and initialize + eip712Domain on the CurveBook — i.e. a full maker custody lifecycle and a signing domain that integrators cannot see.", "likelihood": "N/A.", "evidence": "interface_map.py: PUSH4 enumeration + 4byte resolution of 0x997b2D1B (Custodian) and 0xBfF02E9E (CurveBook)."},
+    {"id": "F4", "title": "Both audit report links published in the docs return 404", "severity": "Informational", "impact": "docs/developers/audits.md lists an OpenZeppelin audit and a Sherlock report; both PDF URLs 404 as published, so a reader cannot retrieve the reports from the documentation.", "likelihood": "N/A.", "evidence": "GET https://docs.baibai.cx/audits/openzeppelin-audit-1.pdf -> 404; .../sherlock-baibai-audit-report.pdf -> 404; alternate paths and mintcdn probes also 404 (2026-09-22)."}
+  ],
+
+  "positive_observations": [
+    "L2Router.owner() = 0x28BAd3f4.. = the published L2BaibaiAdmin CONTRACT, not a bare EOA — good pattern on the verified side.",
+    "L2BaibaiAdmin is mid-migration from an EOA (0x5c55dd20..) to a 3-of-9 Safe (pendingOwner 0xe6419b6d..) — the team is actively hardening key management on the L2 side.",
+    "Entrypoint/CurveBook/Custodian wiring is internally consistent and matches the docs (entrypoint<->curveBook<->custodian cross-reads all agree; quoteToken = USDC on Base)."
+  ]
+}

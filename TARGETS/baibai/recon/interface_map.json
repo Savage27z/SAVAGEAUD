@@ -1,0 +1,633 @@
+{
+ "BaibaiEntrypoint.impl": {
+  "address": "0x8fEF5FDEfCf738997B8833A28378fCB2F9DFD29A",
+  "runtime_bytes": 7958,
+  "push4_total": 26,
+  "documented": [
+   "curveBook()",
+   "custodian()",
+   "quote(address,address,uint256)",
+   "quoteFor(address,address,uint256,address)",
+   "quoteToken()",
+   "swapExactAmountIn(address,address,uint256,uint256,address)"
+  ],
+  "undocumented": [
+   {
+    "sel": "21eed1cd",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "4ca959a0",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "4f1ef286",
+    "uses": 1,
+    "sigs": [
+     "upgradeToAndCall(address,bytes)",
+     "upgradeToAndCall_23573451()"
+    ]
+   },
+   {
+    "sel": "52d1902d",
+    "uses": 2,
+    "sigs": [
+     "proxiableUUID()"
+    ]
+   },
+   {
+    "sel": "53964061",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "5669bc51",
+    "uses": 2,
+    "sigs": null
+   },
+   {
+    "sel": "715018a6",
+    "uses": 2,
+    "sigs": [
+     "renounceOwnership()"
+    ]
+   },
+   {
+    "sel": "79ba5097",
+    "uses": 1,
+    "sigs": [
+     "acceptOwnership()"
+    ]
+   },
+   {
+    "sel": "84000000",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "84906064",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "8da5cb5b",
+    "uses": 1,
+    "sigs": [
+     "ideal_warn_timed(uint256,uint128)",
+     "owner()"
+    ]
+   },
+   {
+    "sel": "a00c6951",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "ad3cb1cc",
+    "uses": 2,
+    "sigs": [
+     "UPGRADE_INTERFACE_VERSION()"
+    ]
+   },
+   {
+    "sel": "c4d66de8",
+    "uses": 1,
+    "sigs": [
+     "initialize(address)"
+    ]
+   },
+   {
+    "sel": "cd2b2eba",
+    "uses": 2,
+    "sigs": null
+   },
+   {
+    "sel": "d25c6e3b",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "d3daca7f",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "e30c3978",
+    "uses": 1,
+    "sigs": [
+     "pendingOwner()"
+    ]
+   },
+   {
+    "sel": "eae1a4a9",
+    "uses": 2,
+    "sigs": null
+   },
+   {
+    "sel": "f2fde38b",
+    "uses": 1,
+    "sigs": [
+     "_SIMONdotBLACK_(int8[],uint256,address,bytes8,int96)",
+     "transferOwnership(address)"
+    ]
+   }
+  ],
+  "undocumented_privileged": [
+   {
+    "sel": "4f1ef286",
+    "uses": 1,
+    "sigs": [
+     "upgradeToAndCall(address,bytes)",
+     "upgradeToAndCall_23573451()"
+    ]
+   },
+   {
+    "sel": "715018a6",
+    "uses": 2,
+    "sigs": [
+     "renounceOwnership()"
+    ]
+   },
+   {
+    "sel": "79ba5097",
+    "uses": 1,
+    "sigs": [
+     "acceptOwnership()"
+    ]
+   },
+   {
+    "sel": "8da5cb5b",
+    "uses": 1,
+    "sigs": [
+     "ideal_warn_timed(uint256,uint128)",
+     "owner()"
+    ]
+   },
+   {
+    "sel": "ad3cb1cc",
+    "uses": 2,
+    "sigs": [
+     "UPGRADE_INTERFACE_VERSION()"
+    ]
+   },
+   {
+    "sel": "c4d66de8",
+    "uses": 1,
+    "sigs": [
+     "initialize(address)"
+    ]
+   },
+   {
+    "sel": "e30c3978",
+    "uses": 1,
+    "sigs": [
+     "pendingOwner()"
+    ]
+   },
+   {
+    "sel": "f2fde38b",
+    "uses": 1,
+    "sigs": [
+     "_SIMONdotBLACK_(int8[],uint256,address,bytes8,int96)",
+     "transferOwnership(address)"
+    ]
+   }
+  ]
+ },
+ "BaibaiCurveBook.impl": {
+  "address": "0xBfF02E9E504B88c84f41205f561E45c2FADdf203",
+  "runtime_bytes": 16815,
+  "push4_total": 29,
+  "documented": [
+   "cUnit()",
+   "entrypoint()",
+   "knot(address,uint8,uint256)",
+   "pair(address)",
+   "quote(address,address,uint256)",
+   "quoteToken()",
+   "ttl()",
+   "validUntil(address)"
+  ],
+  "undocumented": [
+   {
+    "sel": "1b25ba61",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "21eed1cd",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "33a170ff",
+    "uses": 2,
+    "sigs": null
+   },
+   {
+    "sel": "4ca959a0",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "4f1ef286",
+    "uses": 1,
+    "sigs": [
+     "upgradeToAndCall(address,bytes)",
+     "upgradeToAndCall_23573451()"
+    ]
+   },
+   {
+    "sel": "52d1902d",
+    "uses": 1,
+    "sigs": [
+     "proxiableUUID()"
+    ]
+   },
+   {
+    "sel": "565b6040",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "5769f6b2",
+    "uses": 2,
+    "sigs": null
+   },
+   {
+    "sel": "6113ed56",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "715018a6",
+    "uses": 1,
+    "sigs": [
+     "renounceOwnership()"
+    ]
+   },
+   {
+    "sel": "7751c722",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "7879ec31",
+    "uses": 2,
+    "sigs": [
+     "initialize(address,address,uint64)"
+    ]
+   },
+   {
+    "sel": "79ba5097",
+    "uses": 1,
+    "sigs": [
+     "acceptOwnership()"
+    ]
+   },
+   {
+    "sel": "7c310610",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "84146104",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "84b0196e",
+    "uses": 2,
+    "sigs": [
+     "eip712Domain()"
+    ]
+   },
+   {
+    "sel": "8da5cb5b",
+    "uses": 1,
+    "sigs": [
+     "ideal_warn_timed(uint256,uint128)",
+     "owner()"
+    ]
+   },
+   {
+    "sel": "ad3cb1cc",
+    "uses": 1,
+    "sigs": [
+     "UPGRADE_INTERFACE_VERSION()"
+    ]
+   },
+   {
+    "sel": "c2a49489",
+    "uses": 2,
+    "sigs": null
+   },
+   {
+    "sel": "e30c3978",
+    "uses": 1,
+    "sigs": [
+     "pendingOwner()"
+    ]
+   },
+   {
+    "sel": "f2fde38b",
+    "uses": 1,
+    "sigs": [
+     "_SIMONdotBLACK_(int8[],uint256,address,bytes8,int96)",
+     "transferOwnership(address)"
+    ]
+   }
+  ],
+  "undocumented_privileged": [
+   {
+    "sel": "4f1ef286",
+    "uses": 1,
+    "sigs": [
+     "upgradeToAndCall(address,bytes)",
+     "upgradeToAndCall_23573451()"
+    ]
+   },
+   {
+    "sel": "715018a6",
+    "uses": 1,
+    "sigs": [
+     "renounceOwnership()"
+    ]
+   },
+   {
+    "sel": "7879ec31",
+    "uses": 2,
+    "sigs": [
+     "initialize(address,address,uint64)"
+    ]
+   },
+   {
+    "sel": "79ba5097",
+    "uses": 1,
+    "sigs": [
+     "acceptOwnership()"
+    ]
+   },
+   {
+    "sel": "8da5cb5b",
+    "uses": 1,
+    "sigs": [
+     "ideal_warn_timed(uint256,uint128)",
+     "owner()"
+    ]
+   },
+   {
+    "sel": "ad3cb1cc",
+    "uses": 1,
+    "sigs": [
+     "UPGRADE_INTERFACE_VERSION()"
+    ]
+   },
+   {
+    "sel": "e30c3978",
+    "uses": 1,
+    "sigs": [
+     "pendingOwner()"
+    ]
+   },
+   {
+    "sel": "f2fde38b",
+    "uses": 1,
+    "sigs": [
+     "_SIMONdotBLACK_(int8[],uint256,address,bytes8,int96)",
+     "transferOwnership(address)"
+    ]
+   }
+  ]
+ },
+ "BaibaiCustodian.impl": {
+  "address": "0x997b2D1B539DFccC9D42f2d10Fe804F0Ac9b3076",
+  "runtime_bytes": 8992,
+  "push4_total": 25,
+  "documented": [
+   "balanceOf(address)",
+   "curveBook()",
+   "entrypoint()"
+  ],
+  "undocumented": [
+   {
+    "sel": "0288a39c",
+    "uses": 1,
+    "sigs": [
+     "withdrawDelay()"
+    ]
+   },
+   {
+    "sel": "0df25f1d",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "1798de81",
+    "uses": 2,
+    "sigs": [
+     "initialize(address,uint64)"
+    ]
+   },
+   {
+    "sel": "181f37c8",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "1b25ba61",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "1dfce5c6",
+    "uses": 1,
+    "sigs": [
+     "totalClaimable(address)"
+    ]
+   },
+   {
+    "sel": "21c0b342",
+    "uses": 2,
+    "sigs": [
+     "claim(address,address)"
+    ]
+   },
+   {
+    "sel": "21eed1cd",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "397a1b28",
+    "uses": 1,
+    "sigs": [
+     "requestWithdraw(address,uint256)"
+    ]
+   },
+   {
+    "sel": "43138789",
+    "uses": 2,
+    "sigs": null
+   },
+   {
+    "sel": "47e7ef24",
+    "uses": 1,
+    "sigs": [
+     "deposit(address,uint256)"
+    ]
+   },
+   {
+    "sel": "4f1ef286",
+    "uses": 1,
+    "sigs": [
+     "upgradeToAndCall(address,bytes)",
+     "upgradeToAndCall_23573451()"
+    ]
+   },
+   {
+    "sel": "52d1902d",
+    "uses": 2,
+    "sigs": [
+     "proxiableUUID()"
+    ]
+   },
+   {
+    "sel": "55169016",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "61147556",
+    "uses": 1,
+    "sigs": null
+   },
+   {
+    "sel": "715018a6",
+    "uses": 2,
+    "sigs": [
+     "renounceOwnership()"
+    ]
+   },
+   {
+    "sel": "79ba5097",
+    "uses": 1,
+    "sigs": [
+     "acceptOwnership()"
+    ]
+   },
+   {
+    "sel": "8da5cb5b",
+    "uses": 1,
+    "sigs": [
+     "ideal_warn_timed(uint256,uint128)",
+     "owner()"
+    ]
+   },
+   {
+    "sel": "a00c6951",
+    "uses": 2,
+    "sigs": null
+   },
+   {
+    "sel": "ad3cb1cc",
+    "uses": 1,
+    "sigs": [
+     "UPGRADE_INTERFACE_VERSION()"
+    ]
+   },
+   {
+    "sel": "e30c3978",
+    "uses": 1,
+    "sigs": [
+     "pendingOwner()"
+    ]
+   },
+   {
+    "sel": "f2fde38b",
+    "uses": 1,
+    "sigs": [
+     "_SIMONdotBLACK_(int8[],uint256,address,bytes8,int96)",
+     "transferOwnership(address)"
+    ]
+   }
+  ],
+  "undocumented_privileged": [
+   {
+    "sel": "0288a39c",
+    "uses": 1,
+    "sigs": [
+     "withdrawDelay()"
+    ]
+   },
+   {
+    "sel": "1798de81",
+    "uses": 2,
+    "sigs": [
+     "initialize(address,uint64)"
+    ]
+   },
+   {
+    "sel": "397a1b28",
+    "uses": 1,
+    "sigs": [
+     "requestWithdraw(address,uint256)"
+    ]
+   },
+   {
+    "sel": "4f1ef286",
+    "uses": 1,
+    "sigs": [
+     "upgradeToAndCall(address,bytes)",
+     "upgradeToAndCall_23573451()"
+    ]
+   },
+   {
+    "sel": "715018a6",
+    "uses": 2,
+    "sigs": [
+     "renounceOwnership()"
+    ]
+   },
+   {
+    "sel": "79ba5097",
+    "uses": 1,
+    "sigs": [
+     "acceptOwnership()"
+    ]
+   },
+   {
+    "sel": "8da5cb5b",
+    "uses": 1,
+    "sigs": [
+     "ideal_warn_timed(uint256,uint128)",
+     "owner()"
+    ]
+   },
+   {
+    "sel": "ad3cb1cc",
+    "uses": 1,
+    "sigs": [
+     "UPGRADE_INTERFACE_VERSION()"
+    ]
+   },
+   {
+    "sel": "e30c3978",
+    "uses": 1,
+    "sigs": [
+     "pendingOwner()"
+    ]
+   },
+   {
+    "sel": "f2fde38b",
+    "uses": 1,
+    "sigs": [
+     "_SIMONdotBLACK_(int8[],uint256,address,bytes8,int96)",
+     "transferOwnership(address)"
+    ]
+   }
+  ]
+ }
+}
