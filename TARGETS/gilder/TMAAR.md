@@ -59,22 +59,80 @@ Wiring read live: `BondContract.safeVault() = SafeVault`; `BondContract.treasury
 **All six proxies share ONE ERC1967 proxy admin:**
 `0xb358e81b0f92698215bbe821b8c25986ad523a1b`
 
-## 4. ⚠️ RISK #1 — the whole system's upgrade root is a bare EOA
+## 4. ⚠️ FINDING 1 — `DEFAULT_ADMIN_ROLE` sits on a bare EOA, not the multisig
 
-`0xb358e81b0f92698215bbe821b8c25986ad523a1b` has **0 bytes of runtime code**. It is not a Safe,
-not a multisig, not a timelock — just an externally-owned key. Through it, one keypair can
-`upgradeToAndCall` the implementation behind **all six proxies**, i.e. rewrite the logic that holds
-$118K of user USDC locked on 3-year terms.
+### RETRACTION FIRST (my error, caught and fixed)
 
-This is the top item to establish and, if confirmed, to report: an EOA upgrade root on a
-long-lockup deposit protocol means a single compromised key (or the operator acting unilaterally)
-can change the rules of funds that users cannot withdraw for three years. **No exploit is needed —
-the authority is the design.** Severity is High on Impact × Likelihood: impact maximal, likelihood
-depends on key hygiene which cannot be assessed from outside.
+An earlier version of this TMAAR claimed the proxy admin `0xb358e81b…` was "a bare EOA with 0 bytes
+of code" and that "one key can upgrade all six proxies instantly". **That was wrong twice over, and
+it was my probe's fault, not the protocol's.**
 
-**To confirm before reporting:** is the proxy admin also the `UPGRADER_ROLE` holder and the
-`DEFAULT_ADMIN_ROLE` holder? Is any timelock present anywhere? Was the admin rotated during the
-45 days? Report as a finding with the exact storage slot evidence.
+My code did `n = (len(code)-2)//2 if isinstance(code, str) else 0` and then printed
+`"EOA (!!)"` when `n <= 100`. A **failed RPC call** returned `None`, fell through to `else 0`, and
+got reported as *"zero runtime code"*. It was a failed read, not an EOA.
+
+Re-measured against **four independent RPCs** with raw responses kept:
+
+| address | role | code | verdict |
+|---|---|---|---|
+| `0xb358e81b0f92698215bbe821b8c25986ad523a1b` | proxy admin **and** `guardianCouncil()` | **5,782 B** (4/4 RPCs agree) | **CONTRACT** — the GilderMultisig |
+| `0x54f2316b0c02808354fd7f0d48e64a788f7be533` | `DEFAULT_ADMIN_ROLE` + `deployer()` | **0 B** (4/4 RPCs agree) | **EOA** |
+| `0x85bb2a352be250d9e0ed3d499e46984ae831414b` | `liquidityRecipient()` + `marketingWallet()` | 0 B | EOA |
+| `0x1d5388448eec2462329671419853adfc3faf0a76` | `lendingContract()` | 1,922 B | contract (UUPS proxy) |
+| `0xe703430cf3e0309388fe0d2be509f1af0ac62ffe` | `liquidityManager()` | 11,360 B | contract |
+
+And the 48h timelock is **real and enforced at the proxy layer** — `GilderProxy.sol` implements a
+two-step upgrade: `proposeUpgrade(newImpl, data)` commits `(impl, keccak256(data), eta = now + 48h)`
+into unstructured slots, and `upgradeToAndCall` requires the *exact* queued pair **and**
+`block.timestamp >= eta`, all behind `_onlyProxyAdmin`. The multisig is 5 owners and answers
+`isUnanimousExecution()`. **The design comments are accurate and the deployment matches them here.**
+
+### The actual finding
+
+`DEFAULT_ADMIN_ROLE` is held by `0x54f2316b0c02808354fd7f0d48e64a788f7be533` — an **EOA with zero
+runtime code on all four RPCs** — while the source states:
+
+> "That second rule is load-bearing. **DEFAULT_ADMIN_ROLE is held by the multisig**, so without it a
+> mere THRESHOLD of signers … could repoint `guardianCouncil`"
+
+On-chain that is **false**: `hasRole(DEFAULT_ADMIN_ROLE, 0x54f2316b…) = true`, and
+`isOwner(0x54f2316b…)` on the multisig returns **false** — so this key is not merely a signer, it
+is outside the governance set entirely.
+
+**What that key can do**, via `grantRole`/`revokeRole` on every role in `GilderAccessControl`:
+
+| role it can grant to itself or any address | consequence |
+|---|---|
+| `PARAMETER_ROLE` | every wiring setter (`setLendingContract`, `setCyrContract`, `setTurboContract`, `setTvtContract`, `setTokenBuyRouter`, `setLiquidityManager`, `setMarketingWallet`, `setDepositValidationFlags`, `setLoanState`) + rates and BPS splits |
+| `BOND_ENGINE_ROLE` | `accrueInterest`, `consumeAccruedInterest`, `settleMatured` — book interest and settle deposits |
+| `LENDING_OPERATOR_ROLE` | `applyInterestToLoan`, loan state |
+| `LIQUIDATOR_ROLE` | `markLiquidated` |
+| `TREASURY_OPERATOR_ROLE` | treasury disbursement |
+| `PAUSER_ROLE` | freeze the protocol |
+| `UPGRADER_ROLE` | see note below |
+
+Note on `UPGRADER_ROLE`: this proxy does **not** consult it — `GilderUUPSProxy` gates upgrades with
+`_onlyProxyAdmin` (the multisig) and never calls `_authorizeUpgrade`. So `UPGRADER_ROLE` appears
+vestigial in this deployment, and the upgrade path stays protected by the multisig + 48h. The
+exposure is the **role graph**, not the proxy.
+
+The same EOA is also `deployer()`, so it holds residual **freeze** power — `renounceDeployerFreeze()`
+has not been called, and the source itself flags this as a griefing handle.
+
+**Impact × Likelihood.** Impact: High — one key reaches every economic lever (funding destinations,
+interest booking, settlement, liquidation, treasury, freeze). Likelihood: the key is a single
+unprotected EOA, so it is one compromise or one unilateral operator action away; the protocol's own
+documentation asserts this authority was meant to sit behind a 5-owner multisig with unanimity.
+**Assessment: High impact / medium likelihood — a deployment-versus-design divergence, not an
+exploit. No attacker is required to trigger it.**
+
+**Fix:** `grantRole(DEFAULT_ADMIN_ROLE, <multisig>)` then `revokeRole(DEFAULT_ADMIN_ROLE, 0x54f2316b…)`,
+and call `renounceDeployerFreeze()`. Confirm the same handoff for `liquidityRecipient`/`marketingWallet`
+(`0x85bb2a35…`, also a bare EOA).
+
+**Evidence:** `phase1_roles.json` (`hasRole` matrix), `phase0_privilege.json`,
+`_gilder_pass4.py` output; code sizes re-verified across `mainnet.base.org`, `base-rpc.publicnode.com`,
+`1rpc.io/base`, `base.drpc.org`.
 
 ## 5. Assumptions to test
 
