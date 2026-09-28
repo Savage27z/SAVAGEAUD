@@ -7,16 +7,30 @@ Date: 2026-09-28 · Passes 1–24 · All evidence read-only (public GETs/explore
 
 ## Verdict
 
-- **No exploitable vulnerability found.** Two of my own hypotheses were tested and killed:
-  one closed as non-exploitable (Finding 2), one **falsified by experiment** (Finding 3).
-- **One provable finding survives (Finding 1)** — an integration/version divergence, not a
-  contract bug: the shipped frontend's ABI is not the deployed contract's ABI (24 functions
-  differ; `cancelMarket` renamed `voidMarket`). Severity depends on intent, and the impact claim
-  must stay narrow (see the correction in Finding 1).
-- Parts I could not assess: anything behind the unverified source — the resolution/dispute
-  economics, the payout math, and the deployed version's own trade entry point
-  (`TradeExecuted` exists, no `buy`/`sell`). **Explorer verification status remains UNCONFIRMED,
-  not "unverified"** — the check is broken (positive control USDC→`is_verified=None`).
+**CLOSED — no exploitable vulnerability found.** Four leads raised, all resolved:
+
+| # | lead | outcome |
+|---|---|---|
+| 1 | app ABI vs deployed bytecode | **PROVEN** — real integration/version divergence (24 functions; `cancelMarket`→`voidMarket`; `buy` 8 fields vs 10) |
+| 2 | `sweepLeftover` ungated | **CLOSED, not a vuln** — `dest` is the fixed feeRecipient; no theft possible |
+| 3 | signature not bound to the actor | **FALSIFIED** — replay test: original actor passes, foreign addresses rejected `"bad sig"` |
+| 4 | deployed trade path `buy`/`sell` | **NOT A VULN** — actor-bound by the same mechanism |
+
+The signature scheme is **consistently correct**: a proper EIP-712 domain
+(`TaydexMarket` / v1 / chainId 8453 / bound to the contract address), a `msg.sender`-keyed nonce
+gate, and caller-bound signatures on both `createMarket` and `buy`. Privileged setters are
+correctly `Ownable`-gated. On the reachable surface this contract is **well built**; the problems
+are on the deployment/versioning side, not in the crypto.
+
+**Not assessed** (behind the unverified source): the resolution/dispute economics, the payout
+math, and `sell`/`claimRefund` (same signer+nonce pattern as `buy`, so likely bound, but not
+tested — stated as an inference, not a result). **Explorer verification status remains
+UNCONFIRMED, not "unverified"** — the check is broken (positive control USDC→`is_verified=None`).
+
+**Centralisation properties worth stating in any report** (design, not bugs): no on-chain AMM —
+every fill and every market parameter is server-signed, so pricing integrity rests entirely on the
+signer key; `owner()` is a bare EOA with no multisig or timelock, and it can rotate the signer
+(storage slot 6, not immutable) and `rescueToken`-style sweep leftovers.
 
 ---
 
@@ -240,6 +254,65 @@ rotate it. Worth stating in any report; it is a design property, not a vulnerabi
 **Client-side note:** because the *server* builds and signs these messages, the struct definition
 is nowhere in the bundle — the frontend relays an opaque signature it cannot verify or explain to
 the user. Recorded as a trust/UX observation.
+
+## FINDING 4 — the deployed trade path (`buy`/`sell`/`claimRefund`)  **NOT A VULNERABILITY — actor-bound**
+
+The deployed contract *does* trade, through entry points the app ABI does not declare. Named from
+openchain.xyz and confirmed by decoded calldata + logs:
+
+```
+0x9aa63277  buy((uint256,uint16,uint8,uint256,uint256,uint256,uint256,uint256),bytes)       x12
+0x285204f0  sell((uint256,uint16,uint8,uint256,uint256,uint256,uint256,uint256),bytes)
+0x7c9aea76  claimRefund((uint256,uint256,uint256,uint256),bytes)                             x4
+```
+
+Decoded `buy` fields: `(marketId, optionIndex, outcome, usdcAmount, shares, fee, nonce, deadline)`.
+**Note: 8 fields, where the app's ABI declares 10** (`referrer`, `referralFee` were added in the
+newer version) — a third independent confirmation of the version divergence in Finding 1, and a
+reason the app's trade calldata would be mis-shaped even if the selector existed.
+
+`TradeExecuted(uint256 marketId, uint16 optionIndex, address user, bool isBuy, uint8 outcome,
+uint256 usdcAmount, uint256 shares, uint256 fee, uint256 nonce)` — every economics field
+(`usdcAmount`, `shares`, `fee`) is **server-signed**, so the fill is entirely off-chain, as with
+`createMarket`.
+
+### Actor-binding test on buy()
+
+The first attempt was inconclusive for a stateful reason worth recording: `createMarket` and `buy`
+both check `require(!resolved, "resolved")` **before** the nonce/signature gates, and every market
+is now resolved — so every real `buy` payload bounced with `"resolved"` regardless of caller.
+Fixed by making a market live again on the fork:
+
+1. **Located the `markets` mapping** by exact packing fingerprint rather than guessing.
+   `markets` base slot = **12**; `storage[keccak(pad(1)‖pad(12))]` =
+   `0x09c4 0001 0000000069f13998 729939ac…80a4` = `feeBps | numOptions | endDate | creator`
+   — an exact match, so the layout is **verified**. (Note: Solidity packs the **first-declared**
+   variable into the **lowest-order** bytes; my first attempt had it high-first and found nothing.)
+2. **The flag slot is struct slot + 1**, and read `0x…ffff01` = `winningOptionIndex(-1 → 0xffff) << 8
+   | resolved(1)` — which independently confirms the `int16` flag packing and that market 2's
+   `-1` means *voided*, not *unresolved*.
+3. Cleared `resolved` → `getMarket(2)` then read `resolved=False, winning=0`.
+
+Then, same 2×2 at the same nonce value (3):
+
+| caller | nonce | result |
+|---|---|---|
+| original actor, nonce restored | 3 | `Error("ERC20: transfer amount exceeds balance")` |
+| original actor, nonce advanced | 10 | `Error("bad nonce")` |
+| fresh address A | 3 | `Error("bad sig")` |
+| fresh address B | 3 | `Error("bad sig")` |
+
+The original actor clears both gates and reaches the token transfer; the fresh addresses carry the
+payload's own nonce, pass the nonce gate, and are rejected at the **signature** check.
+
+**`buy()` is bound to its actor, by the same mechanism as `createMarket`. No replay.**
+
+Also established: `encodeTokenId(marketId, optionIndex, outcome) = marketId << 16 | optionIndex << 8
+| outcome` (verified against real logs: `1638401` = 25<<16|1, `1769472` = 27<<16|0).
+
+### One genuine third-party trade exists
+Of the 12 `buy` calls, 11 are from operator addresses, but **one is from `0x22845bd1…`** — a real
+outside buyer, market 25, 1.3 USDC in. Worth noting as the sole evidence of non-operator use.
 
 ---
 
