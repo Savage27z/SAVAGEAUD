@@ -1,0 +1,509 @@
+{
+ "TayDex A (largest own)": {
+  "addr": "0x3ade22fa1ef5ac75437a3734d91ba588e54875dd",
+  "size": 20788,
+  "impl": null,
+  "impl_size": null,
+  "matched": [
+   "renounceOwnership()",
+   "transferOwnership(address)",
+   "owner()"
+  ],
+  "undocumented": [
+   {
+    "sel": "a22cb465",
+    "uses": 2,
+    "sigs": [
+     "niceFunctionHerePlzClick943230089(address,bool)",
+     "setApprovalForAll(address,bool)"
+    ]
+   },
+   {
+    "sel": "eb44fdd3",
+    "uses": 2,
+    "sigs": [
+     "getMarket(uint256)"
+    ]
+   },
+   {
+    "sel": "f242432a",
+    "uses": 1,
+    "sigs": [
+     "safeTransferFrom(address,address,uint256,uint256,bytes)"
+    ]
+   },
+   {
+    "sel": "e74b981b",
+    "uses": 1,
+    "sigs": [
+     "setFeeRecipient(address)"
+    ]
+   },
+   {
+    "sel": "e985e9c5",
+    "uses": 1,
+    "sigs": [
+     "isApprovedForAll(address,address)"
+    ]
+   },
+   {
+    "sel": "b9ce896b",
+    "uses": 1,
+    "sigs": [
+     "disputeFee()"
+    ]
+   },
+   {
+    "sel": "b1283e77",
+    "uses": 1,
+    "sigs": [
+     "markets(uint256)"
+    ]
+   },
+   {
+    "sel": "86d6282c",
+    "uses": 2,
+    "sigs": [
+     "dispute(uint256)"
+    ]
+   },
+   {
+    "sel": "8b1a3696",
+    "uses": 1,
+    "sigs": [
+     "claim(uint256,uint16)"
+    ]
+   },
+   {
+    "sel": "7ecebe00",
+    "uses": 1,
+    "sigs": [
+     "nonces(address)",
+     "transfer_attention_tg_invmru_5811b86(uint256,address,address)"
+    ]
+   },
+   {
+    "sel": "84b0196e",
+    "uses": 1,
+    "sigs": [
+     "eip712Domain()"
+    ]
+   },
+   {
+    "sel": "7c16cd9e",
+    "uses": 1,
+    "sigs": [
+     "cancelMarket(uint256)"
+    ]
+   },
+   {
+    "sel": "2eb2c2d6",
+    "uses": 2,
+    "sigs": [
+     "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)"
+    ]
+   },
+   {
+    "sel": "6c19e783",
+    "uses": 1,
+    "sigs": [
+     "setSigner(address)"
+    ]
+   },
+   {
+    "sel": "46904840",
+    "uses": 1,
+    "sigs": [
+     "feeRecipient()"
+    ]
+   },
+   {
+    "sel": "4e1273f4",
+    "uses": 1,
+    "sigs": [
+     "balanceOfBatch(address[],uint256[])"
+    ]
+   },
+   {
+    "sel": "3e413bee",
+    "uses": 1,
+    "sigs": [
+     "usdc()"
+    ]
+   },
+   {
+    "sel": "34b25ee2",
+    "uses": 1,
+    "sigs": [
+     "resolveDispute(uint256,bool)"
+    ]
+   },
+   {
+    "sel": "17299c04",
+    "uses": 2,
+    "sigs": [
+     "setDisputeFee(uint256)"
+    ]
+   },
+   {
+    "sel": "1e34c585",
+    "uses": 1,
+    "sigs": [
+     "setConfig(uint256,uint256)"
+    ]
+   },
+   {
+    "sel": "238ac933",
+    "uses": 1,
+    "sigs": [
+     "signer()"
+    ]
+   },
+   {
+    "sel": "0e89341c",
+    "uses": 1,
+    "sigs": [
+     "uri(uint256)"
+    ]
+   },
+   {
+    "sel": "01ffc9a7",
+    "uses": 2,
+    "sigs": [
+     "pizza_mandate_apology(uint256)",
+     "supportsInterface(bytes4)"
+    ]
+   },
+   {
+    "sel": "02fe5305",
+    "uses": 1,
+    "sigs": [
+     "setURI(string)"
+    ]
+   },
+   {
+    "sel": "5b059991",
+    "uses": 1,
+    "sigs": [
+     "ERC1155InvalidArrayLength(uint256,uint256)"
+    ]
+   }
+  ]
+ },
+ "TayDex B (8469B twin 1)": {
+  "addr": "0x4be0ddfebca9a5a4a617dee4dece99e7c862dceb",
+  "size": 8469,
+  "impl": null,
+  "impl_size": null,
+  "matched": [
+   "grantRole(bytes32,address)"
+  ],
+  "undocumented": [
+   {
+    "sel": "08e93d0a",
+    "uses": 1,
+    "sigs": [
+     "getAllAccounts()"
+    ]
+   },
+   {
+    "sel": "0e6254fd",
+    "uses": 1,
+    "sigs": [
+     "getAccountsOfSigner(address)"
+    ]
+   },
+   {
+    "sel": "11464fbe",
+    "uses": 1,
+    "sigs": [
+     "accountImplementation()"
+    ]
+   },
+   {
+    "sel": "248a9ca3",
+    "uses": 1,
+    "sigs": [
+     "getRoleAdmin(bytes32)"
+    ]
+   },
+   {
+    "sel": "36568abe",
+    "uses": 1,
+    "sigs": [
+     "renounceRole(bytes32,address)"
+    ]
+   },
+   {
+    "sel": "58451f97",
+    "uses": 1,
+    "sigs": [
+     "totalAccounts()"
+    ]
+   },
+   {
+    "sel": "8878ed33",
+    "uses": 1,
+    "sigs": [
+     "getAddress(address,bytes)"
+    ]
+   },
+   {
+    "sel": "9010d07c",
+    "uses": 1,
+    "sigs": [
+     "getRoleMember(bytes32,uint256)"
+    ]
+   },
+   {
+    "sel": "91d14854",
+    "uses": 1,
+    "sigs": [
+     "hasRole(bytes32,address)"
+    ]
+   },
+   {
+    "sel": "938e3d7b",
+    "uses": 1,
+    "sigs": [
+     "setContractURI(string)"
+    ]
+   },
+   {
+    "sel": "a217fddf",
+    "uses": 1,
+    "sigs": [
+     "DEFAULT_ADMIN_ROLE()"
+    ]
+   },
+   {
+    "sel": "a32fa5b3",
+    "uses": 1,
+    "sigs": [
+     "hasRoleWithSwitch(bytes32,address)"
+    ]
+   },
+   {
+    "sel": "a65d69d4",
+    "uses": 1,
+    "sigs": [
+     "entrypoint()"
+    ]
+   },
+   {
+    "sel": "ac9650d8",
+    "uses": 1,
+    "sigs": [
+     "multicall(bytes[])"
+    ]
+   },
+   {
+    "sel": "c3c5a547",
+    "uses": 1,
+    "sigs": [
+     "isRegistered(address)"
+    ]
+   },
+   {
+    "sel": "ca15c873",
+    "uses": 1,
+    "sigs": [
+     "getRoleMemberCount(bytes32)"
+    ]
+   },
+   {
+    "sel": "d547741f",
+    "uses": 1,
+    "sigs": [
+     "revokeRole(bytes32,address)"
+    ]
+   },
+   {
+    "sel": "d8fd8f44",
+    "uses": 1,
+    "sigs": [
+     "createAccount(address,bytes)"
+    ]
+   },
+   {
+    "sel": "e68a7c3b",
+    "uses": 1,
+    "sigs": [
+     "getAccounts(uint256,uint256)"
+    ]
+   },
+   {
+    "sel": "e8a3d485",
+    "uses": 1,
+    "sigs": [
+     "contractURI()"
+    ]
+   },
+   {
+    "sel": "d1f57894",
+    "uses": 1,
+    "sigs": [
+     "initialize(address,bytes)"
+    ]
+   }
+  ]
+ },
+ "TayDex C (8469B twin 2)": {
+  "addr": "0x85e23b94e7f5e9cc1ff78bce78cfb15b81f0df00",
+  "size": 8469,
+  "impl": null,
+  "impl_size": null,
+  "matched": [
+   "grantRole(bytes32,address)"
+  ],
+  "undocumented": [
+   {
+    "sel": "08e93d0a",
+    "uses": 1,
+    "sigs": [
+     "getAllAccounts()"
+    ]
+   },
+   {
+    "sel": "0e6254fd",
+    "uses": 1,
+    "sigs": [
+     "getAccountsOfSigner(address)"
+    ]
+   },
+   {
+    "sel": "11464fbe",
+    "uses": 1,
+    "sigs": [
+     "accountImplementation()"
+    ]
+   },
+   {
+    "sel": "248a9ca3",
+    "uses": 1,
+    "sigs": [
+     "getRoleAdmin(bytes32)"
+    ]
+   },
+   {
+    "sel": "36568abe",
+    "uses": 1,
+    "sigs": [
+     "renounceRole(bytes32,address)"
+    ]
+   },
+   {
+    "sel": "58451f97",
+    "uses": 1,
+    "sigs": [
+     "totalAccounts()"
+    ]
+   },
+   {
+    "sel": "8878ed33",
+    "uses": 1,
+    "sigs": [
+     "getAddress(address,bytes)"
+    ]
+   },
+   {
+    "sel": "9010d07c",
+    "uses": 1,
+    "sigs": [
+     "getRoleMember(bytes32,uint256)"
+    ]
+   },
+   {
+    "sel": "91d14854",
+    "uses": 1,
+    "sigs": [
+     "hasRole(bytes32,address)"
+    ]
+   },
+   {
+    "sel": "938e3d7b",
+    "uses": 1,
+    "sigs": [
+     "setContractURI(string)"
+    ]
+   },
+   {
+    "sel": "a217fddf",
+    "uses": 1,
+    "sigs": [
+     "DEFAULT_ADMIN_ROLE()"
+    ]
+   },
+   {
+    "sel": "a32fa5b3",
+    "uses": 1,
+    "sigs": [
+     "hasRoleWithSwitch(bytes32,address)"
+    ]
+   },
+   {
+    "sel": "a65d69d4",
+    "uses": 1,
+    "sigs": [
+     "entrypoint()"
+    ]
+   },
+   {
+    "sel": "ac9650d8",
+    "uses": 1,
+    "sigs": [
+     "multicall(bytes[])"
+    ]
+   },
+   {
+    "sel": "c3c5a547",
+    "uses": 1,
+    "sigs": [
+     "isRegistered(address)"
+    ]
+   },
+   {
+    "sel": "ca15c873",
+    "uses": 1,
+    "sigs": [
+     "getRoleMemberCount(bytes32)"
+    ]
+   },
+   {
+    "sel": "d547741f",
+    "uses": 1,
+    "sigs": [
+     "revokeRole(bytes32,address)"
+    ]
+   },
+   {
+    "sel": "d8fd8f44",
+    "uses": 1,
+    "sigs": [
+     "createAccount(address,bytes)"
+    ]
+   },
+   {
+    "sel": "e68a7c3b",
+    "uses": 1,
+    "sigs": [
+     "getAccounts(uint256,uint256)"
+    ]
+   },
+   {
+    "sel": "e8a3d485",
+    "uses": 1,
+    "sigs": [
+     "contractURI()"
+    ]
+   },
+   {
+    "sel": "d1f57894",
+    "uses": 1,
+    "sigs": [
+     "initialize(address,bytes)"
+    ]
+   }
+  ]
+ }
+}
