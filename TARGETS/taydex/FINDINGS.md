@@ -2,7 +2,21 @@
 
 Target: `taydex.fun` — "TAYDEX — Prediction exchange on Base"
 Class: **UMA-oracle prediction market, ERC-1155 positions, ERC-4337 accounts** (NOT a casino)
-Date: 2026-09-28 · Passes 1–13 · All evidence read-only (public GETs, `eth_call`, `eth_getCode`, `eth_getStorageAt`)
+Date: 2026-09-28 · Passes 1–24 · All evidence read-only (public GETs/explorer APIs, `eth_call`,
+`eth_getCode`, `eth_getStorageAt`, plus local anvil-fork simulation). Nothing broadcast, no key used.
+
+## Verdict
+
+- **No exploitable vulnerability found.** Two of my own hypotheses were tested and killed:
+  one closed as non-exploitable (Finding 2), one **falsified by experiment** (Finding 3).
+- **One provable finding survives (Finding 1)** — an integration/version divergence, not a
+  contract bug: the shipped frontend's ABI is not the deployed contract's ABI (24 functions
+  differ; `cancelMarket` renamed `voidMarket`). Severity depends on intent, and the impact claim
+  must stay narrow (see the correction in Finding 1).
+- Parts I could not assess: anything behind the unverified source — the resolution/dispute
+  economics, the payout math, and the deployed version's own trade entry point
+  (`TradeExecuted` exists, no `buy`/`sell`). **Explorer verification status remains UNCONFIRMED,
+  not "unverified"** — the check is broken (positive control USDC→`is_verified=None`).
 
 ---
 
@@ -117,26 +131,34 @@ and 3 by the signer key itself — but that is an observation about adoption, no
 
 ---
 
-## FINDING 2 — `sweepLeftover` reached its body from an unprivileged address  **OPEN**
+## FINDING 2 — `sweepLeftover` is callable by anyone  **CLOSED — NOT A VULNERABILITY**
 
 `pass8`: calling `sweepLeftover(uint256,uint16)` from a random address with no role did **not**
-revert with `OwnableUnauthorizedAccount`; it reverted with body reasons — `"not resolved"`
-(market 2) and `"no leftover"` (market 1). Auth modifiers execute *before* the function body,
-so a gated function always reverts with the auth selector regardless of arguments. These did
-not. `sweepLeftover` appears to be **callable by anyone**.
+revert with `OwnableUnauthorizedAccount`; it reverted with body reasons (`"not resolved"`,
+`"no leftover"`). Auth modifiers execute *before* the function body, so a gated function always
+reverts with the auth selector regardless of arguments. These did not — so `sweepLeftover` really
+is unguarded.
 
-`LeftoverSwept(uint256 marketId, uint16 optionIndex, address dest, uint256 amount)` — the
-function takes no address argument, so `dest` is derived internally (likely `msg.sender`).
+**But the guard is unnecessary, and the impact is nil.** The function takes no address argument,
+and the sweep transactions show where the money actually goes:
 
-**Fork result (pass17) — impact UNPROVEN, lead stays open.** On the fork I probed
-`sweepLeftover(marketId, optionIndex)` for **all 27 markets × their options** as
-`0x…deadbeef`. **0 succeeded. All 27 reverted with body reasons: 24 × `"no leftover"`,
-3 × `"not resolved"`.** No market currently holds sweepable dust, so no payout could be
-demonstrated. The absent guard is established; the *impact* is not. **Not a reportable finding
-in this state.** To close it: instrument a fork market into a leftover state (or obtain source
-to read what `dest` is), then re-run.
+```
+market 1 sweep (0xc46c02d0…): 40.279064 USDC  0x3ade22fa… -> 0xc0b085c1… (feeRecipient)
+market 3 sweep (0xfa5acd42…): 50.000000 USDC  0x3ade22fa… -> 0xc0b085c1… (feeRecipient)
+```
 
-## FINDING 3 — the signed structs bind an address, but never the actor  **OPEN**
+`dest` is the **fixed `feeRecipient`**, not `msg.sender`. An unprivileged caller can therefore
+only push leftover dust to the project's own fee address. **No theft is possible.**
+(All 24 sweeps in the contract's history were made by the owner, which is also why my pass17 probe
+found "no leftover" on every market — he had already swept them all.)
+
+Severity if reported: **informational / nuisance** at most. Closed.
+
+## FINDING 3 — "the signed structs don't bind the actor"  **FALSIFIED — the signature IS bound**
+
+Original hypothesis: the calldata tuple for `createMarket`/`buy`/`sell` contains no address field
+(`referrer` is someone else), and `nonces` is a per-address mapping starting at 0, so every fresh
+wallet shares nonce 0 — making a signature usable by any address in that collision class.
 
 Live signing domain (`eip712Domain()`, decoded):
 `fields=0x0f  name="TaydexMarket"  version="1"  chainId=8453  verifyingContract=0x3ade22fa…`
@@ -146,8 +168,43 @@ Cached domain separator recovered **directly from the runtime code** and confirm
 components independently found in the bytecode. (An earlier "MISS" was my own mislabel: I had
 prepended `\x19\x01`, which belongs to the *digest*, not the domain.)
 
+### How it was resolved — a real signed payload, replayed from foreign addresses
+
+I did **not** need to reconstruct the signing scheme. Markets 7/8/9 were created by the signer key
+itself, so real `createMarket` transactions exist carrying genuine signatures from the live
+signer. I pulled one off-chain (`0xc2d946af…`, nonce=0) and replayed it on my fork, after
+discovering that anvil can wind the clock backward (`anvil_setTime` + `evm_mine`) so the
+`endDate past` / `expired` gates stop masking the deeper checks:
+
+| caller | caller's nonce | result |
+|---|---|---|
+| original sender, nonce **restored** to the payload's value | 0 | `Error("ERC20: transfer amount exceeds balance")` |
+| original sender, nonce **left advanced** (control) | 5 | `Error("bad nonce")` |
+| fresh address A | 0 | `Error("bad sig")` |
+| fresh address B | 0 | `Error("bad sig")` |
+
+The original actor passes **both** the nonce gate and the signature check — it reaches the token
+transfer. The two fresh addresses carry the *same nonce value* as the payload, so the nonce gate
+passes for them as well, and they are rejected **at the signature check**.
+
+**Same payload, same nonce, only the caller differs → the accepted caller is the one the signature
+was issued to. The signature is bound to the actor. The hypothesis is falsified.**
+
+Two things learned:
+- The `nonce` gate **is** keyed on `msg.sender` (the control row proves it: same signer, wrong
+  nonce → `"bad nonce"`). My per-address-nonce observation was correct.
+- **The ABI parameter list is not the full set of signed inputs.** `createMarket`'s tuple carries
+  no address, yet verification is caller-specific — so `msg.sender` enters the digest outside the
+  struct. Reading the calldata tuple and concluding "no actor binding" was the flaw in the
+  original reasoning. **A missing field in the calldata is not evidence that the actor is unbound.**
+
+Check order observed: param/date validation (`endDate past`, `expired`) → `bad nonce` →
+`bad sig` → token transfer.
+
 So signatures are correctly bound to *(name, version, chainId, contract)* — no cross-chain or
-cross-contract replay. The gap is in the structs:
+cross-contract replay — **and** to the caller, as the replay above shows.
+
+The signed structs (from the app ABI; the calldata tuples are authoritative for shape):
 
 ```
 createMarket((uint64 endDate, uint128[] fundingPerOption, uint16 creatorFeeShareBps, uint256 nonce, uint256 deadline), bytes sig)
@@ -155,51 +212,34 @@ buy ((uint256 marketId, uint16 optionIndex, uint8 outcome, uint256 usdcIn, uint2
 sell((uint256 marketId, uint16 optionIndex, uint8 outcome, uint256 sharesIn, uint256 usdcOut, uint256 fee, address referrer, uint256 referralFee, uint256 nonce, uint256 deadline), bytes sig)
 ```
 
-`referrer` is someone else. **No field is the actor**, so the only thing binding a signature to
-the wallet that submits it is the `nonce`. Live reads: `nonces(<fresh random>)` = 0 for both
-sampled addresses, `nonces(signer)` = 3, `nonces(owner)` = 0. A per-address nonce starting at 0
-means every fresh wallet shares the same nonce value on its first action — the binding is a
-collision class, not an identity.
+`referrer` is a third party; no field is the actor — yet the caller is bound. So `msg.sender` is
+mixed into the digest separately from the struct. **The original flaw in this analysis was
+inferring the binding from the parameter list alone.**
 
-Also by design: the server dictates the fill (`sharesOut`/`usdcOut`/`fee`) and even
-`creatorFeeShareBps`; there is **no on-chain AMM**, so pricing integrity rests entirely on the
-signer key `0xb5932a150f48dcd5b299702dd0091670368ea4c9`.
+Retained observations, all confirmed rather than assumed:
+- **`nonces` is a per-address mapping at storage slot 14** — probed via
+  `storage[keccak(address ‖ slot)]`: 3 for the signer, 0 for fresh addresses. The gate keys on
+  `msg.sender` (proven by the control row).
+- **`signer` is a storage variable (slot 6), not an immutable** (`usdc` *is* immutable, 16 sites in
+  code) — so the owner can rotate the signing key without a migration. Still a real centralisation
+  property, and still the key that authorises every signed action on the money path.
+- **No `CreateMarket` typehash constant exists in the runtime.** All 48 32-byte immediates are
+  accounted for: event topics (matched against the ABI's event signatures — `MarketCreated`,
+  `MarketResolved`, `DisputeResolved`, `Disputed`, `Claimed`, `CreatorFeesClaimed`,
+  `ConfigUpdated`, `FeeRecipientUpdated`, `SignerUpdated`, `TradeExecuted`, ERC-1155 transfers),
+  internal error strings, domain components, addresses, and the secp256k1 bound. A 105-candidate
+  brute-force over plausible struct names also found nothing. Consistent with a custom digest
+  rather than a standard `keccak256("Name(...)")` typehash — and the thing that hid `msg.sender`
+  from a params-only reading.
 
-**OPEN:** exploitability cannot be settled without the contract source or a fork test — whether
-the on-chain check is `nonces[msg.sender] == p.nonce` decides it. Fork test is the next step.
-Exploitability also depends on observing a victim's signature before it lands (Base's mempool
-is not freely observable, which cuts against the practical severity). **Do not report this as a
-vulnerability until the fork test runs.**
+**Centralisation note (not a bug):** the server dictates the fill (`sharesOut`/`usdcOut`/`fee`)
+and even `creatorFeeShareBps`; there is **no on-chain AMM**, so pricing integrity rests entirely
+on the signer key `0xb5932a150f48dcd5b299702dd0091670368ea4c9` and on the bare-EOA owner that can
+rotate it. Worth stating in any report; it is a design property, not a vulnerability.
 
-**Fork result (pass16/17) — partially probed, still OPEN, and here is exactly what is now known:**
-
-- **`nonces` is a per-address mapping at storage slot 14.** Established by probing
-  `storage[keccak(address ‖ slot)]` across slots 0–15: slot 14 returns 3 for the signer and 0
-  for fresh addresses. So the mapping is keyed by *address* — but I could not read the bytecode
-  well enough to prove the key is `msg.sender` rather than the recovered signer.
-- **The deployed `createMarket` has no typehash constant.** All 48 32-byte immediates in the
-  runtime are now accounted for: event topics (matched against the ABI's event signatures —
-  `MarketCreated`, `MarketResolved`, `DisputeResolved`, `Disputed`, `Claimed`,
-  `CreatorFeesClaimed`, `ConfigUpdated`, `FeeRecipientUpdated`, `SignerUpdated`, `TradeExecuted`,
-  ERC-1155 transfers), internal error strings (`"no leftover"`, `"pool invariant"`,
-  `"funding<min"`, `"fee>in"`, `"bad bps"`, `"endDate past"`, `"not single binary"`,
-  `"already disputed"`, `"nothing to claim"`, …), the domain components, addresses and the
-  secp256k1 bound. **Nothing is left to be a `CreateMarket(...)` typehash**, and a 105-candidate
-  brute-force over plausible struct names found nothing either.
-- **Therefore I cannot honestly resolve the actor-binding question from the bytecode.** Either
-  the contract binds via `nonces[msg.sender]` — in which case a signature is valid for *any*
-  address sharing that nonce value, which is certain for two fresh wallets (both 0) — or it
-  binds through a scheme that is not visible as a typehash constant. **Which one it is remains
-  undetermined, and I am not guessing.**
-- Also established by the probe: **`signer` is a storage variable (slot 6), not an immutable**
-  (`usdc` *is* immutable, present at 16 sites in the code). So the signer key is rotatable by
-  the owner without a contract migration, and the fork can have its signer overridden.
-
-**To close Finding 3:** obtain the source (ask the team — this is a cooperative audit), or
-locate the `ecrecover` path in the disassembly and read what feeds the digest. Note the
-frontend cannot help: **the server builds and signs these EIP-712 messages**, not the client, so
-the struct definition is nowhere in the bundle. That is itself worth recording — the client
-relays an opaque signature it cannot verify.
+**Client-side note:** because the *server* builds and signs these messages, the struct definition
+is nowhere in the bundle — the frontend relays an opaque signature it cannot verify or explain to
+the user. Recorded as a trust/UX observation.
 
 ---
 
@@ -235,8 +275,9 @@ the runtime size matching the live contract byte-for-byte at 20,788 B.
 | attack | method | result |
 |---|---|---|
 | `sweepLeftover` ungated payout | probe all 27 markets × options from `0x…deadbeef`; execute a success if any | **0/27 succeeded** — all body-revert (`no leftover` ×24, `not resolved` ×3). Impact unproven. |
-| signature replay / actor impersonation | override `signer` (slot 6) on the fork with a controlled key, then submit a signed `createMarket` from a second address | **BLOCKED** — the signing scheme could not be reconstructed: no `CreateMarket` typehash constant exists in the runtime, so I cannot build a digest the contract will accept. Recorded as blocked, not as "secure". |
-| replay across nonce-colliding addresses | needs a valid signature to exist at all | **BLOCKED** by the same constraint |
+| signature replay / actor impersonation | replay a **real** signer-signed `createMarket` payload (lifted from chain, from the signer's own market creation) on the fork from foreign addresses, with the clock rewound via `anvil_setTime` + `evm_mine` so the date gates don't mask deeper checks | **RAN — hypothesis FALSIFIED.** Original actor passes nonce + signature (reaches the token transfer); two fresh addresses at the *same* nonce value are rejected `"bad sig"` → the signature is bound to the caller. See Finding 3. |
+| replay across nonce-colliding addresses | fresh address with nonce 0, payload nonce 0 | **nonce gate PASSED** (0 == 0) then rejected at the signature check → the collision class is real but harmless |
+| nonce gate keying | original actor with the payload's nonce vs an advanced nonce | `"bad nonce"` when advanced → the gate keys on `msg.sender` |
 | unprivileged calls on privileged setters | `eth_call` from a random address on `setSigner`, `setFeeRecipient`, `setConfig`, `setDisputeFee`, `resolveMarket`, `resolveSingleBinary`, `resolveDispute` | correctly revert `OwnableUnauthorizedAccount` |
 | `cancelMarket` | live call | owner-gated (`0x118cdaa7`) — confirms the deployed version's name |
 
