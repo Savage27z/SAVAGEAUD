@@ -1,0 +1,137 @@
+{
+ "reverts": {
+  "sweepLeftover(uint256,uint16)": {
+   "message": "execution reverted: not resolved",
+   "data": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000c6e6f74207265736f6c7665640000000000000000000000000000000000000000",
+   "decoded": "Error(\"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\f\")"
+  },
+  "sweepLeftover(uint256,uint16) [m1]": {
+   "message": "execution reverted: no leftover",
+   "data": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b6e6f206c6566746f766572000000000000000000000000000000000000000000",
+   "decoded": "Error(\"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u000b\")"
+  },
+  "pushReferral(uint256,address)": {
+   "message": "execution reverted",
+   "data": null,
+   "decoded": null
+  },
+  "claimReferral(uint256)": {
+   "message": "execution reverted",
+   "data": null,
+   "decoded": null
+  },
+  "rescueToken(address,address,uint256)": {
+   "message": "execution reverted",
+   "data": null,
+   "decoded": null
+  },
+  "setMarketCreatorFeeShare(uint256,uint16)": {
+   "message": "execution reverted",
+   "data": null,
+   "decoded": null
+  },
+  "setSigner(address)": {
+   "message": "execution reverted",
+   "data": "0x118cdaa70000000000000000000000009a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f",
+   "decoded": "OwnableUnauthorizedAccount(address) [OZ v5]"
+  },
+  "setFeeRecipient(address)": {
+   "message": "execution reverted",
+   "data": "0x118cdaa70000000000000000000000009a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f",
+   "decoded": "OwnableUnauthorizedAccount(address) [OZ v5]"
+  },
+  "setDisputeFee(uint256)": {
+   "message": "execution reverted",
+   "data": "0x118cdaa70000000000000000000000009a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f",
+   "decoded": "OwnableUnauthorizedAccount(address) [OZ v5]"
+  },
+  "setConfig(uint256,uint256)": {
+   "message": "execution reverted",
+   "data": "0x118cdaa70000000000000000000000009a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f",
+   "decoded": "OwnableUnauthorizedAccount(address) [OZ v5]"
+  },
+  "pause()": {
+   "message": "execution reverted",
+   "data": null,
+   "decoded": null
+  },
+  "unpause()": {
+   "message": "execution reverted",
+   "data": null,
+   "decoded": null
+  },
+  "voidMarket(uint256)": {
+   "message": "execution reverted",
+   "data": null,
+   "decoded": null
+  },
+  "resolveMarket(uint256,uint16)": {
+   "message": "execution reverted",
+   "data": "0x118cdaa70000000000000000000000009a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f",
+   "decoded": "OwnableUnauthorizedAccount(address) [OZ v5]"
+  },
+  "resolveSingleBinary(uint256,bool)": {
+   "message": "execution reverted",
+   "data": "0x118cdaa70000000000000000000000009a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f",
+   "decoded": "OwnableUnauthorizedAccount(address) [OZ v5]"
+  },
+  "resolveDraw(uint256)": {
+   "message": "execution reverted",
+   "data": null,
+   "decoded": null
+  },
+  "resolveDispute(uint256,bool)": {
+   "message": "execution reverted",
+   "data": "0x118cdaa70000000000000000000000009a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f9a7f",
+   "decoded": "OwnableUnauthorizedAccount(address) [OZ v5]"
+  },
+  "claim(uint256,uint16)": {
+   "message": "execution reverted: no shares",
+   "data": "0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000096e6f207368617265730000000000000000000000000000000000000000000000",
+   "decoded": "Error(\"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\t\")"
+  },
+  "claimCreatorFees(uint256)": {
+   "message": "execution reverted: not creator",
+   "data": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b6e6f742063726561746f72000000000000000000000000000000000000000000",
+   "decoded": "Error(\"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u000b\")"
+  },
+  "dispute(uint256)": {
+   "message": "execution reverted: resolved",
+   "data": "0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000087265736f6c766564000000000000000000000000000000000000000000000000",
+   "decoded": "Error(\"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\b\")"
+  },
+  "acceptOwnership()": {
+   "message": "execution reverted",
+   "data": null,
+   "decoded": null
+  }
+ },
+ "missing_selectors": [
+  "KIND_DRAW()",
+  "KIND_NONE()",
+  "KIND_VOID()",
+  "KIND_WINNER()",
+  "OUTCOME_DRAW()",
+  "acceptOwnership()",
+  "balanceOf(address,uint256)",
+  "buy((uint256,uint16,uint8,uint256,uint256,uint256,address,uint256,uint256,uint256),bytes)",
+  "claimReferral(uint256)",
+  "claimReferralBatch(uint256[])",
+  "getReferralAccrued(uint256,address)",
+  "marketReferralAccrued(uint256,address)",
+  "pause()",
+  "paused()",
+  "pendingOwner()",
+  "pushReferral(uint256,address)",
+  "pushReferralBatch(uint256[],address[])",
+  "rescueToken(address,address,uint256)",
+  "resolutionKind(uint256)",
+  "resolveDraw(uint256)",
+  "sell((uint256,uint16,uint8,uint256,uint256,uint256,address,uint256,uint256,uint256),bytes)",
+  "setMarketCreatorFeeShare(uint256,uint16)",
+  "unpause()",
+  "voidMarket(uint256)"
+ ],
+ "present_count": 45,
+ "missing_count": 24
+}
