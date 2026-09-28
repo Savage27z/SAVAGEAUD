@@ -1,0 +1,2844 @@
+[
+ {
+  "name": "The Gavel Protocol",
+  "cat": "Lending",
+  "tvl": 40106,
+  "age_d": 4.8,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/JamieFrame/The-Gavel-Protocol/blob/main/docs/audit/2026-04-15-Sherlock-Collaborative-Audit.pdf"
+  ],
+  "url": "",
+  "twitter": "GavelProtocol",
+  "desc": "Oracle-free, permissionless lending where borrowers post collateral and lenders compete to fund loans through reverse auctions that discover the inter"
+ },
+ {
+  "name": "StonkBrokers Desks",
+  "cat": "NftFi",
+  "tvl": 2839,
+  "age_d": 4.9,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://www.stonkbrokers.cash",
+  "twitter": "ClutchMarkets",
+  "desc": "Anvil 2 way desks (InternExchange), permissionless NFT desks (bids / asks / both on a price ladder) for any ERC-721 collection"
+ },
+ {
+  "name": "Charity Billionaire",
+  "cat": "Yield Lottery",
+  "tvl": 43,
+  "age_d": 6.8,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": null,
+  "desc": "No-loss prize pool where USDC deposits earn yield that is distributed weekly between one depositor, a selected charity, and the protocol."
+ },
+ {
+  "name": "Antseed",
+  "cat": "Decentralized AI",
+  "tvl": 13180,
+  "age_d": 8.0,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://antseed.com/",
+  "twitter": "antseed",
+  "desc": "A decentralized peer-to-peer marketplace where buyers purchase AI inference and other AI services directly from independent providers, with payments s"
+ },
+ {
+  "name": "CEDEX Earn",
+  "cat": "Uncollateralized Lending",
+  "tvl": 152,
+  "age_d": 9.7,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "Cedex_io",
+  "desc": "CEDEX Earn is an uncollateralized lending protocol on Ethereum. Depositors supply USDC into fixed-term pools to earn yield, while whitelisted borrower"
+ },
+ {
+  "name": "XAX V2",
+  "cat": "Yield",
+  "tvl": 2155,
+  "age_d": 10.2,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://app.xax.trading/",
+  "twitter": "xaxtrading",
+  "desc": "USDT yield vault on Ethereum. Deposit USDT, receive XAUSD ERC-4626 shares"
+ },
+ {
+  "name": "Qiro Finance",
+  "cat": "RWA",
+  "tvl": 9,
+  "age_d": 12.8,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://qiro.fi",
+  "twitter": "Qiro_Finance",
+  "desc": "Qiro connects institutional stablecoin investors with short-term private credit opportunities."
+ },
+ {
+  "name": "Stochastic Finance",
+  "cat": "Options",
+  "tvl": 1284,
+  "age_d": 12.9,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "stochastic_fin",
+  "desc": "Stochastic.Finance is a permissionless options protocol on Base mainnet. Anyone can mint an option by posting USDC as collateral, trade either side of"
+ },
+ {
+  "name": "Dirac Classic Curation",
+  "cat": "Risk Curators",
+  "tvl": 17,
+  "age_d": 12.9,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://dirac.finance",
+  "twitter": "DiracFinance",
+  "desc": "Dirac Finance builds curation infrastructure for financial strategies."
+ },
+ {
+  "name": "Hot Take",
+  "cat": "Prediction Market",
+  "tvl": 732,
+  "age_d": 14.0,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": null,
+  "desc": "Peer-to-peer betting on X. Challenge anyone with a take, both sides stake USDC on Base, and a named judge settles it."
+ },
+ {
+  "name": "zERC20",
+  "cat": "Privacy",
+  "tvl": 97340,
+  "age_d": 17.1,
+  "chains": [
+   "Arbitrum",
+   "Base",
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://zerc20.io/",
+  "twitter": "zERC20io",
+  "desc": "Privacy-preserving token wrapper that enables private transfers of ERC-20 assets using zero-knowledge proofs, including private cross-chain transfers"
+ },
+ {
+  "name": "Ref Market",
+  "cat": "Services",
+  "tvl": 60,
+  "age_d": 17.6,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "ref_market",
+  "desc": "A marketplace for referral bounties: referrers escrow a USDC reward per signup, and referees get paid by the contract once the signup is proven."
+ },
+ {
+  "name": "Prodigy.Fi V2",
+  "cat": "Options",
+  "tvl": 28314,
+  "age_d": 23.1,
+  "chains": [
+   "Base",
+   "Berachain",
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/prodigyfi/audits"
+  ],
+  "url": "https://prodigy.fi/",
+  "twitter": "ProdigyFi",
+  "desc": "An on-chain platform that makes it easy for anyone to earn real yield"
+ },
+ {
+  "name": "fija Finance",
+  "cat": "Yield Aggregator",
+  "tvl": 3703,
+  "age_d": 25.1,
+  "chains": [
+   "Arbitrum",
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://fija.finance/",
+  "twitter": "fija_finance",
+  "desc": "fija Finance provides automated, tokenized DeFi yield strategies through non-custodial ERC-4626 vaults, allocating assets across protocols including C"
+ },
+ {
+  "name": "OpenStock",
+  "cat": "RWA",
+  "tvl": 5,
+  "age_d": 25.1,
+  "chains": [
+   "Mantle"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://opn.st/",
+  "twitter": "PolynomialFi",
+  "desc": "OpenStock (built by Polynomial Protocol), an on-chain pre-IPO market, covering its Mantle deployment."
+ },
+ {
+  "name": "Murk Finance",
+  "cat": "Privacy",
+  "tvl": 64641,
+  "age_d": 26.8,
+  "chains": [
+   "Monad"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://murk.finance",
+  "twitter": "murkfinance",
+  "desc": "A self-custodial privacy layer that lets users hold and transfer shielded balances and interact with external DeFi protocols from a private account."
+ },
+ {
+  "name": "TermiX",
+  "cat": "AI Agents",
+  "tvl": 5560,
+  "age_d": 27.0,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://termix.ai",
+  "twitter": "termix_ai",
+  "desc": "TermiX is a trustless marketplace where AI agents hire agents. Jobs are funded into on-chain escrow in USDC/USDT and released on completion, with prov"
+ },
+ {
+  "name": "AlfaClub",
+  "cat": "SoFi",
+  "tvl": 17710,
+  "age_d": 32.9,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/FriendDotSpace/contracts/blob/main/audits/AstraSec-AuditReport-FriendSpace.pdf"
+  ],
+  "url": "https://alfaclub.app",
+  "twitter": "AlfaClubdotapp",
+  "desc": "Token-gated rooms on Base. Creators issue keys on a USDC bonding curve; trading rooms pool key fees for a shared fund."
+ },
+ {
+  "name": "HRUSD",
+  "cat": "Basis Trading",
+  "tvl": 9153,
+  "age_d": 39.9,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://hyperoute.xyz/",
+  "twitter": "hyperoute",
+  "desc": "HRUSD is a USD-pegged stablecoin on Base, minted 1:1 against USDC through a Peg Stability Module, with an incentivised HRUSD/USDC Uniswap V3 liquidity"
+ },
+ {
+  "name": "Bonker",
+  "cat": "Launchpad",
+  "tvl": 1555,
+  "age_d": 39.9,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://bonker.wtf",
+  "twitter": "bonker_wtf",
+  "desc": "Creator-first token launchpad on Base with locked liquidity, Uniswap v4 hooks, launch-time MEV protection, and on-chain creator rewards."
+ },
+ {
+  "name": "Spiral Stake",
+  "cat": "Yield Aggregator",
+  "tvl": 19245,
+  "age_d": 41.0,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/spiral-stake/v2-core/blob/main/audits/2026-01-20-phage-spiral-stake-v2.pdf",
+   "https://github.com/spiral-stake/v2-core/blob/main/audits/2026-03-12-cyfrin-spiral-stake-v2.pdf"
+  ],
+  "url": "https://spiralstake.xyz",
+  "twitter": "0xspiralstake",
+  "desc": "Spiral Stake opens one-transaction leveraged (\"looping\") positions on Morpho Blue markets \u2014 flash-borrow the loan asset, swap to collateral, supply, a"
+ },
+ {
+  "name": "Tokeshare",
+  "cat": "RWA",
+  "tvl": 5529,
+  "age_d": 41.7,
+  "chains": [
+   "Base",
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://tokeshare.co/",
+  "twitter": "Tokeshare",
+  "desc": "Tokeshare is a Web3 platform for tokenizing real-world assets (RWAs), enabling assets to be fractionalized and managed on-chain"
+ },
+ {
+  "name": "DiceMoon",
+  "cat": "Luck Games",
+  "tvl": 1,
+  "age_d": 42.0,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://dicemoon.com",
+  "twitter": null,
+  "desc": "Non-custodial provably-fair dice and poker for USDC on Base. Stakes are locked in the DiceMoonTables escrow contract - the operator never takes custod"
+ },
+ {
+  "name": "Enhanced",
+  "cat": "Yield",
+  "tvl": 156326,
+  "age_d": 45.0,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "enhanced_defi",
+  "desc": "Enhanced is a structured-product infrastructure for onchain assets, including real-world assets (RWAs). In v1, the system allows users to write option"
+ },
+ {
+  "name": "GILDer",
+  "cat": "Yield",
+  "tvl": 118091,
+  "age_d": 45.7,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://gilderfinance.com/",
+  "twitter": "GILDerfinance",
+  "desc": "GILDer is a non-custodial fixed-term deposit protocol on Base. Users deposit USDC into 3-year Term Deposits represented as NFTs; 80% of each deposit i"
+ },
+ {
+  "name": "GlueHook",
+  "cat": "Liquidity Automation",
+  "tvl": 11683,
+  "age_d": 46.9,
+  "chains": [
+   "Arbitrum",
+   "Avalanche",
+   "Base",
+   "Blast",
+   "Celo",
+   "Ethereum",
+   "Monad",
+   "Optimism",
+   "Polygon",
+   "Unichain",
+   "World Chain"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/glue-finance/GlueHook/tree/main/audit"
+  ],
+  "url": "https://gluehook.trade",
+  "twitter": "GlueFinance",
+  "desc": "GlueHook is a general-purpose Uniswap V4 hook \u2014 not platform-specific. Any project attaches it to its own pool permissionlessly and gets: a buyback po"
+ },
+ {
+  "name": "Avocado Fund",
+  "cat": "Uncollateralized Lending",
+  "tvl": 47,
+  "age_d": 48.8,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://avocado.fund/audit"
+  ],
+  "url": "",
+  "twitter": "_avocadofund",
+  "desc": "Uncollateralised USDC lending on Arbitrum. Borrowers pass identity verification and build an on-chain credit score to draw an unsecured credit line; l"
+ },
+ {
+  "name": "EarnGrid",
+  "cat": "Yield Aggregator",
+  "tvl": 17,
+  "age_d": 48.8,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://earngrid.site/",
+  "twitter": "EarnGridSite",
+  "desc": "An automated USDC vault that reallocates deposits across curated Morpho lending vaults on Base to earn yield"
+ },
+ {
+  "name": "TayDex",
+  "cat": "Prediction Market",
+  "tvl": 0,
+  "age_d": 48.8,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://taydex.fun",
+  "twitter": "taydexfun",
+  "desc": "TayDex is a prediction exchange on Base for creating and trading binary event markets in native USDC"
+ },
+ {
+  "name": "dyield",
+  "cat": "Yield",
+  "tvl": 88,
+  "age_d": 52.0,
+  "chains": [
+   "Base"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://dyield.io",
+  "twitter": "dyieldio",
+  "desc": "Non-custodial USDC yield infrastructure on Base. Three ERC-4626 vault receipt tokens \u2014 d$P, d$H, d$U \u2014 each wrapping a Morpho Vault V2 operated by an "
+ },
+ {
+  "name": "VaultMintCurve",
+  "cat": "Reserve Currency",
+  "tvl": 0,
+  "age_d": 52.0,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "JollyJap3s",
+  "desc": "VaultMintCurve (VMINT), a DAI-backed bonding curve ERC-20 on Ethereum mainnet"
+ },
+ {
+  "name": "AvaLove",
+  "cat": "Launchpad",
+  "tvl": 0,
+  "age_d": 52.1,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://avalove.app",
+  "twitter": "AvaLoveApp",
+  "desc": "AvaLove \u2014 a permissionless on-chain game/staking protocol on Avalanche C-Chain and Robinhood Chain"
+ },
+ {
+  "name": "KeelLabs",
+  "cat": "Liquidity Manager",
+  "tvl": 4953,
+  "age_d": 55.8,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://keellabs.app/#inicio",
+  "twitter": "keelagentlabs",
+  "desc": "KeelLabs is a non-custodial automated liquidity manager. A VaultFactory deploys one EIP-1167 clone per user per pool, and each vault holds a single Un"
+ },
+ {
+  "name": "xDollar",
+  "cat": "CDP",
+  "tvl": 180742,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Avalanche",
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/xDollar-Finance/xDollar-contracts/blob/main/xDollar%20-%20Smart%20Contract%20Audit%20v210624.pdf"
+  ],
+  "url": "",
+  "twitter": "xDollarFi",
+  "desc": "xDollar is cross-chain collateral based stablecoin lending platform with zero interest fee, 110% low collateral ratio and fully redeemable XIM plus DA"
+ },
+ {
+  "name": "Adamant Finance",
+  "cat": "Yield",
+  "tvl": 177053,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://adamantfinance.gitbook.io/adamant-finance/audits"
+  ],
+  "url": "",
+  "twitter": "AdamantVault",
+  "desc": "Adamant is a yield optimizer vault that provides users with an easy and safe way to automatically compound their tokens on the Matic/Polygon network a"
+ },
+ {
+  "name": "Kogefarm",
+  "cat": "Yield",
+  "tvl": 174036,
+  "age_d": null,
+  "chains": [
+   "Fantom",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/Tibereum/obelisk-audits/blob/main/Kogefarm.pdf"
+  ],
+  "url": "https://kogefarm.io",
+  "twitter": "kogecoin",
+  "desc": "KogeFarm is a yield optimizer on the Polygon chain. We have the lowest fees (by far) which helps investors get the highest yields. We are also audited"
+ },
+ {
+  "name": "Soneium Bridge",
+  "cat": "Canonical Bridge",
+  "tvl": 165961,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://superbridge.app/soneium",
+  "twitter": "soneium",
+  "desc": "Bridge between Ethereum and Soneium"
+ },
+ {
+  "name": "ZKSwap",
+  "cat": "Chain",
+  "tvl": 165536,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "ZKSwapOfficial",
+  "desc": "ZKSwap is a ZK-Rollups based layer-2 DEX with AMM model."
+ },
+ {
+  "name": "Dopple Finance",
+  "cat": "Algo-Stables",
+  "tvl": 163693,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://dopple.gitbook.io/dopple-finance/certik-audit"
+  ],
+  "url": "",
+  "twitter": "dopplefi",
+  "desc": "Stablecoin DeFi Ecosystem on #BSC"
+ },
+ {
+  "name": "CREAM Lending",
+  "cat": "Lending",
+  "tvl": 153524,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Base",
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.cream.finance/audit-report"
+  ],
+  "url": "https://cream.finance/",
+  "twitter": "CreamdotFinance",
+  "desc": "Money markets, liquid staking and protocol-to-protocol lending"
+ },
+ {
+  "name": "InsurAce",
+  "cat": "Insurance",
+  "tvl": 148843,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.insurace.io/landing-page/documentation/security-1"
+  ],
+  "url": "",
+  "twitter": "InsurAce_io",
+  "desc": "InsurAce is a leading decentralised insurance protocol, providing reliable, robust and secure insurance services to DeFi users, allowing them to secur"
+ },
+ {
+  "name": "Metronome V1",
+  "cat": "Yield",
+  "tvl": 147888,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/autonomoussoftware/metronome-audits"
+  ],
+  "url": "https://metronome.io/",
+  "twitter": "MetronomeDAO",
+  "desc": "Metronome is the worlds first autonomous cryptocurrency."
+ },
+ {
+  "name": "Float",
+  "cat": "Derivatives",
+  "tvl": 143451,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://code423n4.com/reports/2021-08-floatcapital"
+  ],
+  "url": "",
+  "twitter": "float_shipping",
+  "desc": "Float allows you to get perpetual, leveraged exposure to any crypto asset, without worrying about liquidations or managing debt positions."
+ },
+ {
+  "name": "Nsure",
+  "cat": "Insurance",
+  "tvl": 141202,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "Nsure_network",
+  "desc": "Open Insurance Platform for Open Finance"
+ },
+ {
+  "name": "Indexed Finance",
+  "cat": "Indexes",
+  "tvl": 140043,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.indexed.finance/protocol/security"
+  ],
+  "url": "",
+  "twitter": "ndxfi",
+  "desc": "Indexed Finance is a project focused on the development of passive portfolio management strategies for the Ethereum network."
+ },
+ {
+  "name": "Derive V1",
+  "cat": "Options",
+  "tvl": 134468,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum",
+   "Optimism"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.lyra.finance/overview/audits"
+  ],
+  "url": "https://derive.xyz",
+  "twitter": "derivexyz",
+  "desc": "The first complete decentralized options protocol built on Ethereum"
+ },
+ {
+  "name": "Volmex",
+  "cat": "Yield",
+  "tvl": 132017,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.volmex.finance/smart-contracts/audits"
+  ],
+  "url": "https://volmex.finance/",
+  "twitter": "volmexfinance",
+  "desc": "Tokenized volatility protocol built on Ethereum"
+ },
+ {
+  "name": "Mars Poolin",
+  "cat": "Yield",
+  "tvl": 130568,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://mars.poolin.fi",
+  "twitter": "MarsProject2020",
+  "desc": "Mars is the first Ethereum-based, decentralized standardized hashrate protocol. Mars Project combines standardized hashrate product and liquidity mini"
+ },
+ {
+  "name": "Domani Protocol",
+  "cat": "Indexes",
+  "tvl": 125959,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Ethereum",
+   "zkSync Era"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.dextf.com/documentation/introduction/security-assessment-report"
+  ],
+  "url": "https://mementoblockchain.com/",
+  "twitter": "Memento_Bc",
+  "desc": "Empowering anyone to mint, trade and redeem non-custodial oracle-less tokenized portfolios."
+ },
+ {
+  "name": "Geyser",
+  "cat": "Yield",
+  "tvl": 125923,
+  "age_d": null,
+  "chains": [
+   "Ethereum",
+   "Optimism",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://resources.gysr.io/gysr_v1_audit_pessimistic.pdf",
+   "https://resources.gysr.io/gysr_v2_audit_certik.pdf"
+  ],
+  "url": "",
+  "twitter": "gysr_io",
+  "desc": "GYSR is a platform for on-chain incentives"
+ },
+ {
+  "name": "Yam Finance",
+  "cat": "Synthetics",
+  "tvl": 120449,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/yam-finance/audits"
+  ],
+  "url": "",
+  "twitter": "YamFinance",
+  "desc": "Yam Finance is a Decentralized Autonomous Organization building three core products. Innovative synthetic assets (degnerative.finance), permissionless"
+ },
+ {
+  "name": "CVI Finance",
+  "cat": "Synthetics",
+  "tvl": 119590,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://cvi.finance/files/usdt-audit.pdf",
+   "https://cvi.finance/files/eth-audit.pdf"
+  ],
+  "url": "https://cvi.finance/",
+  "twitter": "official_CVI",
+  "desc": "CVI is a Market Fear Index for the Crypto Space - a new DeFi Primitive"
+ },
+ {
+  "name": "Geist Finance",
+  "cat": "Lending",
+  "tvl": 116983,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/peckshield/publications/blob/master/audit_reports/PeckShield-Audit-Report-Geist-v1.0.pdf",
+   "https://solidity.finance/audits/GeistProtocol/"
+  ],
+  "url": "",
+  "twitter": "GeistFinance",
+  "desc": "Geist is a decentralised non-custodial liquidity market protocol where users can participate as depositors or borrowers."
+ },
+ {
+  "name": "Unagii",
+  "cat": "Yield",
+  "tvl": 111617,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.unagii.com/unagii-vaults/vaults-audits"
+  ],
+  "url": "",
+  "twitter": "unagiidotcom",
+  "desc": "The automated DeFi yield platform with staking services."
+ },
+ {
+  "name": "Cega V2",
+  "cat": "Options",
+  "tvl": 111303,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "cega_fi",
+  "desc": "Cega is a decentralized exotic derivatives protocol"
+ },
+ {
+  "name": "PEAKDEFI",
+  "cat": "Yield",
+  "tvl": 110631,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://certificate.quantstamp.com/full/peakdefi"
+  ],
+  "url": "",
+  "twitter": "PEAKDEFI",
+  "desc": "A decentralized asset management fund created to grow your wealth"
+ },
+ {
+  "name": "BasketDAO",
+  "cat": "Indexes",
+  "tvl": 110253,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/basketdao/contracts/tree/main/audits"
+  ],
+  "url": "",
+  "twitter": "BasketDAOOrg",
+  "desc": "A community controlled no fee token basket that you are PAID to hold."
+ },
+ {
+  "name": "Lixir Finance",
+  "cat": "Liquidity Manager",
+  "tvl": 102854,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://lixir-finance.gitbook.io/lixir-doc/resources/security/audits"
+  ],
+  "url": "",
+  "twitter": "lixirfinance",
+  "desc": "Lixir Finance is a fully automated and optimized concentrated Liquidity Manager. Through Lixir, users and other protocols can deploy liquidity in a ti"
+ },
+ {
+  "name": "Penguin Finance",
+  "cat": "Yield",
+  "tvl": 100331,
+  "age_d": null,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://www.certik.com/projects/penguinfinance"
+  ],
+  "url": "",
+  "twitter": "penguin_defi",
+  "desc": "A third-generation yield farming project building on Avalanche"
+ },
+ {
+  "name": "Lien",
+  "cat": "Options",
+  "tvl": 99638,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://lien.finance/risk"
+  ],
+  "url": "https://lien.finance/",
+  "twitter": "LienFinance",
+  "desc": "A protocol for creating Options and Stablecoins out of ETH"
+ },
+ {
+  "name": "PolyQuity",
+  "cat": "CDP",
+  "tvl": 95507,
+  "age_d": null,
+  "chains": [
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/PolyQuity/audits/tree/main"
+  ],
+  "url": "",
+  "twitter": "polyquity_org",
+  "desc": "PolyQuity is a decentralized borrowing protocol that allows you to draw interest-free loans against Matic used as collateral. Loans are paid out in PU"
+ },
+ {
+  "name": "Treasure Bridge",
+  "cat": "Canonical Bridge",
+  "tvl": 92954,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://treasure.lol",
+  "twitter": "Treasure_DAO",
+  "desc": "$MAGIC-powered entertAInment"
+ },
+ {
+  "name": "Hot Cross",
+  "cat": "Chain",
+  "tvl": 88008,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "hotcrosscom",
+  "desc": "Multi-Chain Infra & Web3 Playground"
+ },
+ {
+  "name": "Alchemix V2",
+  "cat": "Synthetics",
+  "tvl": 87190,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum",
+   "Fantom",
+   "Optimism"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/runtimeverification/publications/blob/main/reports/smart-contracts/Alchemix_v2.pdf"
+  ],
+  "url": "https://alchemix.fi/",
+  "twitter": "AlchemixFi",
+  "desc": "Alchemix is a DeFi protocol that allows for the creation of synthetic tokens that represent the future yield of a deposit. It enables users to retriev"
+ },
+ {
+  "name": "Olive Cash",
+  "cat": "Yield",
+  "tvl": 86458,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://olive-cash.gitbook.io/olive-cash/bsc-1/audit-1"
+  ],
+  "url": "",
+  "twitter": "OliveCashBsc",
+  "desc": "OliveCash is a cross chain Yield Farming project running on Binance Smart Chain Avalanche chain."
+ },
+ {
+  "name": "FilDA",
+  "cat": "Lending",
+  "tvl": 85802,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://www.slowmist.com/en/security-audit-certificate.html?id=c6eb91a0f506aac62c334eb909a37f95e236987d3b3089c9ff902e6c39f16389",
+   "https://docs.filda.io/zhong-wen/dong-tai-geng-xin/2021112-geng-xin-update#filda-passed-the-security-audit-of-knownsec"
+  ],
+  "url": "https://filda.io/",
+  "twitter": "FilDAFinance",
+  "desc": "Lending market"
+ },
+ {
+  "name": "ArbiNYAN",
+  "cat": "Farm",
+  "tvl": 82966,
+  "age_d": null,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "arbinyan",
+  "desc": "First fair launch token on Arbitrum"
+ },
+ {
+  "name": "Opium",
+  "cat": "Options",
+  "tvl": 79193,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://blog.smartdec.net/opium-smart-contracts-security-analysis-4c1857cfd93f"
+  ],
+  "url": "https://app.opium.finance/",
+  "twitter": "Opium_Network",
+  "desc": "Opium is a universal and robust protocolthat allows for creating, settling, and trading any decentralised derivative."
+ },
+ {
+  "name": "Cozy V1",
+  "cat": "Insurance",
+  "tvl": 77546,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://www.cozy.finance",
+  "twitter": "cozyfinance",
+  "desc": "Cozy is an open-source protocol for automated and trust-minimized Protection Markets."
+ },
+ {
+  "name": "Redstone",
+  "cat": "Canonical Bridge",
+  "tvl": 76198,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://redstone.xyz/",
+  "twitter": "redstonexyz",
+  "desc": "Redstone is an Optimistic Rollup on the OP Stack, reducing costs with Plasma mode for data availability, posting input commitments to Ethereum (L1) wh"
+ },
+ {
+  "name": "Governor DAO",
+  "cat": "Yield",
+  "tvl": 75021,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "Governor_DAO",
+  "desc": "All projects can benefit from decentralized governance. Governor DAO aids new and existing projects alike in transitioning to a DAO via Governance-as-"
+ },
+ {
+  "name": "Hundred Finance",
+  "cat": "Lending",
+  "tvl": 70846,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum",
+   "Fantom",
+   "Optimism",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/chainsulting/Smart-Contract-Security-Audits/blob/master/Percent%20Finance/02_Smart%20Contract%20Audit%20Percent%20Finance.pdf"
+  ],
+  "url": "",
+  "twitter": "HundredFinance",
+  "desc": "Hundred Finance is the successor to Percent Finance, a community owned fork of Compound Finance using Chainlink oracles."
+ },
+ {
+  "name": "Trava Finance",
+  "cat": "Lending",
+  "tvl": 68477,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://hacken.io/audits/#trava_finance",
+   "https://www.certik.org/projects/trava"
+  ],
+  "url": "https://trava.finance",
+  "twitter": "trava_finance",
+  "desc": "TRAVA is the world's first decentralized lending marketplace. TRAVA performs blockchain data analysis to optimize pool parameters, calculate credit sc"
+ },
+ {
+  "name": "PowerPool",
+  "cat": "Indexes",
+  "tvl": 63459,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.powerpool.finance/security/security-audits"
+  ],
+  "url": "https://powerpool.finance/",
+  "twitter": "powerpoolcvp",
+  "desc": "DePIN layer powering AI Agents and DeFi automation in multichain universe"
+ },
+ {
+  "name": "Appchain Bridge",
+  "cat": "Canonical Bridge",
+  "tvl": 55300,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://appchain.xyz/",
+  "twitter": "onappchain",
+  "desc": "AppChain is an Ethereum-Layer 2 blockchain (built on the Arbitrum Orbit stack) designed for low-cost, high-throughput smart-contract deployments and d"
+ },
+ {
+  "name": "Ribbon Lend",
+  "cat": "Uncollateralized Lending",
+  "tvl": 52330,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.ribbon.finance/developers/security#audits"
+  ],
+  "url": "https://www.ribbon.finance/",
+  "twitter": "ribbonfinance",
+  "desc": "Structured products protocol"
+ },
+ {
+  "name": "Frost Finance",
+  "cat": "Yield",
+  "tvl": 51992,
+  "age_d": null,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "Frost_FI",
+  "desc": "Safe Yield Farming on AVAX"
+ },
+ {
+  "name": "Tetu Swap",
+  "cat": "Yield",
+  "tvl": 51692,
+  "age_d": null,
+  "chains": [
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.tetu.io/tetu-io/security/audits"
+  ],
+  "url": "",
+  "twitter": "tetu_io",
+  "desc": "Tetu is a decentralized organization committed to providing a next generation yield aggregator to DeFi investors. The Tetu core team has deep industry"
+ },
+ {
+  "name": "Moonpot",
+  "cat": "Yield",
+  "tvl": 51439,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "moonpotdotcom",
+  "desc": "Win-Win Prize Pots on Binance Smart Chain. Earn interest, win big crypto prizes, and always keep your deposit. Powered by Beefy Finance"
+ },
+ {
+  "name": "Paladin Vote",
+  "cat": "Lending",
+  "tvl": 50222,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/pessimistic-io/audits/blob/914e35fdfc879451a61d2a3969f3be839b8c808f/Paladin%20Security%20Analysis%20by%20Pessimistic.pdf"
+  ],
+  "url": "",
+  "twitter": "Paladin_vote",
+  "desc": "Paladin is a decentralized, non-custodial governance lending protocol where users can either loan the voting power in their governance token, or borro"
+ },
+ {
+  "name": "Float Protocol",
+  "cat": "Yield",
+  "tvl": 49736,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://drive.google.com/file/d/1Vg3nCThlArC44JFj7Di5HMWziPGMFbvl/view"
+  ],
+  "url": "",
+  "twitter": "FloatProtocol",
+  "desc": "Float Protocol is the decentralised monetary system of the future. At its core is the FLOAT token, a floating stablecoin that defends purchasing power"
+ },
+ {
+  "name": "Magic Land",
+  "cat": "Yield",
+  "tvl": 42441,
+  "age_d": null,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "0xMagicland",
+  "desc": "Magicland is an emerging sustainable decentralized one-stop DeFI portal that starts with yield farming powered on Arbitrium."
+ },
+ {
+  "name": "Lunos",
+  "cat": "Insurance",
+  "tvl": 40782,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/Uno-Re/audit-reports"
+  ],
+  "url": "https://lunos.xyz/",
+  "twitter": "LunosDAO",
+  "desc": "Automated on-chain coverage & advanced security to protect your assets. No claims, no delays\u2014just protection that works."
+ },
+ {
+  "name": "Warp Protocol",
+  "cat": "Lending",
+  "tvl": 39267,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/warp-finance/warpv2/blob/c0d26e0b1a74dccbe042aae65cc964f0d391630a/audits/Trail%20of%20Bits%20Second%20Audit%20Warp%20Finance.pdf"
+  ],
+  "url": "",
+  "twitter": "warpfinance",
+  "desc": "Warp Finance is an open-source protocol on Ethereum that is creating a novel use case for unused Liquidity Provider (LP) tokens by allowing them to be"
+ },
+ {
+  "name": "Multiplier",
+  "cat": "Lending",
+  "tvl": 39240,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://mcl-docs.multiplier.finance/developers/security-and-audits"
+  ],
+  "url": "",
+  "twitter": "MultiplierMXX",
+  "desc": "Multiplier is an algorithmic money market system designed to bring secure and unique lending and borrowing opportunities like flash loans onto the Bin"
+ },
+ {
+  "name": "CompliFi",
+  "cat": "Derivatives",
+  "tvl": 37422,
+  "age_d": null,
+  "chains": [
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/CompliFi/complifi-protocol/tree/master/audits",
+   "https://github.com/CompliFi/complifi-amm/tree/master/audits"
+  ],
+  "url": "",
+  "twitter": "CompliFi_Pro",
+  "desc": "Decentralised derivatives. No defaults, no margin calls, no liquidations."
+ },
+ {
+  "name": "Tranche Finance",
+  "cat": "Yield",
+  "tvl": 36714,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Ethereum",
+   "Fantom",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.tranche.finance/tranchefinance/governance/security-and-development#security-audits"
+  ],
+  "url": "",
+  "twitter": "TrancheFinance",
+  "desc": "Tranche splits any yield-generating asset from the DeFi ecosystem into two perpetual assets: a fixed rate asset that lets you manage your risk, and a "
+ },
+ {
+  "name": "zkSync Lite Bridge",
+  "cat": "Canonical Bridge",
+  "tvl": 34633,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://lite.zksync.io/",
+  "twitter": "zksync",
+  "desc": "Bridge between zkSync Lite and Ethereum chain"
+ },
+ {
+  "name": "Mushrooms Finance",
+  "cat": "Yield Aggregator",
+  "tvl": 33025,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Ethereum",
+   "Fantom",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/mushroomsforest/deployment/blob/main/security.md"
+  ],
+  "url": "",
+  "twitter": "MushroomsFinan1",
+  "desc": "Mushrooms Finance is yet another crypto earning vault with focus on seeking sustainable profit in DeFi universe"
+ },
+ {
+  "name": "Boardwalk",
+  "cat": "Launchpad",
+  "tvl": 31169,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Base",
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/useboardwalk/boardwalk-contracts/tree/main/audits"
+  ],
+  "url": "https://www.useboardwalk.com/",
+  "twitter": "useboardwalk",
+  "desc": "Boardwalk is a permissionless, community-centered fee-protection protocol for launching, discovering, and participating in token economies."
+ },
+ {
+  "name": "zLot",
+  "cat": "Liquid Staking",
+  "tvl": 30034,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "zLOTFinance",
+  "desc": "The first staking protocol built upon Hegic."
+ },
+ {
+  "name": "Aladdin DAO",
+  "cat": "Yield Aggregator",
+  "tvl": 28980,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://www.aladdin.club/audits/PeckShield-Audit-Report-AladdinDAO2-v1.0.pdf",
+   "https://www.certik.org/projects/aladdindao"
+  ],
+  "url": "https://www.aladdin.club",
+  "twitter": "aladdindao",
+  "desc": "AladdinDAO is a decentralized network to shift crypto investments from venture capitalists to wisdom of crowds through collective value discovery. At "
+ },
+ {
+  "name": "Alkemi",
+  "cat": "Lending",
+  "tvl": 28964,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/AlkemiNetwork/alkemi-earn-security-audit"
+  ],
+  "url": "https://alkemi.network",
+  "twitter": "AlkemiNetwork",
+  "desc": "Alkemi Network is bridging CeFi to DeFi, building an institution-grade liquidity network for financial institutions and individuals to access professi"
+ },
+ {
+  "name": "Bao Masterchef V1",
+  "cat": "Farm",
+  "tvl": 28532,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://baofinance.io/",
+  "twitter": "BaoCommunity",
+  "desc": "Bao Finance is like a combination of SNX and Aave, but use LP tokens for collateral. Rather than re-invent the wheel, Bao will create new features for"
+ },
+ {
+  "name": "Cycle Finance",
+  "cat": "Yield Aggregator",
+  "tvl": 28212,
+  "age_d": null,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "CycleProtocol",
+  "desc": "The Cycle Protocol is a yield optimizer containing vaults and a liquidity mining program."
+ },
+ {
+  "name": "Ooki",
+  "cat": "Lending",
+  "tvl": 27516,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum",
+   "Optimism",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.ooki.com/developers/audits"
+  ],
+  "url": "",
+  "twitter": "OokiTrade",
+  "desc": "Ooki is a flexible decentralized finance protocol for margin trading, borrowing, lending and staking on multiple blockchains."
+ },
+ {
+  "name": "Ethernity Chain",
+  "cat": "Yield",
+  "tvl": 25783,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "EthernityChain",
+  "desc": "A community-oriented platform that produces limited edition authenticated NFTs and trading cards created by your favorite artists and endorsed by nota"
+ },
+ {
+  "name": "Tidal Finance",
+  "cat": "Insurance",
+  "tvl": 24741,
+  "age_d": null,
+  "chains": [
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.tidal.finance/audit-report"
+  ],
+  "url": "https://tidal.finance",
+  "twitter": "tidaldefi",
+  "desc": "TIDAL is a decentralized discretionary mutual cover protocol that offers the DeFi community the ability to hedge against the failure of any DeFi proto"
+ },
+ {
+  "name": "Auctus",
+  "cat": "Options",
+  "tvl": 24097,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.auctus.org/security#audits"
+  ],
+  "url": "https://auctus.org/",
+  "twitter": "AuctusOptions",
+  "desc": "Auctus brings on-chain options to the ecosystem."
+ },
+ {
+  "name": "AlienX",
+  "cat": "Chain",
+  "tvl": 23880,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://alienxchain.io/home",
+  "twitter": "ALIENXchain",
+  "desc": "AlienX is an EVM-compatible blockchain built with Arbitrum Orbit technology that uses a distributed network of AI-driven nodes to secure and operate t"
+ },
+ {
+  "name": "BarnBridge",
+  "cat": "Yield Aggregator",
+  "tvl": 23805,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum",
+   "Optimism"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/BarnBridge/BarnBridge-PM/tree/master/audits"
+  ],
+  "url": "",
+  "twitter": "Barn_Bridge",
+  "desc": "A fluctuations derivatives protocol for hedging yield sensitivity and market price."
+ },
+ {
+  "name": "Singular Farm",
+  "cat": "Yield",
+  "tvl": 23028,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Fantom",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://solidity.finance/audits/MasterSing"
+  ],
+  "url": "",
+  "twitter": "singularfarm",
+  "desc": "Dual earning Yield Farm with USDT earning bank. Earn $JOE and $SING at once with your LP with high APR. Launched as an official partner of TraderJoe."
+ },
+ {
+  "name": "Gaj Finance",
+  "cat": "Yield",
+  "tvl": 21901,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://solidity.finance/audits/Gaj-NFT-Farming"
+  ],
+  "url": "",
+  "twitter": "GajFinance",
+  "desc": "Gaj, previously known as PolyGaj, is a multichain platform covering the two most promising subsects of cryptocurrency namely DeFi and NFT."
+ },
+ {
+  "name": "TrueFi",
+  "cat": "Uncollateralized Lending",
+  "tvl": 21713,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/trusttoken/audits/tree/master/TrueFi"
+  ],
+  "url": "",
+  "twitter": "TrueFiDAO",
+  "desc": "Earn high yields on stablecoin loans and borrow capital without collateral"
+ },
+ {
+  "name": "StakeSteak",
+  "cat": "Yield",
+  "tvl": 21674,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "stake_steak",
+  "desc": "The first Fantom-native, interest-bearing Stable Coin: iFUSD"
+ },
+ {
+  "name": "Parrot Defi",
+  "cat": "Farm",
+  "tvl": 21313,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "Parrotdefi1",
+  "desc": "Yield farming and staking on the Arbitrum network."
+ },
+ {
+  "name": "Bella Protocol",
+  "cat": "Yield",
+  "tvl": 20530,
+  "age_d": null,
+  "chains": [
+   "Ethereum",
+   "Manta",
+   "Mantle",
+   "zkSync Era"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/peckshield/publications/blob/master/audit_reports/bella_audit_report_2020_48_en_1_0.pdf"
+  ],
+  "url": "",
+  "twitter": "BellaProtocol",
+  "desc": "Aiming to help users unleash the liquidity potential and maximize crypto yields across multiple chains, Bella Protocol provides a suite of streamlined"
+ },
+ {
+  "name": "Vanilla",
+  "cat": "Derivatives",
+  "tvl": 20108,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/vanilladefi/contracts/tree/main/audits"
+  ],
+  "url": "",
+  "twitter": "VanillaDeFi",
+  "desc": "A decentralized meritocracy for investors"
+ },
+ {
+  "name": "NAOS Finance",
+  "cat": "RWA",
+  "tvl": 18619,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://certificate.quantstamp.com/full/naos-formation",
+   "https://www.certik.com/projects/naosfinance"
+  ],
+  "url": "",
+  "twitter": "naos_finance",
+  "desc": "A DeFi lending protocol allowing lenders and SME borrowers to facilitate permissionless and borderless loaning/borrowing transactions"
+ },
+ {
+  "name": "Orion Money",
+  "cat": "Yield",
+  "tvl": 17892,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://orion.money/security-and-audits"
+  ],
+  "url": "",
+  "twitter": "orion_money",
+  "desc": "Orion Money's vision is to become a cross-chain stablecoin bank providing seamless and frictionless stablecoin saving, lending, and spending."
+ },
+ {
+  "name": "YFDAI",
+  "cat": "Services",
+  "tvl": 17817,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://attest.im/attestation/searchResult?qurey=4c533d00766c4b2a9761fad5da78b56f",
+   "https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-MSgvIS2RfKE66pfkI81%2F-MUv-RfymyB6PvCRlnwz%2F-MUv1a71AjJ6p3Bgz5ui%2FChannels-Audit-Report-030321(1).pdf?alt=media&token=1af91ea6-d3d0-4ba3-8784-5dce6a907930"
+  ],
+  "url": "",
+  "twitter": "YfdaiF",
+  "desc": "Bridging the Worlds of Traditional Finance and Decentralised Networks"
+ },
+ {
+  "name": "Composable Finance",
+  "cat": "Cross Chain Bridge",
+  "tvl": 16696,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "ComposableFin",
+  "desc": "Composable is a hyper liquidity infrastructure layer for DeFi assets powered by Layer 2 Ethereum and Polkadot."
+ },
+ {
+  "name": "Teddy Cash",
+  "cat": "CDP",
+  "tvl": 16189,
+  "age_d": null,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "TeddyCashLive",
+  "desc": "Teddy Cash is a fork of the Liquity protocol for the Avalanche C-Chain."
+ },
+ {
+  "name": "ACoconut",
+  "cat": "Yield",
+  "tvl": 14170,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.acoconut.fi/security"
+  ],
+  "url": "",
+  "twitter": null,
+  "desc": "ACoconut provides the first cross-chain yield aggregator for BTC DeFi users. ACoconut v2 consists of two open protocols: BTC+ and acBTC. BTC+ is a liq"
+ },
+ {
+  "name": "Channels Finance",
+  "cat": "Lending",
+  "tvl": 14150,
+  "age_d": null,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://channelsofficial.gitbook.io/channels-finance-english/overview/audit"
+  ],
+  "url": "",
+  "twitter": "ChannelsFinance",
+  "desc": "Channels.finance is the first fully decentralized lending platform on Heco, focusing on user asset security. The first release supports LP mortgage le"
+ },
+ {
+  "name": "Deri Chain",
+  "cat": "Chain",
+  "tvl": 13607,
+  "age_d": null,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://deri.io/",
+  "twitter": "DeriProtocol",
+  "desc": "Deri Chain is a decentralized L3 built on Arbitrum."
+ },
+ {
+  "name": "Vee Finance",
+  "cat": "Lending",
+  "tvl": 13442,
+  "age_d": null,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://vee.finance/home#contract"
+  ],
+  "url": "",
+  "twitter": "VeeFinance",
+  "desc": "Vee Finance is a DeFi lending platform for traditional financed and crypto users alike."
+ },
+ {
+  "name": "Amigo",
+  "cat": "SoFi",
+  "tvl": 13158,
+  "age_d": null,
+  "chains": [
+   "Abstract"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://amigo.cool/",
+  "twitter": "TryAmigoApp",
+  "desc": "Own a stake in creators you believe in."
+ },
+ {
+  "name": "Guard-Helmet",
+  "cat": "Insurance",
+  "tvl": 12319,
+  "age_d": null,
+  "chains": [
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://www.certik.org/projects/helmet"
+  ],
+  "url": "",
+  "twitter": "Helmet_insure",
+  "desc": "Guard.insure is a peer-to-peer (P2P) price-shield insurance protocol launched on Binance Smart Chain (BSC) fistly with the form of helmet.insure and n"
+ },
+ {
+  "name": "ENIBridge",
+  "cat": "Canonical Bridge",
+  "tvl": 11484,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "ENI__Official",
+  "desc": "The official cross-chain bridge built on Orbiter Finance."
+ },
+ {
+  "name": "Newland",
+  "cat": "Yield",
+  "tvl": 11021,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://www.fairyproof.com/doc/Newland-Audit-Report-080321.pdf"
+  ],
+  "url": "",
+  "twitter": "Newlandplatform",
+  "desc": "Newland is a one-stop decentralized ecological platform that integrates multiple public chains"
+ },
+ {
+  "name": "DAOventures",
+  "cat": "Yield",
+  "tvl": 10244,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "VenturesDao",
+  "desc": "DAOventures is a DeFi technologies based automated investment fund that automatically invests into DeFi protocols and generates returns for the fund b"
+ },
+ {
+  "name": "StormSwap",
+  "cat": "Yield",
+  "tvl": 10059,
+  "age_d": null,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://paladinsec.co/projects/stormswap-finance/"
+  ],
+  "url": "",
+  "twitter": "StormSwap_Fi",
+  "desc": "StormSwap is a decentralized yield farming & yield aggegrator protocol powered by Avalanche"
+ },
+ {
+  "name": "Hedgey",
+  "cat": "Payments",
+  "tvl": 8984,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Avalanche",
+   "Base",
+   "Berachain",
+   "Ethereum",
+   "Linea",
+   "Mode",
+   "Optimism",
+   "Polygon",
+   "zkSync Era"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://hedgey.gitbook.io/hedgey-community-docs/for-developers/audits"
+  ],
+  "url": "https://hedgey.finance/",
+  "twitter": "hedgeyfinance",
+  "desc": "Hedgey helps teams create & manage employee token vesting, investor lockups, & community token claims"
+ },
+ {
+  "name": "Wild Credit",
+  "cat": "Lending",
+  "tvl": 8666,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://code423n4.com/reports/2021-07-wildcredit/"
+  ],
+  "url": "",
+  "twitter": "WildCredit",
+  "desc": "Wild is a permissionless lending protocol featuring isolated lending pairs."
+ },
+ {
+  "name": "EnterDAO",
+  "cat": "Gaming",
+  "tvl": 8632,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "EnterDao",
+  "desc": "Through a lineup of core products, EnterDAO aims to empower users, metaverse land owners, investors, brands, and degens of all kinds by tackling pain "
+ },
+ {
+  "name": "Grim Finance",
+  "cat": "Yield",
+  "tvl": 7962,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Avalanche",
+   "Fantom",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://solidity.finance/audits/GrimVault/",
+   "https://www.certik.com/projects/grim-finance"
+  ],
+  "url": "",
+  "twitter": "financegrim",
+  "desc": "Grim Finance is a Smart Yield Optimizer Platform that allows users to stake LP-Tokens issued from the AMM\u2019s in Smart Grim Vaults, which automatically "
+ },
+ {
+  "name": "Whiteheart",
+  "cat": "Options",
+  "tvl": 7825,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/peckshield/publications/blob/master/audit_reports/PeckShield-Audit-Report-Whiteheart-v1.0.pdf"
+  ],
+  "url": "",
+  "twitter": "WhiteheartDeFi",
+  "desc": "Hedge contracts by Whiteheart help #DeFi users to protect USD value of their $ETH & $WBTC"
+ },
+ {
+  "name": "Stryke SSOV",
+  "cat": "Options",
+  "tvl": 7152,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Avalanche",
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.stryke.xyz/references/audits"
+  ],
+  "url": "https://www.stryke.xyz/en",
+  "twitter": "dopex_io",
+  "desc": "Stryke is a maximum liquidity and minimal exposure options protocol"
+ },
+ {
+  "name": "QIAN",
+  "cat": "Synthetics",
+  "tvl": 6130,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://qian.finance/PeckShield-Audit-Report-QIAN2-v1.0.pdf"
+  ],
+  "url": "",
+  "twitter": null,
+  "desc": "QIAN protocol provides a set of open architecture allowing anyone to generate stable-value tokens, anytime and anywhere."
+ },
+ {
+  "name": "Arbi's Finance",
+  "cat": "Yield",
+  "tvl": 5890,
+  "age_d": null,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "arbis_finance",
+  "desc": "Arbi's Finance is the premier autocompounder on the Arbitrum network."
+ },
+ {
+  "name": "Strike",
+  "cat": "Lending",
+  "tvl": 5881,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://www.certik.org/projects/strikefinance"
+  ],
+  "url": "",
+  "twitter": "StrikeFinance",
+  "desc": "The Strike App enables users access to a fully decentralized money market powered on Ethereum 24/7/365 with a user-interface, api, or smart contracts."
+ },
+ {
+  "name": "Carbon Finance",
+  "cat": "Farm",
+  "tvl": 5778,
+  "age_d": null,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "carbonfi_io",
+  "desc": "Farming protocol on Arbitrum"
+ },
+ {
+  "name": "Zabu Finance",
+  "cat": "Yield Aggregator",
+  "tvl": 5548,
+  "age_d": null,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "zabufinance",
+  "desc": "Zabu Finance helps you maximize your yield through a full-fledged ecosystem with yield-aggregation, yield farming, staking, fundraising and focuses on"
+ },
+ {
+  "name": "ShadeCash",
+  "cat": "Privacy",
+  "tvl": 5469,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "ShadeCash_",
+  "desc": "Shade.Cash is a decentralized protocol for private transactions on the Fantom Opera network."
+ },
+ {
+  "name": "Defirex",
+  "cat": "Yield",
+  "tvl": 5231,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/pessimistic-io/audits/blob/main/DeFireX%20Security%20Audit%20by%20Pessimistic%20Public.pdf"
+  ],
+  "url": "",
+  "twitter": "DeFireXorg",
+  "desc": "DeFireX is a group of smart contracts that works with leading DeFi projects for ensuring its users the most reliable and highly profitable level of li"
+ },
+ {
+  "name": "Stacker Ventures",
+  "cat": "Yield",
+  "tvl": 4110,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "StackerVentures",
+  "desc": "Stacker Ventures is a community-run protocol for initiating and managing pooled capital on the blockchain."
+ },
+ {
+  "name": "Flashstake OLD",
+  "cat": "Yield",
+  "tvl": 4073,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://t.co/ngdoQ1FYv1?amp=1"
+  ],
+  "url": "https://flashstake.io/",
+  "twitter": "flashstake",
+  "desc": "Flashstaking introduces the concept of locking money today and earning money from the future - the time travel of money. All done in a decentralized, "
+ },
+ {
+  "name": "Robo-Advisor for Yield",
+  "cat": "Yield",
+  "tvl": 3927,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://staked.us/v/robo-advisor-yield/",
+  "twitter": null,
+  "desc": "RAY is a set of smart contracts that automatically move crypto assets to the highest yielding opportunity."
+ },
+ {
+  "name": "The Grand Banks",
+  "cat": "Yield",
+  "tvl": 3917,
+  "age_d": null,
+  "chains": [
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://www.certik.org/projects/grandbanks"
+  ],
+  "url": "",
+  "twitter": "Grandbanks13",
+  "desc": "The Grand Banks brings yield farming back to basics. No barrier for entry, no multiple steps to farming \u2014 just the simple, easy depositing of your tok"
+ },
+ {
+  "name": "CryptoYieldFocus",
+  "cat": "Farm",
+  "tvl": 3378,
+  "age_d": null,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "CryptYieldFocus",
+  "desc": "Newly-launched yield farm and AMM based on Avalanche. Our goal is to create a strong and trustworthy foundation for which to be built upon by other bu"
+ },
+ {
+  "name": "Zivoe",
+  "cat": "RWA",
+  "tvl": 3045,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/sherlock-protocol/sherlock-reports/blob/main/audits/2024.04.25%20-%20Final%20-%20Zivoe%20Audit%20Report.pdf",
+   "https://github.com/runtimeverification/publications/blob/main/reports/smart-contracts/Zivoe_Core_Contracts.pdf"
+  ],
+  "url": "https://zivoe.com/",
+  "twitter": "ZivoeProtocol",
+  "desc": "Zivoe is a real-world asset (RWA) credit protocol that enables qualified participants to gain tokenized exposure to the consumer lending market"
+ },
+ {
+  "name": "Robo-Vault",
+  "cat": "Yield",
+  "tvl": 2733,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.robo-vault.com/security"
+  ],
+  "url": "",
+  "twitter": "robo_vault",
+  "desc": "Single asset automated yield generation"
+ },
+ {
+  "name": "Blizzard",
+  "cat": "Yield",
+  "tvl": 2536,
+  "age_d": null,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "BlizzardAVAX",
+  "desc": "Blizzard is an advanced yield accumulator that helps users (even with little technical know-how) to achieve an optimised farming adventure, helping th"
+ },
+ {
+  "name": "CHFRY Finance",
+  "cat": "Lending",
+  "tvl": 2322,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://raw.githubusercontent.com/chfry-finance/chfry-protocol/master/docs/PeckShield-Audit-Report-Chfry-v1.0.pdf"
+  ],
+  "url": "",
+  "twitter": "ChfryFinance",
+  "desc": "CHFRY is a lending protocol that powers automatic repayment of debt by deploying capital to high yield strategies and with flash loans"
+ },
+ {
+  "name": "MANTRA DAO",
+  "cat": "Lending",
+  "tvl": 2286,
+  "age_d": null,
+  "chains": [
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://www.slowmist.com/en/security-audit-certificate.html?id=1193264f67af7c2bb840306b82eff6218471cf4fbed79a7d48d6a01a93030e35"
+  ],
+  "url": "https://mantrachain.io/",
+  "twitter": "MANTRADAO",
+  "desc": "MANTRA DAO leverages the wisdom of the crowd to give financial control back to the people to grow wealth together."
+ },
+ {
+  "name": "Kroma",
+  "cat": "Chain",
+  "tvl": 2286,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://kroma.network/",
+  "twitter": "kroma_network",
+  "desc": "Kroma is developing a universal ZK Rollup on the Optimism Bedrock architecture, currently using an Optimistic Rollup with ZK fault proofs and a Scroll"
+ },
+ {
+  "name": "Erasure",
+  "cat": "Derivatives",
+  "tvl": 2114,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/erasureprotocol/NMR/tree/master/audits"
+  ],
+  "url": "https://numer.ai/",
+  "twitter": "numerai",
+  "desc": "A new kind of hedge fund built by a network of data scientists"
+ },
+ {
+  "name": "Synthetix v1+v2",
+  "cat": "Synthetics",
+  "tvl": 1789,
+  "age_d": null,
+  "chains": [
+   "Ethereum",
+   "Optimism"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.synthetix.io/v/v3/for-developers/smart-contract-audits/"
+  ],
+  "url": "https://synthetix.io",
+  "twitter": "synthetix",
+  "desc": "Synthetix is a derivatives liquidity protocol providing the backbone for derivatives trading in DeFi."
+ },
+ {
+  "name": "TrustSwap",
+  "cat": "Token Locker",
+  "tvl": 1727,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://trustswap.com/",
+  "twitter": "TrustSwap",
+  "desc": "TrustSwap is building foundational layers in the rapidly-emerging decentralized finance landscape with services like SmartLocks, Mint, Launchpad, Swap"
+ },
+ {
+  "name": "unFederalReserve",
+  "cat": "Lending",
+  "tvl": 948,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://lending-docs.unfederalreserve.com/docs/security/#security-audits"
+  ],
+  "url": "",
+  "twitter": "Unfederalreser1",
+  "desc": "unFederalReserve is a banking SaaS company built on blockchain technology. Our banking products are designed for smaller U.S. Treasury chartered banks"
+ },
+ {
+  "name": "Defi Yield Protocol",
+  "cat": "Yield",
+  "tvl": 737,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://dyp.finance/audit"
+  ],
+  "url": "https://www.dypius.com/",
+  "twitter": "dypius",
+  "desc": "The DeFi Yield Protocol (DYP) is a unique platform that offers solutions for yield farming, staking, NFTs, and enabling users to leverage the advanced"
+ },
+ {
+  "name": "Aquarius",
+  "cat": "CDP",
+  "tvl": 634,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "Aquarius__Fi",
+  "desc": "Aquarius is a decentralized borrowing protocol with interest-free loans, high capital efficiency. we expect Aquarius to be the next MakerDao in the Fa"
+ },
+ {
+  "name": "KingDefi",
+  "cat": "Yield",
+  "tvl": 558,
+  "age_d": null,
+  "chains": [
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://hacken.io/wp-content/uploads/2021/09/KingDefi_16092021_SCAudit_Report_4.pdf",
+   "https://kingdefi.io/assets/files/CertikAuditFarms.pdf"
+  ],
+  "url": "",
+  "twitter": "KingDefi2",
+  "desc": "KingDeFi is a DeFi project combining two main areas: analytics and monitoring where we provide a market overview, liquidity pool search engine and por"
+ },
+ {
+  "name": "DeFiner",
+  "cat": "Lending",
+  "tvl": 376,
+  "age_d": null,
+  "chains": [
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.definer.org/"
+  ],
+  "url": "https://definer.org/",
+  "twitter": "DeFinerOrg",
+  "desc": "DeFiner empowers users to embrace the new digital economy and unlock instant value from their crypto assets through earning, lending, and borrowing."
+ },
+ {
+  "name": "Liqee",
+  "cat": "Lending",
+  "tvl": 331,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "liqeeio",
+  "desc": "Liqee is the world's first lending protocol for liquid staking assets (PoS staking tokens, DeFi staking tokens). The protocol also provides tokenizati"
+ },
+ {
+  "name": "Augmented Finance",
+  "cat": "Lending",
+  "tvl": 327,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://github.com/peckshield/publications/blob/master/audit_reports/PeckShield-Audit-Report-Augmented-v1.0.pdf"
+  ],
+  "url": "",
+  "twitter": "augmentedfin",
+  "desc": "Augmented Finance is a DeFi liquidity protocol for high-yield lending and low-interest borrowing of digital assets, launched fairly and enabled by art"
+ },
+ {
+  "name": "Sapphire Defi",
+  "cat": "Yield",
+  "tvl": 247,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "DefiSapphire",
+  "desc": "A multichain DeFi ecosystem"
+ },
+ {
+  "name": "Yield Wars",
+  "cat": "Farm",
+  "tvl": 226,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "YieldWars",
+  "desc": "DeFi Battle Royale. Humble Farmers, Rise Up & Fight!"
+ },
+ {
+  "name": "Bumper Finance",
+  "cat": "Options",
+  "tvl": 211,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.bumper.fi/security/audits"
+  ],
+  "url": "",
+  "twitter": "bumperfinance",
+  "desc": "Bumper protects the value of your crypto using an innovative DeFi protocol. Set the price you want to protect and if the market crashes, your asset wi"
+ },
+ {
+  "name": "Avaware",
+  "cat": "Yield",
+  "tvl": 153,
+  "age_d": null,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "AvawareAVE",
+  "desc": "Avaware.Network is a DeFi hub that features farming, a launchpad, and several NFT collections."
+ },
+ {
+  "name": "Yeet BGT Auction",
+  "cat": "Gamified Mining",
+  "tvl": 123,
+  "age_d": null,
+  "chains": [
+   "Berachain"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://www.yeetit.xyz/",
+  "twitter": "eatsleepyeet",
+  "desc": "Yeet is a gamified DeFi protocol on Berachain where users play timing-based BERA pool games, buy discounted ecosystem tokens through YeetBonds, and st"
+ },
+ {
+  "name": "The Dragon's Lair",
+  "cat": "Yield",
+  "tvl": 91,
+  "age_d": null,
+  "chains": [
+   "Avalanche"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.thedragonslair.farm/security-and-safety"
+  ],
+  "url": "",
+  "twitter": "DRGNCRYPTOGAMIN",
+  "desc": "The Dragon's Lair is a yield farm on the Avalanche network that serves as an on-ramp to our blockchain gaming ecosystem. This is the layer 1 of our pr"
+ },
+ {
+  "name": "Flux Protocol",
+  "cat": "Lending",
+  "tvl": 72,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://certik.org/projects/flux"
+  ],
+  "url": "",
+  "twitter": "zero1_flux",
+  "desc": "Flux Protocol is a borderless lending protocol, where low transaction fees and cross-chain interoperability are reality!"
+ },
+ {
+  "name": "Kyan Blue Perps",
+  "cat": "Derivatives",
+  "tvl": 46,
+  "age_d": null,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://app.kyan.blue/perps",
+  "twitter": "KyanExchange",
+  "desc": "Kyan Blue Perps is Kyan's perpetuals market."
+ },
+ {
+  "name": "OpenZK",
+  "cat": "Canonical Bridge",
+  "tvl": 28,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://www.openzk.net",
+  "twitter": "OpenZkNetwork",
+  "desc": "OpenZK is the first Layer 2 solution on ZK rollup technology to unite native ETH staking, liquid restaking, and stablecoin staking in one seamless pla"
+ },
+ {
+  "name": "Meso Finance Fantom Farm",
+  "cat": "Yield",
+  "tvl": 23,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://paladinsec.co/projects/meso-finance"
+  ],
+  "url": "",
+  "twitter": "mesofinance",
+  "desc": "Meso Finance, is building up on becoming a multi-chain project that can provide a multitude of products and services. We strive to provide awesome exp"
+ },
+ {
+  "name": "FutureSwap",
+  "cat": "Derivatives",
+  "tvl": 13,
+  "age_d": null,
+  "chains": [
+   "Arbitrum",
+   "Avalanche",
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.futureswap.com/other/audits"
+  ],
+  "url": "",
+  "twitter": "futureswapx",
+  "desc": "Futureswap is a decentralized perpetuals exchange governed by the community."
+ },
+ {
+  "name": "BabyPig Finance",
+  "cat": "Yield",
+  "tvl": 12,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "BabypigCash",
+  "desc": "Experience the Real Yield Farming on Fantom Protocol. Our ultimate aim is to built a stable passive earning platform to our investors and to become a "
+ },
+ {
+  "name": "Fei Protocol",
+  "cat": "Algo-Stables",
+  "tvl": 8,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.fei.money/audit"
+  ],
+  "url": "",
+  "twitter": "feiprotocol",
+  "desc": "FEI uses a new kind of stablecoin mechanism called direct incentives. It is more capital efficient, has a fair distribution, and is fully decentralize"
+ },
+ {
+  "name": "Feeder Finance",
+  "cat": "Yield",
+  "tvl": 6,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://docs.feeder.finance/audits"
+  ],
+  "url": "https://www.feeder.finance",
+  "twitter": "FeederFinance",
+  "desc": "Feeder Finance reimagines the DeFi journey with a simplified user experience, unique diversified vaults, and multichain vault aggregation -- Think les"
+ },
+ {
+  "name": "Zkfair",
+  "cat": "Canonical Bridge",
+  "tvl": 5,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "ZKFCommunity",
+  "desc": "ZKFair is the a community ZK-L2 based on Polygon CDK and Celestia DA, powered by Lumoz, a ZK-RaaS provider. ZKFair utilizes the stablecoin USDC as the"
+ },
+ {
+  "name": "Mint Bridge",
+  "cat": "Canonical Bridge",
+  "tvl": 0,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://bridge.mintchain.io/",
+  "twitter": "superbridgeapp",
+  "desc": "The Mint Mainnet native bridge contracts are deployed as part of the Mint Mainnet rollup. They control the flow of funds to and from Ethereum and Mint"
+ },
+ {
+  "name": "RSS3 Bridge",
+  "cat": "Canonical Bridge",
+  "tvl": 0,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://explorer.rss3.io/bridge",
+  "twitter": "rss3_",
+  "desc": "Bridge to/from the VSL chain"
+ },
+ {
+  "name": "Growth DeFi",
+  "cat": "Yield",
+  "tvl": 0,
+  "age_d": null,
+  "chains": [
+   "Avalanche",
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://consensys.net/diligence/audits/2020/12/growth-defi-v1/"
+  ],
+  "url": "https://growthdefi.com/",
+  "twitter": "GrowthDefi",
+  "desc": "Growth DeFi provides an advanced suite of products to blockchain protocols and investors, helping to increase their capital efficiency."
+ },
+ {
+  "name": "Eventum Bridge",
+  "cat": "Canonical Bridge",
+  "tvl": 0,
+  "age_d": null,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://evedex.com/en-US/",
+  "twitter": "EVEDEX",
+  "desc": "Canonical bridge for Eventum, a Hybrid DEX chain powered by Arbitrum Orbit"
+ },
+ {
+  "name": "ForTube",
+  "cat": "Lending",
+  "tvl": 0,
+  "age_d": null,
+  "chains": [
+   "Ethereum",
+   "Polygon"
+  ],
+  "audits": 0,
+  "audit_links": [
+   "https://for.tube/security"
+  ],
+  "url": "",
+  "twitter": "ForTubeFi",
+  "desc": "Based on The Force Protocol, ForTube is committed to providing decentralized lending services for cryptoasset enthusiasts around the world."
+ },
+ {
+  "name": "Rari Chain",
+  "cat": "Canonical Bridge",
+  "tvl": 0,
+  "age_d": null,
+  "chains": [
+   "Arbitrum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://rarichain.org/",
+  "twitter": "RariChain",
+  "desc": "RARI Chain is an EVM-equivalent Layer 3 blockchain powered by Arbitrum, featuring embedded royalties at the node level, low transaction costs, fast tr"
+ },
+ {
+  "name": "Tomb",
+  "cat": "Algo-Stables",
+  "tvl": 0,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "tombfinance",
+  "desc": "TOMB is a crosschain algorithmic stablecoin, pegged to the price of 1 FTM via seigniorage."
+ },
+ {
+  "name": "Supra Bridge",
+  "cat": "Canonical Bridge",
+  "tvl": 0,
+  "age_d": null,
+  "chains": [
+   "Ethereum"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "https://supra.com/",
+  "twitter": "SUPRA_Labs",
+  "desc": "Canonical bridge for Supra."
+ },
+ {
+  "name": "Morphex V1 Perps",
+  "cat": "Derivatives",
+  "tvl": 0,
+  "age_d": null,
+  "chains": [
+   "Fantom"
+  ],
+  "audits": 0,
+  "audit_links": [],
+  "url": "",
+  "twitter": "MorphexFTM",
+  "desc": "Decentralized perpetual exchange, powered by Fantom. (old version)"
+ }
+]

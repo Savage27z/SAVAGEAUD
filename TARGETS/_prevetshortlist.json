@@ -1,0 +1,44 @@
+[
+ {
+  "name": "EnterDAO",
+  "chain": "Ethereum",
+  "addr": "0xd779eEA9936B4e323cDdff2529eb6F13d0A4d66e",
+  "verified": true,
+  "contract": "ENTR",
+  "proxy": null,
+  "impl_note": "",
+  "cat": "Gaming",
+  "tvl": 8632,
+  "age_d": -0.0,
+  "audits": "0",
+  "url": ""
+ },
+ {
+  "name": "Antseed",
+  "chain": "Base",
+  "addr": "base:0xa87EE81b2C0Bc659307ca2D9ffdC38514DD85263",
+  "verified": null,
+  "contract": null,
+  "proxy": null,
+  "impl_note": "",
+  "cat": "Decentralized AI",
+  "tvl": 13180,
+  "age_d": 8.0,
+  "audits": "0",
+  "url": "https://antseed.com/"
+ },
+ {
+  "name": "HRUSD",
+  "chain": "Base",
+  "addr": "base:0x5587AD03F9565F1B86cfA51a3C744Bcc4039dAf0",
+  "verified": null,
+  "contract": null,
+  "proxy": null,
+  "impl_note": "",
+  "cat": "Basis Trading",
+  "tvl": 9153,
+  "age_d": 39.9,
+  "audits": "0",
+  "url": "https://hyperoute.xyz/"
+ }
+]
