@@ -1,0 +1,539 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "admin_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "usdc_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "gil_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "swapRouter_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "gilRecipient_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "NotAdmin",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "caller",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "NotBondContract",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "caller",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "SlippageAboveMaximum",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "requested",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "maximum",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "SwapFailed",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "ZeroAddress",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "AdminTransferred",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "previousAdmin",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "newAdmin",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "BondContractSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "bondContract",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "GilPurchased",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "usdcIn",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "gilOut",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "SlippageUpdated",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "bps",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "TokenBuyExecuted",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "TokenBuySkipped",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "usdcIn",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "reason",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "TwapGuardUpdated",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "windowSeconds",
+    "type": "uint32",
+    "indexed": false,
+    "internalType": "uint32"
+   },
+   {
+    "name": "maxDeviationTicks",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "minWindowSeconds",
+    "type": "uint32",
+    "indexed": false,
+    "internalType": "uint32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "BPS_DENOMINATOR",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "MAX_SLIPPAGE_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "POOL_FEE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint24",
+    "internalType": "uint24"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "admin",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "bondContract",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "executeTokenBuy",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "factory",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IUniswapV3Factory"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "gil",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IERC20"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "gilRecipient",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "gilSpotPriceUsdc",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "price",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "maxDeviationTicks",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "minTwapWindowSeconds",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "setBondContract",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "bondContract_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setSlippageBps",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "bps",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setTwapGuard",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "windowSeconds",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "maxDeviationTicks_",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "minWindowSeconds",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "slippageBps",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "swapRouter",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract ISwapRouter"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "totalGilBought",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "totalUsdcSpent",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "transferAdmin",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "newAdmin",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "twapGuardStatus",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "ok",
+    "type": "bool",
+    "internalType": "bool"
+   },
+   {
+    "name": "reason",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "twapWindowSeconds",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "usdc",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IERC20"
+   }
+  ],
+  "stateMutability": "view"
+ }
+]

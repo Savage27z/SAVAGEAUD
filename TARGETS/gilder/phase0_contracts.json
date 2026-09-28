@@ -1,0 +1,159 @@
+[
+ {
+  "addr": "0x13a18c43be8d5faefb4d00a70817af74be81f06c",
+  "size": 1922,
+  "match": "exact_match",
+  "nsrc": 2,
+  "files": [
+   "contracts/GilderAccessControl.sol",
+   "contracts/GilderProxy.sol"
+  ],
+  "name": [
+   "GilderUUPSProxy"
+  ]
+ },
+ {
+  "addr": "0x41e5d0ea02cccae1d8acf0d8533afd9ddf0f1bca",
+  "size": 1922,
+  "match": "exact_match",
+  "nsrc": 2,
+  "files": [
+   "contracts/GilderAccessControl.sol",
+   "contracts/GilderProxy.sol"
+  ],
+  "name": [
+   "GilderUUPSProxy"
+  ]
+ },
+ {
+  "addr": "0x5d25cfc927f95cb519c0fef438afaa64cb374e10",
+  "size": 23617,
+  "match": "exact_match",
+  "nsrc": 15,
+  "files": [
+   "contracts/GilderAccessControl.sol",
+   "contracts/GilderSystem.sol",
+   "contracts/interfaces/IAutoCompound.sol",
+   "contracts/interfaces/IBondContract.sol",
+   "contracts/interfaces/ICapitalRouter.sol",
+   "contracts/interfaces/IDepositMetadataRenderer.sol"
+  ],
+  "name": [
+   "BondContract"
+  ]
+ },
+ {
+  "addr": "0x809c4ee02279a38c9c32e63d4e1d9f0f8cc7da02",
+  "size": 10223,
+  "match": "exact_match",
+  "nsrc": 15,
+  "files": [
+   "contracts/GilderAccessControl.sol",
+   "contracts/GilderSystem.sol",
+   "contracts/interfaces/IAutoCompound.sol",
+   "contracts/interfaces/IBondContract.sol",
+   "contracts/interfaces/ICapitalRouter.sol",
+   "contracts/interfaces/IDepositMetadataRenderer.sol"
+  ],
+  "name": [
+   "DepositNFT"
+  ]
+ },
+ {
+  "addr": "0x904e0e92ebd0a40d04c5b54be4c75447879c2a5d",
+  "size": 1922,
+  "match": "exact_match",
+  "nsrc": 2,
+  "files": [
+   "contracts/GilderAccessControl.sol",
+   "contracts/GilderProxy.sol"
+  ],
+  "name": [
+   "GilderUUPSProxy"
+  ]
+ },
+ {
+  "addr": "0x9b937b72172c0706b51984a09992bb8007771e67",
+  "size": 8062,
+  "match": "exact_match",
+  "nsrc": 15,
+  "files": [
+   "contracts/GilderAccessControl.sol",
+   "contracts/GilderSystem.sol",
+   "contracts/interfaces/IAutoCompound.sol",
+   "contracts/interfaces/IBondContract.sol",
+   "contracts/interfaces/ICapitalRouter.sol",
+   "contracts/interfaces/IDepositMetadataRenderer.sol"
+  ],
+  "name": [
+   "SafeVault"
+  ]
+ },
+ {
+  "addr": "0x9e2ce9510a89deac71898fd0a86d84214c20607b",
+  "size": 1922,
+  "match": "exact_match",
+  "nsrc": 2,
+  "files": [
+   "contracts/GilderAccessControl.sol",
+   "contracts/GilderProxy.sol"
+  ],
+  "name": [
+   "GilderUUPSProxy"
+  ]
+ },
+ {
+  "addr": "0xa6c3b8dcb7c31132dcef64ef099f68b731db1e73",
+  "size": 1443,
+  "match": "exact_match",
+  "nsrc": 2,
+  "files": [
+   "contracts/GilderToken.sol",
+   "contracts/interfaces/IERC20.sol"
+  ],
+  "name": [
+   "GilderToken"
+  ]
+ },
+ {
+  "addr": "0xaa199c5605c221574d9738ada3d04ceea493e658",
+  "size": 1922,
+  "match": "exact_match",
+  "nsrc": 2,
+  "files": [
+   "contracts/GilderAccessControl.sol",
+   "contracts/GilderProxy.sol"
+  ],
+  "name": [
+   "GilderUUPSProxy"
+  ]
+ },
+ {
+  "addr": "0xd144cdceb6a49bc9be906964abeb6de5d39952d0",
+  "size": 4946,
+  "match": "exact_match",
+  "nsrc": 4,
+  "files": [
+   "contracts/GilderTokenBuyRouter.sol",
+   "contracts/interfaces/ICapitalRouter.sol",
+   "contracts/interfaces/IERC20.sol",
+   "contracts/interfaces/IUniswapV3.sol"
+  ],
+  "name": [
+   "GilderTokenBuyRouter"
+  ]
+ },
+ {
+  "addr": "0xf2e668f7e457d16e546ba56f531b007a17f946e8",
+  "size": 1922,
+  "match": "exact_match",
+  "nsrc": 2,
+  "files": [
+   "contracts/GilderAccessControl.sol",
+   "contracts/GilderProxy.sol"
+  ],
+  "name": [
+   "GilderUUPSProxy"
+  ]
+ }
+]

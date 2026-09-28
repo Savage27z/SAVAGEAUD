@@ -1,0 +1,103 @@
+[
+ {
+  "name": "Tokeshare",
+  "tvl": 5529,
+  "chain": "Base",
+  "contracts": 9,
+  "verified": 8,
+  "srcbytes": 0,
+  "note": ""
+ },
+ {
+  "name": "GILDer",
+  "tvl": 118091,
+  "chain": "Base",
+  "contracts": 11,
+  "verified": 4,
+  "srcbytes": 0,
+  "note": ""
+ },
+ {
+  "name": "Enhanced",
+  "tvl": 156326,
+  "chain": "Ethereum",
+  "contracts": 0,
+  "verified": 0,
+  "note": "no-addresses"
+ },
+ {
+  "name": "zERC20",
+  "tvl": 97340,
+  "chain": "Arbitrum",
+  "contracts": 0,
+  "verified": 0,
+  "note": "no-addresses"
+ },
+ {
+  "name": "Murk Finance",
+  "tvl": 64641,
+  "chain": "Monad",
+  "contracts": 0,
+  "verified": 0,
+  "note": "no-addresses"
+ },
+ {
+  "name": "Antseed",
+  "tvl": 13180,
+  "chain": "Base",
+  "contracts": 0,
+  "verified": 0,
+  "note": "no-addresses"
+ },
+ {
+  "name": "HRUSD",
+  "tvl": 9153,
+  "chain": "Base",
+  "contracts": 0,
+  "verified": 0,
+  "note": "no-addresses"
+ },
+ {
+  "name": "TermiX",
+  "tvl": 5560,
+  "chain": "Base",
+  "contracts": 0,
+  "verified": 0,
+  "note": "no-addresses"
+ },
+ {
+  "name": "KeelLabs",
+  "tvl": 4953,
+  "chain": "Arbitrum",
+  "contracts": 2,
+  "verified": 0,
+  "srcbytes": 0,
+  "note": ""
+ },
+ {
+  "name": "fija Finance",
+  "tvl": 3703,
+  "chain": "Arbitrum",
+  "contracts": 0,
+  "verified": 0,
+  "note": "no-addresses"
+ },
+ {
+  "name": "StonkBrokers Desks",
+  "tvl": 2839,
+  "chain": "Ethereum",
+  "contracts": 0,
+  "verified": 0,
+  "srcbytes": 0,
+  "note": ""
+ },
+ {
+  "name": "XAX V2",
+  "tvl": 2155,
+  "chain": "Ethereum",
+  "contracts": 0,
+  "verified": 0,
+  "srcbytes": 0,
+  "note": ""
+ }
+]

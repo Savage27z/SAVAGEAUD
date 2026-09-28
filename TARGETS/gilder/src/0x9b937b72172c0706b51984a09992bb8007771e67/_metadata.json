@@ -1,0 +1,1405 @@
+{
+ "compiler": {
+  "version": "0.8.30+commit.73712a01"
+ },
+ "language": "Solidity",
+ "output": {
+  "abi": [
+   {
+    "inputs": [],
+    "name": "AlreadyInitialized",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "council",
+      "type": "address"
+     }
+    ],
+    "name": "IncompatibleCouncil",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "requested",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "slice",
+      "type": "uint256"
+     }
+    ],
+    "name": "InsufficientUserPayout",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "requested",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "available",
+      "type": "uint256"
+     }
+    ],
+    "name": "LoanExceedsAvailable",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "MissingRole",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     }
+    ],
+    "name": "NoLoanToForfeit",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "caller",
+      "type": "address"
+     }
+    ],
+    "name": "NotFreezeAuthority",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "paid",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "owed",
+      "type": "uint256"
+     }
+    ],
+    "name": "OverRepayment",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "ProtocolFrozen",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "ReentrantCall",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "outstanding",
+      "type": "uint256"
+     }
+    ],
+    "name": "SettleBlockedByLoan",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "TransferFailed",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "caller",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "council",
+      "type": "address"
+     }
+    ],
+    "name": "UnfreezeNotFromCouncil",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "UnfreezeNotUnanimous",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "ZeroAddress",
+    "type": "error"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "liquidator",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "forfeited",
+      "type": "uint256"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "outstandingCleared",
+      "type": "uint256"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "liquidatorBonus",
+      "type": "uint256"
+     }
+    ],
+    "name": "CollateralForfeited",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "deployer",
+      "type": "address"
+     }
+    ],
+    "name": "DeployerFreezeRenounced",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "recipient",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "userPayout",
+      "type": "uint256"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "retainedBuffer",
+      "type": "uint256"
+     }
+    ],
+    "name": "EarlyExitReleased",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "bool",
+      "name": "enabled",
+      "type": "bool"
+     }
+    ],
+    "name": "EmergencyGuardianSet",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "council",
+      "type": "address"
+     }
+    ],
+    "name": "GuardianCouncilSet",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "borrower",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "LoanDisbursed",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "outstandingCleared",
+      "type": "uint256"
+     }
+    ],
+    "name": "LoanNetSettledAtVault",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "from",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "LoanRepaymentAccepted",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "Paused",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "PrincipalAccounted",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "recipient",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "PrincipalReleased",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "sender",
+      "type": "address"
+     }
+    ],
+    "name": "RoleGranted",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "sender",
+      "type": "address"
+     }
+    ],
+    "name": "RoleRevoked",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "Unpaused",
+    "type": "event"
+   },
+   {
+    "inputs": [],
+    "name": "BOND_ENGINE_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "COMPOUND_OPERATOR_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "LENDING_OPERATOR_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "LIQUIDATOR_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "NFT_MINTER_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "PARAMETER_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "PAUSER_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "TREASURY_OPERATOR_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "UPGRADER_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "address",
+      "name": "from",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "acceptRepayment",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "accountPrincipal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "accountedPrincipal",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "asset",
+    "outputs": [
+     {
+      "internalType": "contract IERC20",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     }
+    ],
+    "name": "availableForLoan",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "bondContract",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "deployer",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "address",
+      "name": "borrower",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "disburseLoan",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "address",
+      "name": "recipient",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "userPayout",
+      "type": "uint256"
+     }
+    ],
+    "name": "earlyExitRelease",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "retainedBuffer",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "emergencyFreeze",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "emergencyUnfreeze",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "address",
+      "name": "depositor",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "liquidator",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "liquidatorBonus",
+      "type": "uint256"
+     }
+    ],
+    "name": "forfeitCollateral",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "forfeited",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "outstandingCleared",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "grantRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "guardianCouncil",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "hasRole",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "admin",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "asset_",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "bondContract_",
+      "type": "address"
+     }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "isEmergencyGuardian",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "enabled",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "isFreezeAuthority",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     }
+    ],
+    "name": "loanedAgainst",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     }
+    ],
+    "name": "netSettleLoan",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "outstandingCleared",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "address",
+      "name": "from",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "noteRepayment",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "pause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "paused",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     }
+    ],
+    "name": "principalOf",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "protocolBuffer",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "address",
+      "name": "recipient",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "releasePrincipal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "renounceDeployerFreeze",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "revokeRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     },
+     {
+      "internalType": "bool",
+      "name": "enabled",
+      "type": "bool"
+     }
+    ],
+    "name": "setEmergencyGuardian",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "council",
+      "type": "address"
+     }
+    ],
+    "name": "setGuardianCouncil",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "treasury_",
+      "type": "address"
+     }
+    ],
+    "name": "setTreasury",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "totalLoaned",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "treasury",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "unpause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   }
+  ],
+  "devdoc": {
+   "kind": "dev",
+   "methods": {},
+   "title": "SafeVault",
+   "version": 1
+  },
+  "userdoc": {
+   "errors": {
+    "IncompatibleCouncil(address)": [
+     {
+      "notice": "Candidate council cannot answer `isUnanimousExecution()` - see setGuardianCouncil. Wiring it would brick the unfreeze path."
+     }
+    ],
+    "NotFreezeAuthority(address)": [
+     {
+      "notice": "Caller holds none of the freeze powers (\u00a7Emergency Brake)."
+     }
+    ],
+    "ProtocolFrozen()": [
+     {
+      "notice": "The emergency brake is engaged - see `whenNotPaused`."
+     }
+    ],
+    "UnfreezeNotFromCouncil(address,address)": [
+     {
+      "notice": "Unfreeze was not routed through the guardian council."
+     }
+    ],
+    "UnfreezeNotUnanimous()": [
+     {
+      "notice": "Unfreeze reached the council but not every owner had confirmed it."
+     }
+    ]
+   },
+   "kind": "user",
+   "methods": {
+    "acceptRepayment(uint256,address,uint256)": {
+     "notice": "Accepts loan principal repayment from the borrower. Interest paid goes to Treasury via a separate path (handled by Lending) - this method strictly returns principal capital to the SafeVault pool. Pulls USDC directly from `from` via transferFrom - `from` must have approved SafeVault as a spender. Kept for direct integrations and unit tests; the live Lending flow uses `noteRepayment` instead so the borrower only needs to approve Lending."
+    },
+    "disburseLoan(uint256,address,uint256)": {
+     "notice": "Disburses loan capital from a SINGLE deposit's collateral slice. `availableForLoan` (= principal - already-loaned) is the hard cap. Lending enforces its own 75% LTV on top. Crucially: this withdraws USDC from the SafeVault contract balance but leaves `_principalByDeposit[depositId]` untouched - the user's claim is preserved. `_loanedAgainstDeposit[depositId]` records the debt so settle/exit math knows to deduct."
+    },
+    "earlyExitRelease(uint256,address,uint256)": {
+     "notice": "Early-exit release: hand `userPayout` (principal - penalty) to the depositor and route the remainder (the forfeited penalty surplus) to the Distribution Reserve (Treasury) as FRESH USDC. The deposit's slice is fully closed out - `_principalByDeposit` -> 0. Spec \u00a74.5/\u00a78: the forfeited penalty belongs to the Distribution Reserve. For the Standard product retainedBuffer is 0 (the user's full SafeVault slice returns), so this is a no-op transfer. For the Turbo product the ~30% residual physically leaves SafeVault and is booked into the reserve via `creditEarlyExitPenalty`. If no treasury has been wired yet it falls back to the legacy `protocolBuffer` slot."
+    },
+    "emergencyFreeze()": {
+     "notice": "FREEZE - single-signer, instant, no timelock. Idempotent: freezing an already-frozen module is a no-op rather than a revert, so a batch freeze across every module cannot be derailed by one that is already down."
+    },
+    "emergencyUnfreeze()": {
+     "notice": "UNFREEZE - guardian council only, and only while that council is executing a transaction EVERY current owner confirmed. Before a council is wired (local / single-operator deployments) this falls back to the historical PAUSER_ROLE rule so a dev chain is not permanently bricked. Production deploys MUST call `setGuardianCouncil` - see scripts/deploy.js."
+    },
+    "forfeitCollateral(uint256,address,address,uint256)": {
+     "notice": "Liquidation: forfeit the full collateral slice, clear the debt, pay the liquidator their bonus, and return the REMAINING principal to the depositor (spec \u00a714.5: \"remaining principal returned to user\"). Math: surplus = principalSlice - outstanding. Liquidator gets `liquidatorBonus` (bounded by surplus); whatever is left after the bonus is paid straight back to `depositor`. No other depositor's slice is touched, so the capital-protection invariant holds."
+    },
+    "guardianCouncil()": {
+     "notice": "GilderMultisig acting as guardian council. Zero = not wired yet."
+    },
+    "isEmergencyGuardian(address)": {
+     "notice": "Extra freeze-only addresses (monitoring bots, on-call keeper, ...)."
+    },
+    "isFreezeAuthority(address)": {
+     "notice": "Who may pull the brake. Deliberately broad - during an active drain the expensive mistake is hesitating, not over-freezing."
+    },
+    "netSettleLoan(uint256)": {
+     "notice": "\u00a7Code-Review N4 (Jul 2026) - accounting-only loan close used by the atomic net-settlement path. The loaned USDC physically left the vault at `disburseLoan` time; here the deposit's own claim absorbs the debt: both the claim and the outstanding-loan record shrink by the same amount, so the vault's solvency invariant (balance >= accountedPrincipal - totalLoaned) is untouched. No USDC moves and no other depositor's slice is involved."
+    },
+    "noteRepayment(uint256,address,uint256)": {
+     "notice": "Accounting-only counterpart to `acceptRepayment`. The caller (the Lending contract) must have ALREADY transferred `amount` USDC into SafeVault before invoking this - typically via a plain `asset.transfer(safeVault, principalPaid)` right before the call. Used by the borrower-facing repay flow so the borrower only needs a single approval (Lending) rather than two (Lending + SafeVault)."
+    },
+    "pause()": {
+     "notice": "Legacy name kept for existing scripts/ABIs - any single freeze authority, instant, no timelock."
+    },
+    "releasePrincipal(uint256,address,uint256)": {
+     "notice": "Full-slice release on settle/abandoned-fee. Refuses if any loan is still outstanding against the deposit - the lifecycle layer already enforces this on `settleMatured`, but we double-check at the vault so dormant-fee / abandoned-fee paths can't accidentally release pledged collateral."
+    },
+    "renounceDeployerFreeze()": {
+     "notice": "Drop the deployer's standing freeze power. A retired deploy key that can still halt the protocol is a griefing handle (freeze costs one tx; recovery costs every signer), so this should be called alongside scripts/renounce-deployer.js once governance is multisig-only."
+    },
+    "setEmergencyGuardian(address,bool)": {
+     "notice": "Add/remove a freeze-only guardian (no unfreeze power is ever granted)."
+    },
+    "setGuardianCouncil(address)": {
+     "notice": "Wire (or rotate) the guardian council. First wiring is an admin action (it happens at deploy, before the council exists). Every ROTATION afterwards must come from the sitting council under a unanimously-confirmed execution. That second rule is load-bearing. DEFAULT_ADMIN_ROLE is held by the multisig, so without it a mere THRESHOLD of signers (2-of-3, plus the 48h timelock) could repoint `guardianCouncil` at a contract of their own whose `isUnanimousExecution()` always returns true - and then unfreeze without unanimity. Rotating the council is therefore held to the same bar as the thing it protects. It can never be cleared back to zero either, which would re-open the single-signer fallback."
+    },
+    "setTreasury(address)": {
+     "notice": "Sets the Distribution Reserve (Treasury) that forfeited early-exit  penalty USDC is routed to. Must be wired before any Turbo early exit  for the penalty to reach the reserve. "
+    },
+    "unpause()": {
+     "notice": "Legacy name kept for existing scripts/ABIs - guardian council only, and only under a unanimously-confirmed execution."
+    }
+   },
+   "notice": "Per-deposit principal custody PLUS the lending pool. Spec \u00a76 invariant: each deposit's loan capital comes EXCLUSIVELY from its own SafeVault slice - never from another deposit's slice. The `_loanedAgainstDeposit` mapping tracks how much of each deposit's collateral has been disbursed as a loan; `availableForLoan` returns the remaining headroom (capped externally by Lending's max-LTV). Solvency invariants:   - principalOf(id) >= loanedAgainst(id) for every id   - SafeVault USDC balance >= sum(principalOf) - sum(loanedAgainst)     so every depositor without a loan can always exit/settle in full. Capital flows:   - openDeposit       -> accountPrincipal             (USDC in, claim up)   - loan opens        -> disburseLoan                 (USDC out, loaned up)   - loan repays       -> acceptRepayment              (USDC in, loaned down)   - liquidation       -> forfeitCollateral            (claim -> 0, debt -> 0,                                                       liquidator paid bonus)   - early exit        -> earlyExitRelease             (user gets payout,                                                       penalty stays as buffer)   - settle matured    -> releasePrincipal             (entire slice -> user;                                                       reverts if loan open)",
+   "version": 1
+  }
+ },
+ "settings": {
+  "compilationTarget": {
+   "contracts/GilderSystem.sol": "SafeVault"
+  },
+  "evmVersion": "paris",
+  "libraries": {},
+  "metadata": {
+   "bytecodeHash": "ipfs"
+  },
+  "optimizer": {
+   "enabled": true,
+   "runs": 200
+  },
+  "remappings": [],
+  "viaIR": true
+ },
+ "sources": {
+  "contracts/GilderAccessControl.sol": {
+   "keccak256": "0x525c3cd42d8f8b840d471a51743453e5c3b9a24371e91c80f7eca08d35e3a808",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://18ed2623f1b03af67273e98ee360d5ad9d30a920523498eb2917d635ed2f43cf",
+    "dweb:/ipfs/Qmbb4nSoYrfT2Cz4adBjLWshep63icuYqdiQY9bxPS3DEM"
+   ]
+  },
+  "contracts/GilderSystem.sol": {
+   "keccak256": "0x4d3a96ab7852bafc34c2615730d9740eea2f74e1155501e943c29dfcfea59b36",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://0d7197c6c60fd424b6960d6c21d293710ed9b7c8687ad71d7df017d38e3f9465",
+    "dweb:/ipfs/QmW1zK76PMpRphJV9Wdiy53JRgwt7fHvGZZyY5vRVMPmhV"
+   ]
+  },
+  "contracts/interfaces/IAutoCompound.sol": {
+   "keccak256": "0xae9e9244185d059f83dc70ca2ff32c9ab66ffb10bee821270466489a966f926a",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://d4a80f39e5f6cbb050bd16bd63c9ffe74c66872f83c65ba89486107cd37e06d0",
+    "dweb:/ipfs/QmNnqvcJXboMoBtW5461hq7ZtXSpznuGvmVDZu3fqJdtvZ"
+   ]
+  },
+  "contracts/interfaces/IBondContract.sol": {
+   "keccak256": "0xe4ea4d3ec605fee7bf611ab9b1b0a3a4ef102dc028deb199d48183c926a7232a",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://e8b735626adfaf342d7fa6c02ce928f0bfa3aeb9f2b9f0b601302193b8b144ba",
+    "dweb:/ipfs/QmY1tLA4BbtjZZagvzU9LsGqWp3a5zmXaU6NQ2R9eSDCXi"
+   ]
+  },
+  "contracts/interfaces/ICapitalRouter.sol": {
+   "keccak256": "0x0fc978a0af62a028db722573989f3dad9f4502d5f10932adf0da925e09fad2de",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://384b8144eb729d5677ffc701c85aecf4e57bb55a064958de3302b3f98750383f",
+    "dweb:/ipfs/QmSm7wg5Wdvq2b1XkF52hkeCFHBECxtAFSrEj9Mv7KtBjC"
+   ]
+  },
+  "contracts/interfaces/IDepositMetadataRenderer.sol": {
+   "keccak256": "0xf26b486407bef2cba4e02c380d787d0108adb576be6a85611a7af8e9bf53a701",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://96b33ecddf6ea9a56d526f2f581b90be4c1f6dca2907dc046630166940bb7e6d",
+    "dweb:/ipfs/QmP5zvwRJ2bqBRiJAaaK7zpCvWcaCztmm33fRt4ovdAdHA"
+   ]
+  },
+  "contracts/interfaces/IDepositNFT.sol": {
+   "keccak256": "0xeaa95c3bc219a2aefbfe9bbb17cb8fbfc6034b804070d0008f4dc82a610c7ead",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://8835765daff1842173a37a21541c31a22cdcb8a4ab98938998a81ba3498f610e",
+    "dweb:/ipfs/QmVv9xH3PerE2CxpFzNxTGxCKLmWzQaoWCcpixGTQQz9dg"
+   ]
+  },
+  "contracts/interfaces/IERC20.sol": {
+   "keccak256": "0x7fc9e7c88bea1bcc1eac7388065914c2ccf2311a602260dd67ebc33d775c929f",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://6f85a3da80bed30b6df4f19b9c105575912d380420beb12393bd19c5c11c7bc1",
+    "dweb:/ipfs/Qmcf2gsB1rTMTRrDQ2yRTvAgwxxrDDExM4kBCAPgFEzx61"
+   ]
+  },
+  "contracts/interfaces/IGilderTypes.sol": {
+   "keccak256": "0x9d034e615e7d205f00ef96452b1553d82dc54bb2cbecf68cb7906710b38f7d17",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://7b96a2a8c9c8f47e1f91265b5afe87a5c281a010ab2c9ff2be45f5a7612496f6",
+    "dweb:/ipfs/QmPJiNZ5XVLuFLgqZsMFYJJ5vUrxZV8PMq5keQUx2wcdJV"
+   ]
+  },
+  "contracts/interfaces/IGovernance.sol": {
+   "keccak256": "0xc76e99d769772f53c3e8cb4af8622089a1a01f2e9938e3b3731f035c1093dde5",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://0b5a0ec8a4b07a0406431c41a86b277b96a1d0c7b6553cfb72792af38cb56eb9",
+    "dweb:/ipfs/QmY9YEwHBLpHxWrhM8eapa5mb4H4uqGc4pUEEPKyJJihsc"
+   ]
+  },
+  "contracts/interfaces/ILending.sol": {
+   "keccak256": "0x59bbe22f386b4bfa1b03580993d4c55ee695c4b48204937731d13739d777cdba",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://e44ce1e069ea315ee6c84ee567c85fe49510e2110e0e2218dd726c49ce9d3854",
+    "dweb:/ipfs/Qmd8SpbcPL6mJopuh7cNjcyJuehqijNseVn91uYbJfNsrR"
+   ]
+  },
+  "contracts/interfaces/ISafeVault.sol": {
+   "keccak256": "0x46b5ef89758222440f67205c116a6965d90caa1e4a3ed55c06648a6e43a883b2",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://8fdc6b44f3fc19041bab9181d8ea60e81cade68715d2cc65b3d3146effcf7244",
+    "dweb:/ipfs/QmaEffFLFchuxHGwPBrZMgRxBxYnQGLqXVWoLaygXyuR3d"
+   ]
+  },
+  "contracts/interfaces/ITVT.sol": {
+   "keccak256": "0x87ea6f2d08040cdc6e12266153fa9903b7caaf12ce5e6c1a1d29abd1abbea134",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://99879f5bc6f88fba705bb204fdb52c70e24b4ad6ef329336c09f2d1061bc7447",
+    "dweb:/ipfs/Qmde5qnZadfXRD7BX52Zrb8UY8U1GgbHqJjQRgGXRznWW5"
+   ]
+  },
+  "contracts/interfaces/ITreasury.sol": {
+   "keccak256": "0x92ce462ced5db01e39f2456c1535210a75a3d91f61bc7a5e8af85313a4df0fdf",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://7dd8cff9c899a3632e4c282caced003695f7d0de5232c1d48cf11283e6ab0457",
+    "dweb:/ipfs/QmR9rvKkywuHcDGzNrpQivZVPsYfcPf3bzQqB2pRcBN9jC"
+   ]
+  },
+  "contracts/interfaces/ITurbo.sol": {
+   "keccak256": "0xdf164145f76bcde182d3df363664e28b1e515f5483ae1aadc69c6cbfc0908bb7",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://4baaef472e4014bb5caba567716b2f54b828404286d26a7f91e4fb9de2683e6c",
+    "dweb:/ipfs/QmeP621oc6YSJSMUpHqK8AkknKBo1zPMhohU2dYcsTWmLE"
+   ]
+  }
+ },
+ "version": 1
+}

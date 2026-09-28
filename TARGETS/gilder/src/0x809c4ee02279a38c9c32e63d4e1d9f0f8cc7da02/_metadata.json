@@ -1,0 +1,1622 @@
+{
+ "compiler": {
+  "version": "0.8.30+commit.73712a01"
+ },
+ "language": "Solidity",
+ "output": {
+  "abi": [
+   {
+    "inputs": [],
+    "name": "AlreadyInitialized",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "council",
+      "type": "address"
+     }
+    ],
+    "name": "IncompatibleCouncil",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "MissingRole",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "caller",
+      "type": "address"
+     }
+    ],
+    "name": "NotFreezeAuthority",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "NotMarketplace",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "NotOwnerOrApproved",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "ProtocolFrozen",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "ReentrantCall",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "TokenAlreadyMinted",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "TokenPoolAttached",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "TransferFailed",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "TransferNotWhitelisted",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "TransferToNonReceiver",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "caller",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "council",
+      "type": "address"
+     }
+    ],
+    "name": "UnfreezeNotFromCouncil",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "UnfreezeNotUnanimous",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "UnknownToken",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "ZeroAddress",
+    "type": "error"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "owner",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "approved",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "Approval",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "owner",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "operator",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "bool",
+      "name": "approved",
+      "type": "bool"
+     }
+    ],
+    "name": "ApprovalForAll",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": false,
+      "internalType": "string",
+      "name": "baseTokenUri",
+      "type": "string"
+     }
+    ],
+    "name": "BaseTokenUriSet",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "cyr",
+      "type": "address"
+     }
+    ],
+    "name": "CyrContractSet",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "deployer",
+      "type": "address"
+     }
+    ],
+    "name": "DeployerFreezeRenounced",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "DepositBurned",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "owner",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     }
+    ],
+    "name": "DepositTokenMinted",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "bool",
+      "name": "enabled",
+      "type": "bool"
+     }
+    ],
+    "name": "EmergencyGuardianSet",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "council",
+      "type": "address"
+     }
+    ],
+    "name": "GuardianCouncilSet",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     },
+     {
+      "indexed": false,
+      "internalType": "bool",
+      "name": "listed",
+      "type": "bool"
+     }
+    ],
+    "name": "ListedStateSet",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "marketplace",
+      "type": "address"
+     }
+    ],
+    "name": "MarketplaceSet",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "renderer",
+      "type": "address"
+     }
+    ],
+    "name": "MetadataRendererSet",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "Paused",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "sender",
+      "type": "address"
+     }
+    ],
+    "name": "RoleGranted",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "sender",
+      "type": "address"
+     }
+    ],
+    "name": "RoleRevoked",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "from",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "to",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "Transfer",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "bool",
+      "name": "allowed",
+      "type": "bool"
+     }
+    ],
+    "name": "TransferWhitelistSet",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "Unpaused",
+    "type": "event"
+   },
+   {
+    "inputs": [],
+    "name": "BOND_ENGINE_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "COMPOUND_OPERATOR_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "LENDING_OPERATOR_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "LIQUIDATOR_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "NFT_MINTER_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "PARAMETER_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "PAUSER_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "ROYALTY_BPS",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "ROYALTY_DENOMINATOR",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "TREASURY_OPERATOR_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "UPGRADER_ROLE",
+    "outputs": [
+     {
+      "internalType": "bytes32",
+      "name": "",
+      "type": "bytes32"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "to",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "approve",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "owner",
+      "type": "address"
+     }
+    ],
+    "name": "balanceOf",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "balance",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "bondContract",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "burn",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "cyrContract",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "deployer",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "emergencyFreeze",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "emergencyUnfreeze",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "getApproved",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "grantRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "guardianCouncil",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "hasRole",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "admin",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "bondContract_",
+      "type": "address"
+     }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "owner",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "operator",
+      "type": "address"
+     }
+    ],
+    "name": "isApprovedForAll",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "isEmergencyGuardian",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "enabled",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "isFreezeAuthority",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "isListed",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "listed",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "isPoolAttached",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "marketplace",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "metadataRenderer",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "owner",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "depositId",
+      "type": "uint256"
+     }
+    ],
+    "name": "mintForDeposit",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+     {
+      "internalType": "string",
+      "name": "",
+      "type": "string"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "ownerOf",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "owner",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "pause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "paused",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "renounceDeployerFreeze",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "bytes32",
+      "name": "role",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "revokeRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "salePrice",
+      "type": "uint256"
+     }
+    ],
+    "name": "royaltyInfo",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "receiver",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "royaltyAmount",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "royaltyReceiver",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "from",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "to",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "from",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "to",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "bytes",
+      "name": "data",
+      "type": "bytes"
+     }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "operator",
+      "type": "address"
+     },
+     {
+      "internalType": "bool",
+      "name": "approved",
+      "type": "bool"
+     }
+    ],
+    "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "string",
+      "name": "baseTokenUri",
+      "type": "string"
+     }
+    ],
+    "name": "setBaseTokenUri",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "cyr",
+      "type": "address"
+     }
+    ],
+    "name": "setCyrContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     },
+     {
+      "internalType": "bool",
+      "name": "enabled",
+      "type": "bool"
+     }
+    ],
+    "name": "setEmergencyGuardian",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "council",
+      "type": "address"
+     }
+    ],
+    "name": "setGuardianCouncil",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "bool",
+      "name": "listed",
+      "type": "bool"
+     }
+    ],
+    "name": "setListedState",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "marketplace_",
+      "type": "address"
+     }
+    ],
+    "name": "setMarketplace",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "renderer",
+      "type": "address"
+     }
+    ],
+    "name": "setMetadataRenderer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "receiver",
+      "type": "address"
+     }
+    ],
+    "name": "setRoyaltyReceiver",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     },
+     {
+      "internalType": "bool",
+      "name": "allowed",
+      "type": "bool"
+     }
+    ],
+    "name": "setTransferWhitelist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "bytes4",
+      "name": "interfaceId",
+      "type": "bytes4"
+     }
+    ],
+    "name": "supportsInterface",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
+     {
+      "internalType": "string",
+      "name": "",
+      "type": "string"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+     {
+      "internalType": "string",
+      "name": "uri",
+      "type": "string"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "from",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "to",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+     }
+    ],
+    "name": "transferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "transferWhitelist",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "allowed",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "unpause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   }
+  ],
+  "devdoc": {
+   "kind": "dev",
+   "methods": {},
+   "title": "DepositNFT",
+   "version": 1
+  },
+  "userdoc": {
+   "errors": {
+    "IncompatibleCouncil(address)": [
+     {
+      "notice": "Candidate council cannot answer `isUnanimousExecution()` - see setGuardianCouncil. Wiring it would brick the unfreeze path."
+     }
+    ],
+    "NotFreezeAuthority(address)": [
+     {
+      "notice": "Caller holds none of the freeze powers (\u00a7Emergency Brake)."
+     }
+    ],
+    "ProtocolFrozen()": [
+     {
+      "notice": "The emergency brake is engaged - see `whenNotPaused`."
+     }
+    ],
+    "UnfreezeNotFromCouncil(address,address)": [
+     {
+      "notice": "Unfreeze was not routed through the guardian council."
+     }
+    ],
+    "UnfreezeNotUnanimous()": [
+     {
+      "notice": "Unfreeze reached the council but not every owner had confirmed it."
+     }
+    ]
+   },
+   "kind": "user",
+   "methods": {
+    "burn(uint256)": {
+     "notice": "Burns a deposit token. Only the BondContract (NFT_MINTER_ROLE) may burn so a token cannot outlive its deposit lifecycle."
+    },
+    "emergencyFreeze()": {
+     "notice": "FREEZE - single-signer, instant, no timelock. Idempotent: freezing an already-frozen module is a no-op rather than a revert, so a batch freeze across every module cannot be derailed by one that is already down."
+    },
+    "emergencyUnfreeze()": {
+     "notice": "UNFREEZE - guardian council only, and only while that council is executing a transaction EVERY current owner confirmed. Before a council is wired (local / single-operator deployments) this falls back to the historical PAUSER_ROLE rule so a dev chain is not permanently bricked. Production deploys MUST call `setGuardianCouncil` - see scripts/deploy.js."
+    },
+    "guardianCouncil()": {
+     "notice": "GilderMultisig acting as guardian council. Zero = not wired yet."
+    },
+    "isEmergencyGuardian(address)": {
+     "notice": "Extra freeze-only addresses (monitoring bots, on-call keeper, ...)."
+    },
+    "isFreezeAuthority(address)": {
+     "notice": "Who may pull the brake. Deliberately broad - during an active drain the expensive mistake is hesitating, not over-freezing."
+    },
+    "isPoolAttached(uint256)": {
+     "notice": "\u00a7Phase 2 Marketplace - public view of the \u00a7M4 pool-attachment state so the marketplace can reject listing a pooled deposit up-front (a listed pooled NFT would otherwise fail at purchase when `_transfer` reverts with TokenPoolAttached)."
+    },
+    "pause()": {
+     "notice": "Legacy name kept for existing scripts/ABIs - any single freeze authority, instant, no timelock."
+    },
+    "renounceDeployerFreeze()": {
+     "notice": "Drop the deployer's standing freeze power. A retired deploy key that can still halt the protocol is a griefing handle (freeze costs one tx; recovery costs every signer), so this should be called alongside scripts/renounce-deployer.js once governance is multisig-only."
+    },
+    "setCyrContract(address)": {
+     "notice": "Registers the M4 Consolidated Yield Reinvestment module. Once set, any token whose deposit is attached to a Reinvestment Pool is frozen for transfer (spec \u00a7M4 \"marketplace transfer restriction logic for pooled NFTs\") - the position must be detached, which settles the pooled bonus, before the NFT can change hands."
+    },
+    "setEmergencyGuardian(address,bool)": {
+     "notice": "Add/remove a freeze-only guardian (no unfreeze power is ever granted)."
+    },
+    "setGuardianCouncil(address)": {
+     "notice": "Wire (or rotate) the guardian council. First wiring is an admin action (it happens at deploy, before the council exists). Every ROTATION afterwards must come from the sitting council under a unanimously-confirmed execution. That second rule is load-bearing. DEFAULT_ADMIN_ROLE is held by the multisig, so without it a mere THRESHOLD of signers (2-of-3, plus the 48h timelock) could repoint `guardianCouncil` at a contract of their own whose `isUnanimousExecution()` always returns true - and then unfreeze without unanimity. Rotating the council is therefore held to the same bar as the thing it protects. It can never be cleared back to zero either, which would re-open the single-signer fallback."
+    },
+    "setListedState(uint256,bool)": {
+     "notice": "\u00a7Phase 2 Marketplace - flips a token's listing lock. Marketplace-only. BondContract reads `isListed` to freeze value extraction while a bond is listed for secondary sale."
+    },
+    "setMarketplace(address)": {
+     "notice": "\u00a7Phase 2 Marketplace - registers the authorised Bond Marketplace and whitelists it for transfers in the same call (a listed sale moves the token through the marketplace, which would otherwise hit the whitelist gate). Only the marketplace may subsequently flip `isListed`."
+    },
+    "unpause()": {
+     "notice": "Legacy name kept for existing scripts/ABIs - guardian council only, and only under a unanimously-confirmed execution."
+    }
+   },
+   "notice": "ERC-721C token representing ownership of a term deposit. Standards implemented:   - ERC-721 (ownerOf, balanceOf, transferFrom, safeTransferFrom, approve,             setApprovalForAll, getApproved, isApprovedForAll).   - ERC-165 (supportsInterface for ERC-721, ERC-2981 and itself).   - ERC-2981 (royaltyInfo for marketplace royalty enforcement at 2%). Marketplace gating: every transfer (including marketplace operator transfers) is filtered through `transferWhitelist`. Only addresses explicitly approved by governance - typically the proprietary marketplace contract once Phase 2 ships - can move tokens, which is how on-chain royalty enforcement is preserved.",
+   "version": 1
+  }
+ },
+ "settings": {
+  "compilationTarget": {
+   "contracts/GilderSystem.sol": "DepositNFT"
+  },
+  "evmVersion": "paris",
+  "libraries": {},
+  "metadata": {
+   "bytecodeHash": "ipfs"
+  },
+  "optimizer": {
+   "enabled": true,
+   "runs": 200
+  },
+  "remappings": [],
+  "viaIR": true
+ },
+ "sources": {
+  "contracts/GilderAccessControl.sol": {
+   "keccak256": "0x525c3cd42d8f8b840d471a51743453e5c3b9a24371e91c80f7eca08d35e3a808",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://18ed2623f1b03af67273e98ee360d5ad9d30a920523498eb2917d635ed2f43cf",
+    "dweb:/ipfs/Qmbb4nSoYrfT2Cz4adBjLWshep63icuYqdiQY9bxPS3DEM"
+   ]
+  },
+  "contracts/GilderSystem.sol": {
+   "keccak256": "0x4d3a96ab7852bafc34c2615730d9740eea2f74e1155501e943c29dfcfea59b36",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://0d7197c6c60fd424b6960d6c21d293710ed9b7c8687ad71d7df017d38e3f9465",
+    "dweb:/ipfs/QmW1zK76PMpRphJV9Wdiy53JRgwt7fHvGZZyY5vRVMPmhV"
+   ]
+  },
+  "contracts/interfaces/IAutoCompound.sol": {
+   "keccak256": "0xae9e9244185d059f83dc70ca2ff32c9ab66ffb10bee821270466489a966f926a",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://d4a80f39e5f6cbb050bd16bd63c9ffe74c66872f83c65ba89486107cd37e06d0",
+    "dweb:/ipfs/QmNnqvcJXboMoBtW5461hq7ZtXSpznuGvmVDZu3fqJdtvZ"
+   ]
+  },
+  "contracts/interfaces/IBondContract.sol": {
+   "keccak256": "0xe4ea4d3ec605fee7bf611ab9b1b0a3a4ef102dc028deb199d48183c926a7232a",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://e8b735626adfaf342d7fa6c02ce928f0bfa3aeb9f2b9f0b601302193b8b144ba",
+    "dweb:/ipfs/QmY1tLA4BbtjZZagvzU9LsGqWp3a5zmXaU6NQ2R9eSDCXi"
+   ]
+  },
+  "contracts/interfaces/ICapitalRouter.sol": {
+   "keccak256": "0x0fc978a0af62a028db722573989f3dad9f4502d5f10932adf0da925e09fad2de",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://384b8144eb729d5677ffc701c85aecf4e57bb55a064958de3302b3f98750383f",
+    "dweb:/ipfs/QmSm7wg5Wdvq2b1XkF52hkeCFHBECxtAFSrEj9Mv7KtBjC"
+   ]
+  },
+  "contracts/interfaces/IDepositMetadataRenderer.sol": {
+   "keccak256": "0xf26b486407bef2cba4e02c380d787d0108adb576be6a85611a7af8e9bf53a701",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://96b33ecddf6ea9a56d526f2f581b90be4c1f6dca2907dc046630166940bb7e6d",
+    "dweb:/ipfs/QmP5zvwRJ2bqBRiJAaaK7zpCvWcaCztmm33fRt4ovdAdHA"
+   ]
+  },
+  "contracts/interfaces/IDepositNFT.sol": {
+   "keccak256": "0xeaa95c3bc219a2aefbfe9bbb17cb8fbfc6034b804070d0008f4dc82a610c7ead",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://8835765daff1842173a37a21541c31a22cdcb8a4ab98938998a81ba3498f610e",
+    "dweb:/ipfs/QmVv9xH3PerE2CxpFzNxTGxCKLmWzQaoWCcpixGTQQz9dg"
+   ]
+  },
+  "contracts/interfaces/IERC20.sol": {
+   "keccak256": "0x7fc9e7c88bea1bcc1eac7388065914c2ccf2311a602260dd67ebc33d775c929f",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://6f85a3da80bed30b6df4f19b9c105575912d380420beb12393bd19c5c11c7bc1",
+    "dweb:/ipfs/Qmcf2gsB1rTMTRrDQ2yRTvAgwxxrDDExM4kBCAPgFEzx61"
+   ]
+  },
+  "contracts/interfaces/IGilderTypes.sol": {
+   "keccak256": "0x9d034e615e7d205f00ef96452b1553d82dc54bb2cbecf68cb7906710b38f7d17",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://7b96a2a8c9c8f47e1f91265b5afe87a5c281a010ab2c9ff2be45f5a7612496f6",
+    "dweb:/ipfs/QmPJiNZ5XVLuFLgqZsMFYJJ5vUrxZV8PMq5keQUx2wcdJV"
+   ]
+  },
+  "contracts/interfaces/IGovernance.sol": {
+   "keccak256": "0xc76e99d769772f53c3e8cb4af8622089a1a01f2e9938e3b3731f035c1093dde5",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://0b5a0ec8a4b07a0406431c41a86b277b96a1d0c7b6553cfb72792af38cb56eb9",
+    "dweb:/ipfs/QmY9YEwHBLpHxWrhM8eapa5mb4H4uqGc4pUEEPKyJJihsc"
+   ]
+  },
+  "contracts/interfaces/ILending.sol": {
+   "keccak256": "0x59bbe22f386b4bfa1b03580993d4c55ee695c4b48204937731d13739d777cdba",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://e44ce1e069ea315ee6c84ee567c85fe49510e2110e0e2218dd726c49ce9d3854",
+    "dweb:/ipfs/Qmd8SpbcPL6mJopuh7cNjcyJuehqijNseVn91uYbJfNsrR"
+   ]
+  },
+  "contracts/interfaces/ISafeVault.sol": {
+   "keccak256": "0x46b5ef89758222440f67205c116a6965d90caa1e4a3ed55c06648a6e43a883b2",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://8fdc6b44f3fc19041bab9181d8ea60e81cade68715d2cc65b3d3146effcf7244",
+    "dweb:/ipfs/QmaEffFLFchuxHGwPBrZMgRxBxYnQGLqXVWoLaygXyuR3d"
+   ]
+  },
+  "contracts/interfaces/ITVT.sol": {
+   "keccak256": "0x87ea6f2d08040cdc6e12266153fa9903b7caaf12ce5e6c1a1d29abd1abbea134",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://99879f5bc6f88fba705bb204fdb52c70e24b4ad6ef329336c09f2d1061bc7447",
+    "dweb:/ipfs/Qmde5qnZadfXRD7BX52Zrb8UY8U1GgbHqJjQRgGXRznWW5"
+   ]
+  },
+  "contracts/interfaces/ITreasury.sol": {
+   "keccak256": "0x92ce462ced5db01e39f2456c1535210a75a3d91f61bc7a5e8af85313a4df0fdf",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://7dd8cff9c899a3632e4c282caced003695f7d0de5232c1d48cf11283e6ab0457",
+    "dweb:/ipfs/QmR9rvKkywuHcDGzNrpQivZVPsYfcPf3bzQqB2pRcBN9jC"
+   ]
+  },
+  "contracts/interfaces/ITurbo.sol": {
+   "keccak256": "0xdf164145f76bcde182d3df363664e28b1e515f5483ae1aadc69c6cbfc0908bb7",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://4baaef472e4014bb5caba567716b2f54b828404286d26a7f91e4fb9de2683e6c",
+    "dweb:/ipfs/QmeP621oc6YSJSMUpHqK8AkknKBo1zPMhohU2dYcsTWmLE"
+   ]
+  }
+ },
+ "version": 1
+}

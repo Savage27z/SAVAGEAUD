@@ -1,0 +1,348 @@
+{
+ "compiler": {
+  "version": "0.8.30+commit.73712a01"
+ },
+ "language": "Solidity",
+ "output": {
+  "abi": [
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "implementation",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "proxyAdmin",
+      "type": "address"
+     },
+     {
+      "internalType": "bytes",
+      "name": "initCalldata",
+      "type": "bytes"
+     }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+   },
+   {
+    "inputs": [],
+    "name": "InitFailed",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "NoUpgradeProposed",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "caller",
+      "type": "address"
+     }
+    ],
+    "name": "NotProxyAdmin",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "expectedImplementation",
+      "type": "address"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "expectedDataHash",
+      "type": "bytes32"
+     }
+    ],
+    "name": "UpgradeMismatch",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "eta",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "nowTs",
+      "type": "uint256"
+     }
+    ],
+    "name": "UpgradeTimelockActive",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "ZeroImplementation",
+    "type": "error"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "previousAdmin",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "newAdmin",
+      "type": "address"
+     }
+    ],
+    "name": "AdminChanged",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "implementation",
+      "type": "address"
+     }
+    ],
+    "name": "UpgradeCancelled",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "implementation",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "bytes32",
+      "name": "dataHash",
+      "type": "bytes32"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "eta",
+      "type": "uint256"
+     }
+    ],
+    "name": "UpgradeProposed",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "implementation",
+      "type": "address"
+     }
+    ],
+    "name": "Upgraded",
+    "type": "event"
+   },
+   {
+    "stateMutability": "payable",
+    "type": "fallback"
+   },
+   {
+    "inputs": [],
+    "name": "UPGRADE_TIMELOCK",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "cancelUpgrade",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "newAdmin",
+      "type": "address"
+     }
+    ],
+    "name": "changeProxyAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "implementation",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "impl",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "pendingUpgrade",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "implementation_",
+      "type": "address"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "dataHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "uint256",
+      "name": "eta",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "newImplementation",
+      "type": "address"
+     },
+     {
+      "internalType": "bytes",
+      "name": "data",
+      "type": "bytes"
+     }
+    ],
+    "name": "proposeUpgrade",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "proxyAdmin",
+    "outputs": [
+     {
+      "internalType": "address",
+      "name": "adm",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "newImplementation",
+      "type": "address"
+     },
+     {
+      "internalType": "bytes",
+      "name": "data",
+      "type": "bytes"
+     }
+    ],
+    "name": "upgradeToAndCall",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "stateMutability": "payable",
+    "type": "receive"
+   }
+  ],
+  "devdoc": {
+   "kind": "dev",
+   "methods": {},
+   "title": "GilderUUPSProxy",
+   "version": 1
+  },
+  "userdoc": {
+   "kind": "user",
+   "methods": {
+    "cancelUpgrade()": {
+     "notice": "\u00a7N2 - cancel the queued upgrade (admin only). "
+    },
+    "changeProxyAdmin(address)": {
+     "notice": "Rotate the proxy admin (e.g., move from deployer EOA -> multisig). "
+    },
+    "pendingUpgrade()": {
+     "notice": "\u00a7N2 - views for monitoring/queued-upgrade transparency. "
+    },
+    "proposeUpgrade(address,bytes)": {
+     "notice": "\u00a7Code-Review N2 - step 1 of the two-step upgrade: queue the new implementation (and the exact migration calldata, committed by hash). Only the proxy admin may propose. The queued upgrade becomes executable via `upgradeToAndCall` after UPGRADE_TIMELOCK elapses. Proposing again overwrites the previous proposal (restarting the clock), so a mis-queued upgrade is corrected by re-proposing."
+    },
+    "upgradeToAndCall(address,bytes)": {
+     "notice": "Step 2 of the two-step upgrade: swap the implementation. Only the proxy admin may execute, ONLY for the exact (implementation, data) pair queued via `proposeUpgrade`, and ONLY after the proxy-layer timelock has elapsed (\u00a7Code-Review N2 - identity AND process). Optionally re-runs an init/migration call on the new implementation in the same tx."
+    }
+   },
+   "notice": "EIP-1967 minimal UUPS proxy used as the M3 upgrade scaffold. Why a custom proxy rather than OZ's `UUPSUpgradeable`? - We already lean on a hand-rolled GilderAccessControl for role   management; pulling in OpenZeppelin's full Initializable + UUPS   stack would force every M1/M2 contract to be refactored to   `initializer` modifier semantics and constructorless storage. This   proxy keeps the existing `initialize(...)` pattern, just behind a   delegatecall layer. New M3+ modules can opt in. Upgrade flow:   1. Deploy a fresh implementation contract.   2. Call `upgradeTo(newImpl)` on the proxy. Only DEFAULT_ADMIN_ROLE      may upgrade (gated by the implementation's access control,      because the role check happens in the delegated `_authorizeUpgrade`).   3. Implementation storage layout MUST be append-only - that's why      every Gilder module already reserves a `uint256[N] __gap`. Storage layout uses the EIP-1967 standard slots so an off-chain indexer (or a block explorer's \"Read as Proxy\" view) can resolve the implementation address without a special getter.",
+   "version": 1
+  }
+ },
+ "settings": {
+  "compilationTarget": {
+   "contracts/GilderProxy.sol": "GilderUUPSProxy"
+  },
+  "evmVersion": "paris",
+  "libraries": {},
+  "metadata": {
+   "bytecodeHash": "ipfs"
+  },
+  "optimizer": {
+   "enabled": true,
+   "runs": 200
+  },
+  "remappings": [],
+  "viaIR": true
+ },
+ "sources": {
+  "contracts/GilderAccessControl.sol": {
+   "keccak256": "0x525c3cd42d8f8b840d471a51743453e5c3b9a24371e91c80f7eca08d35e3a808",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://18ed2623f1b03af67273e98ee360d5ad9d30a920523498eb2917d635ed2f43cf",
+    "dweb:/ipfs/Qmbb4nSoYrfT2Cz4adBjLWshep63icuYqdiQY9bxPS3DEM"
+   ]
+  },
+  "contracts/GilderProxy.sol": {
+   "keccak256": "0x9ec0ca5d7aefaf69ec5c759db58ee20829f9ab0889348f02ba4cd3d68e4c3a2a",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://2cea1d67f14daede494f14485c72641b52c5f75d2b7d0376d4b39f208427344b",
+    "dweb:/ipfs/Qmdzr5VV29fXtcaXu4QEQEa6iBvz6Qne9wmp2FT94WXSdx"
+   ]
+  }
+ },
+ "version": 1
+}

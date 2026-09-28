@@ -1,0 +1,360 @@
+{
+ "compiler": {
+  "version": "0.8.30+commit.73712a01"
+ },
+ "language": "Solidity",
+ "output": {
+  "abi": [
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "recipient",
+      "type": "address"
+     }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "allowance",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "needed",
+      "type": "uint256"
+     }
+    ],
+    "name": "InsufficientAllowance",
+    "type": "error"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "balance",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "needed",
+      "type": "uint256"
+     }
+    ],
+    "name": "InsufficientBalance",
+    "type": "error"
+   },
+   {
+    "inputs": [],
+    "name": "ZeroAddress",
+    "type": "error"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "owner",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "spender",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "value",
+      "type": "uint256"
+     }
+    ],
+    "name": "Approval",
+    "type": "event"
+   },
+   {
+    "anonymous": false,
+    "inputs": [
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "from",
+      "type": "address"
+     },
+     {
+      "indexed": true,
+      "internalType": "address",
+      "name": "to",
+      "type": "address"
+     },
+     {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "value",
+      "type": "uint256"
+     }
+    ],
+    "name": "Transfer",
+    "type": "event"
+   },
+   {
+    "inputs": [],
+    "name": "INITIAL_SUPPLY",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "owner",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "spender",
+      "type": "address"
+     }
+    ],
+    "name": "allowance",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "spender",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "approve",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     }
+    ],
+    "name": "balanceOf",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "burn",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "decimals",
+    "outputs": [
+     {
+      "internalType": "uint8",
+      "name": "",
+      "type": "uint8"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+     {
+      "internalType": "string",
+      "name": "",
+      "type": "string"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
+     {
+      "internalType": "string",
+      "name": "",
+      "type": "string"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [],
+    "name": "totalSupply",
+    "outputs": [
+     {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+     }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "to",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "transfer",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   },
+   {
+    "inputs": [
+     {
+      "internalType": "address",
+      "name": "from",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "to",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     }
+    ],
+    "name": "transferFrom",
+    "outputs": [
+     {
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+     }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+   }
+  ],
+  "devdoc": {
+   "kind": "dev",
+   "methods": {},
+   "title": "GilderToken (GIL)",
+   "version": 1
+  },
+  "userdoc": {
+   "kind": "user",
+   "methods": {
+    "burn(uint256)": {
+     "notice": "Permanently removes `amount` GIL from the caller's balance + total supply. "
+    },
+    "constructor": {
+     "notice": "Mints the full fixed supply to `recipient` (the deploy script's treasury / protocol holder). All distribution - pool seeding, Treasury inventory - happens afterwards via plain transfers."
+    }
+   },
+   "notice": "The protocol token.   Name          : GILD   Symbol        : $GILD   Decimals      : 18   Initial supply: 1,000,000,000,000 GIL  (1 trillion, per V6.2 \u00a7B.2) Fixed-supply ERC-20: the entire 1T GIL is minted once to the deployment recipient at construction and there is no further mint path - the supply can only ever decrease (via `burn`). The 10% of every deposit that the protocol routes into an open-market token buy trades against the existing supply on the GIL/USDC Uniswap V2 pool; it does not mint new tokens. V6.2 \u00a7B.2 mandated initial allocation (post-mint distribution, handled by the deploy script via plain ERC-20 transfers):   50% -> Market Treasury        (500B)   30% -> Distribution Reserve   (300B)   15% -> Marketing & Ops Wallet (150B)    5% -> Liquidity Pool          (50B + $50k USDC seed) Spec \u00a79.2: \"circulating supply\" for the TVT calculation excludes protocol-held inventory - the TVT module derives it as `totalSupply() - balanceOf(treasury)`.",
+   "version": 1
+  }
+ },
+ "settings": {
+  "compilationTarget": {
+   "contracts/GilderToken.sol": "GilderToken"
+  },
+  "evmVersion": "paris",
+  "libraries": {},
+  "metadata": {
+   "bytecodeHash": "ipfs"
+  },
+  "optimizer": {
+   "enabled": true,
+   "runs": 200
+  },
+  "remappings": [],
+  "viaIR": true
+ },
+ "sources": {
+  "contracts/GilderToken.sol": {
+   "keccak256": "0x9026e8b36a5f33e7d5659c918f446170a319b0ad8df4d2eae295cd5ea9a60dfe",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://575fd1d96684b0edd448272fc80ca5a4cdaa850995a7227b4f71e36f49a83c5e",
+    "dweb:/ipfs/QmNPFAb5FfARdF95ndoxQeNC2eqF5P3gqE4d6vffkM4iny"
+   ]
+  },
+  "contracts/interfaces/IERC20.sol": {
+   "keccak256": "0x7fc9e7c88bea1bcc1eac7388065914c2ccf2311a602260dd67ebc33d775c929f",
+   "license": "MIT",
+   "urls": [
+    "bzz-raw://6f85a3da80bed30b6df4f19b9c105575912d380420beb12393bd19c5c11c7bc1",
+    "dweb:/ipfs/Qmcf2gsB1rTMTRrDQ2yRTvAgwxxrDDExM4kBCAPgFEzx61"
+   ]
+  }
+ },
+ "version": 1
+}

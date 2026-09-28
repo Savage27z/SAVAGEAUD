@@ -1,0 +1,2609 @@
+[
+ {
+  "name": "AlreadyInitialized",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "BelowMinInterestWithdrawal",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "minimum",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "CapitalRouterTransferFailed",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "DepositBelowMinimum",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "minimum",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "actual",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "DepositListed",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "DepositPoolAttached",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "DepositsDisabled",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "GracePeriodActive",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "IncompatibleCouncil",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "council",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "InsufficientAccruedInterest",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "requested",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "available",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "InvalidDepositState",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "state",
+    "type": "uint8",
+    "internalType": "enum IGilderTypes.DepositState"
+   }
+  ]
+ },
+ {
+  "name": "InvalidMaturity",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidProductMode",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "productMode",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ]
+ },
+ {
+  "name": "InvalidTransition",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "from",
+    "type": "uint8",
+    "internalType": "enum IGilderTypes.DepositState"
+   },
+   {
+    "name": "to",
+    "type": "uint8",
+    "internalType": "enum IGilderTypes.DepositState"
+   }
+  ]
+ },
+ {
+  "name": "MarketingWalletNotSet",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "MaturityNotReached",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "MissingRole",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "NoFeeDue",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotAutoCompoundOperator",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotDePegGuard",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotDepositNftOperator",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotDepositOwner",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "caller",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "NotFreezeAuthority",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "caller",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "NotLendingOperator",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotTurboOperator",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "OutstandingLoan",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "PegNotOk",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "ProtocolFrozen",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "ReentrantCall",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "SeizeAmountExceedsCollateral",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "requested",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "available",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "TransferFailed",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "UnfreezeNotFromCouncil",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "caller",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "council",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "UnfreezeNotUnanimous",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "UnknownDeposit",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "ZeroAddress",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "AbandonedFeeAssessed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "feeAmount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "elapsedMonths",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "AbandonedFeeCharged",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "feeAmount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "elapsedMonths",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "AccruedInterestConsumed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "AutoCompoundContractSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "autoCompound",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "CapitalRouted",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "safeVaultAmount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "tokenBuyAmount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "treasuryAmount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "liquidityAmount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "CompoundModeSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "mode",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "uint8"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "CyrContractSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "cyr",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "DePegGuardSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "dePegGuard",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "DeployerFreezeRenounced",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "deployer",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "DepositOpened",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "owner",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "principal",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "DepositOwnershipTransferred",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "from",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "to",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "DepositRolledOver",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "oldDepositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "newDepositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "rolloverAmount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "compoundedInterest",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "DepositSettled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "owner",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "principalPaid",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "interestPaid",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "DepositStateChanged",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "state",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "enum IGilderTypes.DepositState"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "DepositValidationFlagsSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositsEnabled",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   },
+   {
+    "name": "pegOk",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "EarlyExit",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "owner",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "userPayout",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "penalty",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "EmergencyGuardianSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "account",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "enabled",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "GovernanceParameterSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "key",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "value",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "GuardianCouncilSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "council",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "InterestWithdrawn",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "owner",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "LendingContractSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "lending",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "LiquidityManagerSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "manager",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "LiquidityTopUpFailed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "usdcAmount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "LoanCollateralSeized",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "liquidator",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "collateralAmount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "LoanStateUpdated",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "loanBalance",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "loanAccruedInterest",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "MarketingWalletSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "wallet",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Paused",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "account",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "RoleGranted",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "account",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "sender",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "RoleRevoked",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "account",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "sender",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "TokenBuyRouterSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "router",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "TurboContractSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "turbo",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "TvtContractSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "tvt",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Unpaused",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "account",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "ABANDONED_MONTHLY_FEE_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "AUTO_COMPOUND_TRIGGER",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "BOND_ENGINE_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "BPS_DENOMINATOR",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "COMPOUND_OPERATOR_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "DAYS_PER_YEAR",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "DEFAULT_ADMIN_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "DORMANT_GRACE_PERIOD",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "EARLY_EXIT_PENALTY_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "EARLY_EXIT_PENALTY_TURBO_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "FIXED_TERM",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "LENDING_OPERATOR_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "LIQUIDATOR_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "LIQUIDITY_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "LIQUIDITY_TURBO_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "MIN_DEPOSIT_AMOUNT",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "MIN_INTEREST_WITHDRAWAL",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "NFT_MINTER_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "PARAMETER_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "PAUSER_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "PRODUCT_MODE_STANDARD",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "PRODUCT_MODE_TURBO",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "SAFE_VAULT_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "SAFE_VAULT_TURBO_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "SIMPLE_ANNUAL_RATE_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "SIMPLE_ANNUAL_RATE_TURBO_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "TOKEN_BUY_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "TOKEN_BUY_TURBO_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "TREASURY_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "TREASURY_OPERATOR_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "TREASURY_TURBO_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "UPGRADER_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "abandonedFeePreview",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "feeAmount",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "accrueInterest",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "newlyAccrued",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "applyInterestToLoan",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "interestApplied",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "asset",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IERC20"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "autoCompoundContract",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "chargeAbandonedFee",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "feeAmount",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "consumeAccruedInterest",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "cyrContract",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "dePegGuard",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "deployer",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "depositNft",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "depositsEnabled",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "earlyExit",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "emergencyFreeze",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "emergencyUnfreeze",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "getDeposit",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "deposit",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "owner",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "principal",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "safeVaultAmount",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "tokenBuyAmount",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "treasuryAmount",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "liquidityAmount",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "annualRateBps",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "accruedInterest",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "loanBalance",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "loanAccruedInterest",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "startTime",
+      "type": "uint64",
+      "internalType": "uint64"
+     },
+     {
+      "name": "maturityTime",
+      "type": "uint64",
+      "internalType": "uint64"
+     },
+     {
+      "name": "dormantTime",
+      "type": "uint64",
+      "internalType": "uint64"
+     },
+     {
+      "name": "state",
+      "type": "uint8",
+      "internalType": "enum IGilderTypes.DepositState"
+     },
+     {
+      "name": "compoundMode",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "realizedInterest",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "productMode",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "earlyExitPenaltyBps",
+      "type": "uint256",
+      "internalType": "uint256"
+     }
+    ],
+    "internalType": "struct IGilderTypes.Deposit"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "grantRole",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "guardianCouncil",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "hasRole",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "initialize",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "admin",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "asset_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "safeVault_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "treasury_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "depositNft_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "tokenBuyRouter_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "liquidityRecipient_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "marketingWallet_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "isDepositListed",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "isEmergencyGuardian",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "enabled",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "isFreezeAuthority",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "lendingContract",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "liquidityManager",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "liquidityRecipient",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "markAbandoned",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "markDormant",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "markLiquidated",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "markMatured",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "marketingWallet",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "netLoanInterest",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "nextDepositId",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "openDeposit",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "productMode",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "openDepositFor",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "owner_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "productMode",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "pause",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "paused",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "pegOk",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "previewAccruedInterest",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "accruedInterest",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "renounceDeployerFreeze",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "revokeRole",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "rollover",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "compoundInterest",
+    "type": "bool",
+    "internalType": "bool"
+   },
+   {
+    "name": "newProductMode",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "newDepositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "safeVault",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "setAutoCompoundContract",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "auto_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setCompoundMode",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "mode",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setCyrContract",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "cyr",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setDePegGuard",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "guard",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setDepositValidationFlags",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositsEnabled_",
+    "type": "bool",
+    "internalType": "bool"
+   },
+   {
+    "name": "pegOk_",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setEmergencyGuardian",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "enabled",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setGuardianCouncil",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "council",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setLendingContract",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "lending",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setLiquidityManager",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "manager",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setLoanState",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "loanBalance",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "loanAccruedInterest_",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setMarketingWallet",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "wallet",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setPegOk",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "pegOk_",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setTokenBuyRouter",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "router",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setTurboContract",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "turbo",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setTvtContract",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "tvt_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "settleMatured",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "settleMaturedNet",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "sweepInterestForCyr",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "recipient",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "syncDepositOwner",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "newOwner",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "toggleDeposits",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "tokenBuyRouter",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "treasury",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "turboContract",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "tvtContract",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "unpause",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "withdrawAbandoned",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "withdrawInterest",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "paid",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "withdrawInterestAmount",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositIds",
+    "type": "uint256[]",
+    "internalType": "uint256[]"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "paid",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "withdrawInterestBatch",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "depositIds",
+    "type": "uint256[]",
+    "internalType": "uint256[]"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "totalPaid",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ }
+]

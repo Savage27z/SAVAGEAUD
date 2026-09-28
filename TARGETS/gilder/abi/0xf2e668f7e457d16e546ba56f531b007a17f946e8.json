@@ -1,0 +1,277 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "implementation",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "proxyAdmin",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "initCalldata",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "InitFailed",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NoUpgradeProposed",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotProxyAdmin",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "caller",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "UpgradeMismatch",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "expectedImplementation",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "expectedDataHash",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ]
+ },
+ {
+  "name": "UpgradeTimelockActive",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "eta",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "nowTs",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "ZeroImplementation",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "AdminChanged",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "previousAdmin",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "newAdmin",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "UpgradeCancelled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "implementation",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "UpgradeProposed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "implementation",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "dataHash",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "eta",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Upgraded",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "implementation",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "fallback",
+  "stateMutability": "payable"
+ },
+ {
+  "name": "UPGRADE_TIMELOCK",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "cancelUpgrade",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "changeProxyAdmin",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "newAdmin",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "implementation",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "impl",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "pendingUpgrade",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "implementation_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "dataHash",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "eta",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "proposeUpgrade",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "newImplementation",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "data",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "proxyAdmin",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "adm",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "upgradeToAndCall",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "newImplementation",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "data",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "receive",
+  "stateMutability": "payable"
+ }
+]

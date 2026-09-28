@@ -1,0 +1,50 @@
+[
+ {
+  "addr": "0x5d25cfc927f95cb519c0fef438afaa64cb374e10",
+  "name": "BondContract",
+  "fn": "paused()",
+  "val": "0"
+ },
+ {
+  "addr": "0x5d25cfc927f95cb519c0fef438afaa64cb374e10",
+  "name": "BondContract",
+  "fn": "safeVault()",
+  "val": "0x9b937b72172c0706b51984a09992bb8007771e67"
+ },
+ {
+  "addr": "0x5d25cfc927f95cb519c0fef438afaa64cb374e10",
+  "name": "BondContract",
+  "fn": "treasury()",
+  "val": "0x9e2ce9510a89deac71898fd0a86d84214c20607b"
+ },
+ {
+  "addr": "0x809c4ee02279a38c9c32e63d4e1d9f0f8cc7da02",
+  "name": "DepositNFT",
+  "fn": "paused()",
+  "val": "0"
+ },
+ {
+  "addr": "0x9b937b72172c0706b51984a09992bb8007771e67",
+  "name": "SafeVault",
+  "fn": "bondContract()",
+  "val": "0x5d25cfc927f95cb519c0fef438afaa64cb374e10"
+ },
+ {
+  "addr": "0x9b937b72172c0706b51984a09992bb8007771e67",
+  "name": "SafeVault",
+  "fn": "treasury()",
+  "val": "0"
+ },
+ {
+  "addr": "0xd144cdceb6a49bc9be906964abeb6de5d39952d0",
+  "name": "GilderTokenBuyRouter",
+  "fn": "admin()",
+  "val": "0x54f2316b0c02808354fd7f0d48e64a788f7be533"
+ },
+ {
+  "addr": "0xd144cdceb6a49bc9be906964abeb6de5d39952d0",
+  "name": "GilderTokenBuyRouter",
+  "fn": "usdc()",
+  "val": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
+ }
+]
