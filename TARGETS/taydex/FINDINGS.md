@@ -99,6 +99,22 @@ and fund it with real USDC, on a contract where **nobody can ever take the other
   succeed against this address", which is proven; "trading is broken for every user" is a
   strong inference from it.
 
+### CORRECTION (fork phase, pass16) — the contract *can* trade, the app just can't call it
+`TradeExecuted(uint256,uint16,address,bool,uint8,uint256,uint256,uint256,uint256)` **is present
+as a live event topic** in the deployed code, and `SignerUpdated(address)` with it. So the
+deployed version does support trading through its own entry point(s) — it simply does not expose
+`buy`/`sell`. The precise claim is therefore:
+
+> the app's trade calls target functions absent from the deployed contract, **and** the app's
+> ABI is not the deployed contract's ABI (they differ on 24 functions and rename
+> `cancelMarket` → `voidMarket`).
+
+That is a real integration/version divergence. It is **not** the same as "the contract cannot
+trade", and the earlier "users pay 5 USDC for a market nobody can trade" line must be softened:
+the contract's own interface could trade the market; the shipped UI cannot reach it. Nobody is
+calling that interface directly in practice — 17 of 27 markets were created by a single address
+and 3 by the signer key itself — but that is an observation about adoption, not a proven loss.
+
 ---
 
 ## FINDING 2 — `sweepLeftover` reached its body from an unprivileged address  **OPEN**
@@ -111,13 +127,24 @@ not. `sweepLeftover` appears to be **callable by anyone**.
 
 `LeftoverSwept(uint256 marketId, uint16 optionIndex, address dest, uint256 amount)` — the
 function takes no address argument, so `dest` is derived internally (likely `msg.sender`).
-**OPEN:** needs a resolved market that actually holds leftover funds to establish impact, and
-the bytecode must be read to confirm where `dest` points. Not yet a finding — a live lead.
+
+**Fork result (pass17) — impact UNPROVEN, lead stays open.** On the fork I probed
+`sweepLeftover(marketId, optionIndex)` for **all 27 markets × their options** as
+`0x…deadbeef`. **0 succeeded. All 27 reverted with body reasons: 24 × `"no leftover"`,
+3 × `"not resolved"`.** No market currently holds sweepable dust, so no payout could be
+demonstrated. The absent guard is established; the *impact* is not. **Not a reportable finding
+in this state.** To close it: instrument a fork market into a leftover state (or obtain source
+to read what `dest` is), then re-run.
 
 ## FINDING 3 — the signed structs bind an address, but never the actor  **OPEN**
 
 Live signing domain (`eip712Domain()`, decoded):
 `fields=0x0f  name="TaydexMarket"  version="1"  chainId=8453  verifyingContract=0x3ade22fa…`
+Cached domain separator recovered **directly from the runtime code** and confirmed:
+`0xa4b938fc46dcb5ce581218f2adcdc0fd3284b0cf8eecdf218bab38407c061598`
+= `keccak(TYPE_HASH ‖ keccak("TaydexMarket") ‖ keccak("1") ‖ chainId ‖ address)` — all five
+components independently found in the bytecode. (An earlier "MISS" was my own mislabel: I had
+prepended `\x19\x01`, which belongs to the *digest*, not the domain.)
 
 So signatures are correctly bound to *(name, version, chainId, contract)* — no cross-chain or
 cross-contract replay. The gap is in the structs:
@@ -143,6 +170,83 @@ the on-chain check is `nonces[msg.sender] == p.nonce` decides it. Fork test is t
 Exploitability also depends on observing a victim's signature before it lands (Base's mempool
 is not freely observable, which cuts against the practical severity). **Do not report this as a
 vulnerability until the fork test runs.**
+
+**Fork result (pass16/17) — partially probed, still OPEN, and here is exactly what is now known:**
+
+- **`nonces` is a per-address mapping at storage slot 14.** Established by probing
+  `storage[keccak(address ‖ slot)]` across slots 0–15: slot 14 returns 3 for the signer and 0
+  for fresh addresses. So the mapping is keyed by *address* — but I could not read the bytecode
+  well enough to prove the key is `msg.sender` rather than the recovered signer.
+- **The deployed `createMarket` has no typehash constant.** All 48 32-byte immediates in the
+  runtime are now accounted for: event topics (matched against the ABI's event signatures —
+  `MarketCreated`, `MarketResolved`, `DisputeResolved`, `Disputed`, `Claimed`,
+  `CreatorFeesClaimed`, `ConfigUpdated`, `FeeRecipientUpdated`, `SignerUpdated`, `TradeExecuted`,
+  ERC-1155 transfers), internal error strings (`"no leftover"`, `"pool invariant"`,
+  `"funding<min"`, `"fee>in"`, `"bad bps"`, `"endDate past"`, `"not single binary"`,
+  `"already disputed"`, `"nothing to claim"`, …), the domain components, addresses and the
+  secp256k1 bound. **Nothing is left to be a `CreateMarket(...)` typehash**, and a 105-candidate
+  brute-force over plausible struct names found nothing either.
+- **Therefore I cannot honestly resolve the actor-binding question from the bytecode.** Either
+  the contract binds via `nonces[msg.sender]` — in which case a signature is valid for *any*
+  address sharing that nonce value, which is certain for two fresh wallets (both 0) — or it
+  binds through a scheme that is not visible as a typehash constant. **Which one it is remains
+  undetermined, and I am not guessing.**
+- Also established by the probe: **`signer` is a storage variable (slot 6), not an immutable**
+  (`usdc` *is* immutable, present at 16 sites in the code). So the signer key is rotatable by
+  the owner without a contract migration, and the fork can have its signer overridden.
+
+**To close Finding 3:** obtain the source (ask the team — this is a cooperative audit), or
+locate the `ecrecover` path in the disassembly and read what feeds the digest. Note the
+frontend cannot help: **the server builds and signs these EIP-712 messages**, not the client, so
+the struct definition is nowhere in the bundle. That is itself worth recording — the client
+relays an opaque signature it cannot verify.
+
+---
+
+## FORK-ATTACK PHASE (mandatory per `CLAUDE.md`) — what was run
+
+Fork: `anvil --fork-url https://base-rpc.publicnode.com --fork-block-number 51923920 --port 8546
+--chain-id 8453`. Confirmed as mine via `anvil_nodeInfo` (chainId 8453, correct fork URL) and by
+the runtime size matching the live contract byte-for-byte at 20,788 B.
+
+> Process pitfall hit and worth keeping: two **other** forks already held ports (a Robinhood
+> Chain fork on :8545, a Monad fork on :8555). My first anvil silently failed to bind and I spent
+> a pass reading *a stranger's fork* — `eth_getCode` returned "historical state … is not
+> available", which was the only clue. **Always confirm with `anvil_nodeInfo` that
+> `chainId`/`forkUrl` are yours before trusting a single read.**
+
+### Storage layout (recovered, not guessed)
+
+| slot | holds |
+|---|---|
+| 2 | `69` (packed flag / small counter) |
+| 3 | `owner` |
+| 6 | **`signer`** — mutable, so rotatable by the owner |
+| 7 | `feeRecipient` |
+| 8 | `marketCreationFee` = 5,000,000 |
+| 9 | `minLiquidityPerOption` = 50,000,000 |
+| 10 | `disputeFee` = 20,000,000 |
+| 11 | `nextMarketId` = 28 |
+| 14 | **`nonces` mapping** (per-address) |
+| — | `usdc` is **immutable** (in code, 16 sites) |
+
+### Attacks attempted
+
+| attack | method | result |
+|---|---|---|
+| `sweepLeftover` ungated payout | probe all 27 markets × options from `0x…deadbeef`; execute a success if any | **0/27 succeeded** — all body-revert (`no leftover` ×24, `not resolved` ×3). Impact unproven. |
+| signature replay / actor impersonation | override `signer` (slot 6) on the fork with a controlled key, then submit a signed `createMarket` from a second address | **BLOCKED** — the signing scheme could not be reconstructed: no `CreateMarket` typehash constant exists in the runtime, so I cannot build a digest the contract will accept. Recorded as blocked, not as "secure". |
+| replay across nonce-colliding addresses | needs a valid signature to exist at all | **BLOCKED** by the same constraint |
+| unprivileged calls on privileged setters | `eth_call` from a random address on `setSigner`, `setFeeRecipient`, `setConfig`, `setDisputeFee`, `resolveMarket`, `resolveSingleBinary`, `resolveDispute` | correctly revert `OwnableUnauthorizedAccount` |
+| `cancelMarket` | live call | owner-gated (`0x118cdaa7`) — confirms the deployed version's name |
+
+### Market activity (real on-chain state)
+
+27 markets, **all resolved**. Creators: `0xfe6a5322…` created **17**, `0x729939ac…` 2,
+`0xd4a8716d…` 1, and **`0xb5932a15…` — the signer key itself — created 3** (markets 7, 8, 9).
+Markets 2, 7, 8 carry `winningOptionIndex = -1` (never finalised). `marketCreatorFees(1)` = 0.
+This profile — one address and the operator's own signer key creating nearly all markets — reads
+as test/operator activity, not user adoption. It is evidence about adoption, **not** a charge.
 
 ---
 
