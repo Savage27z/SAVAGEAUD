@@ -1,0 +1,12 @@
+{
+  "start": 25221688,
+  "final": 28211899,
+  "gain": 2990211,
+  "elapsed_s": 1757.3563842773438,
+  "accepts": 1,
+  "rejects": 2,
+  "refills": [
+    843.6
+  ],
+  "big_step_works": null
+}

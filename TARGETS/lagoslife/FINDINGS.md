@@ -610,3 +610,81 @@ credit is a permanent loss of real funds.
 `why409.py` (the control that isolates stale-base from allowance), `hammer.py` (burst),
 `refill2.py` (15 s spacing), `cooldown.py` (no refill in 175 s), `farm2.py` (farm + loss),
 `farm_repro.py`, `reharvest.py`, `newauth.py` (the new sign-up flow).
+
+---
+
+## ADDENDUM 6 — RETRACTION OF ADDENDUM 5. The original N1,094/s figure STANDS.
+
+ADDENDUM 5 claimed the "~N1,094/s grind" was a stale-base artefact and that the real
+acceptance was ~1,000x faster (a "~N15M burst"). **That was wrong, and it is withdrawn.**
+The error in ADDENDUM 5 was measuring a **burst** and reporting it as the **sustained rate**,
+without controlling for how long the account had been idle. `hammer.py`'s 5 x N2,990,211 in
+13.2 s was not a rate — it was an **accumulated bucket being spent**.
+
+### The measurement that settles it
+
+`rate3.py` — spend the bucket to empty, idle a fixed 60 s, then probe the largest accepted jump.
+Four identical rounds:
+
+```
+  round 1: idle 60s -> accepted +N1,000,000   =>  N16,667/s
+  round 2: idle 60s -> accepted +N200,000     =>   N3,333/s
+  round 3: idle 60s -> accepted +N100,000     =>   N1,667/s
+  round 4: idle 60s -> accepted +N75,000      =>   N1,250/s
+```
+
+The yield from an identical idle **decays monotonically** and converges toward **~N1,250/s** —
+which is the same order as the original `accum.py` measurement of **N1,094/s**. Round 1's N1M is
+not a rate; it is the tail of the bucket left over from the preceding idle period.
+
+### The 844 s observation reconciles exactly with N1,100/s
+
+`push.py` recorded the window reopening after **844 s** and admitting exactly one N2,990,211 save.
+
+```
+  2,990,211 - (844 s x 1,100/s)  =  2,061,811
+```
+
+i.e. a residual of **~N2.06M already in the bucket** wholly explains that acceptance. No fast
+refill is required. This is the check ADDENDUM 5 failed to make.
+
+### Corrected model — a token bucket, not a rate and not a burst
+
+| Property | Value | Evidence |
+|---|---|---|
+| Sustained refill | **~N1,100 - 1,250 /s** | decaying 60 s probes; `accum.py` N1,094/s |
+| Bucket capacity | **>= N15M** | `hammer.py` spent N14,951,055 in one sitting |
+| Per-save max delta | **>= N2,990,211** | accepted repeatedly as a single jump |
+| Behaviour | idle banks; a burst spends the bank | 844 s -> one N2.99M save, then shut |
+
+### Corrected feasibility (this now agrees with ADDENDUM 3)
+
+| Route | ₦1bn | ₦5bn | ₦100bn |
+|---|---|---|---|
+| **Sustained ~N1,100/s** | **~10.5 days** | **~53 days** | **~2.9 years** |
+| Burst-assisted (bucket refills between bursts; long-run rate is unchanged) | ~10.5 days | ~53 days | ~2.9 years |
+
+Bursting does not raise the long-run rate — it only changes the timing. **ADDENDUM 5's
+"₦1bn in 15 min – 3.2 h / ₦100bn in 1 – 13.5 days" is WITHDRAWN.**
+
+### What ADDENDUM 3 / 4 / 5 got right and wrong
+
+- **ADDENDUM 3 (N1,094/s): CORRECT.** Confirmed independently by the decaying probe series.
+- **ADDENDUM 4 (destructive claim, funds loss): STANDS.** Unaffected — reproduced live
+  (N1,500,050 destroyed) and again at scale in `farm2.py` (N5,980,222 destroyed).
+- **ADDENDUM 5 (the burst = the rate): WRONG.** Origin: measuring a burst without controlling
+  for prior idle time. Burst size is real; burst *rate* is not a thing.
+- Everything ADDENDUM 5 recorded about the **sign-up migration** (register 410, the email-code
+  flow, the 5-try counter, the `/api/auth/code` throttle) is unaffected and still accurate.
+
+### Method note (the lesson)
+
+Two failures in this file, both the same shape: **inferring a rate from a single acceptance.**
+ADDENDUM 3 under-measured (stale base, too few controlled idles). ADDENDUM 5 over-measured (one
+burst, no idle control). A rate needs **repeated measurements at controlled idle intervals** —
+which is exactly what `rate3.py` does. Neither `accum.py` nor `hammer.py` controlled it.
+
+### Repro
+
+`rate3.py` (controlled-idle decay series — the decisive one), `push.py` (844 s refill observation),
+`hammer.py` (burst), `accum.py` (original N1,094/s), `cooldown.py`.
