@@ -282,3 +282,56 @@ The exploit is **rate-limited, not unbounded**. Restated honestly:
 - **NOT CONFIRMED / FALSIFIED:** setting an arbitrary balance (₦100bn). The allowance prevents it; in-game time cannot extend it.
 - Net effect: a cheater can earn **~5–7M/hour ≈ 120–170M/day, 24/7, unattended**, forever. That is a real economic exploit (it out-earns any human player and needs no effort) but it is not "set your balance".
 - **OPEN:** whether an absolute ceiling exists near the observed ₦5bn leaderboard cluster, and whether the backup/restore route bypasses the allowance.
+
+---
+
+# ADDENDUM 2 — full bypass sweep (2026-10-06)
+
+Requested: "keep trying whatever way you can". Ran every distinct attack class
+against the money layer. **No route allows an arbitrary balance. The design is
+consistent: every server-side money operation validates against the last SAVED
+money, and the save is rate-limited.**
+
+## Falsification table
+
+| # | Vector | Result |
+|---|--------|--------|
+| 1 | direct jump to ₦100bn | **409** |
+| 2 | `fresh:true` / `replace:<at>` / `base:0` / no `base` | **409** all |
+| 3 | in-game clock (`game.time`, `stats.dayStarted`, `lastEventCheck`) +30d and +365d, then jump | server returned 200 but **discarded the client's time jump** (stored wall-clock only) and still 409'd the money jump |
+| 4 | zero-balance floor escape (set money 0, then jump) | **409** — no zero special-case |
+| 5 | `game.version` spoof (`999`, `"1"`) | **409** |
+| 6 | `stats.earnedTotal` / `stats.earnedToday` spoof to 100bn | **409** — no earnings cross-check *for the allowance*, but spoofing them changes nothing |
+| 7 | `money` as string | **400 Bad save** (type validated) |
+| 8 | `money` = 2^53−1 / 2^53 / 2^63 | **400 Bad save** (upper numeric bound between 1e15 and 2^53−1) |
+| 9 | `money` = −1 | **200 — accepted.** Negatives are stored |
+| 10 | `money` = 1.5 | **200 — accepted.** Floats are stored |
+| 11 | `/api/bank` `deposit` / `bond` with insufficient funds | `"You need ₦X and have ₦0 saved"` — validates the save |
+| 12 | `/api/bank` `withdraw` beyond `saved` | `"You have ₦0 in savings"` |
+| 13 | `/api/bank` `cash` an unfunded bond | `400 "Which bond?"` |
+| 14 | `/api/jobs` `post` with `fee` while broke | `"You need ₦1,010 for this job (it comes off when you hire)"` — escrow validates the save |
+| 15 | `/api/jobs` fee bounds | enforced server-side: ₦1,000–₦10,000,000 |
+| 16 | `/api/casino` `buy` 1M/10M chips while broke | `"You need ₦X and have ₦0 saved"` |
+| 17 | `/api/casino` `buy` above `buyMax` | `400 "Buy between ₦5,000 and ₦10,000,000"` |
+| 18 | `/api/casino` `cash` / `spin` / `bj` with `chips:0` | `"You have ₦0 in chips"` / `"Not enough chips"` |
+| 19 | `/api/wallet/verify?checkout_id=TEST`, `/api/ads/verify?checkout_id=TEST` | **404** `"Payment not found"` / `"Booking not found"` — resolves against server-side records |
+| 20 | `/api/save/backup` restore | `{"backup": null}` — a backup is never created for this account (a `fresh:true` save returned 200 but produced none), so the restore path is **unreachable** |
+| 21 | `/api/save/old-account` | `{"old": null}` |
+| 22 | ~20 other POST endpoints (`/api/party`, `/api/venue`, `/api/spray`, `/api/food-gift`, `/api/gov/*`, `/api/politics/*`, `/api/music`, …) | 405 / 403 / `"Unknown action"` / schema errors — none credits money |
+
+## Two genuine defects found while sweeping (neither is inflation)
+
+1. **`money` accepts negatives.** `PUT money = -1` → 200, stored as `-1`. There is a lower bound of *none*.
+2. **`money` accepts floats.** `PUT money = 1.5` → 200, stored as `1.5`. There is an upper bound (~1e15–2^53) and a type check (string → 400), but the value is not required to be a non-negative integer.
+
+Both are data-integrity defects. They matter because the balance is compared arithmetically elsewhere (`bank`, `jobs`, `casino` all compare `amount` against `money`); a negative or fractional balance is a state the economy code was not written to expect.
+
+## Untested (honest residual)
+
+- **Two-account transfer.** Every transfer-shaped route needs a partner (`/api/family send` requires a marriage) or an escrow (`/api/jobs`, which validates funds). Not exercised end-to-end.
+- **Cage `landed` replay.** `GET /api/casino` returns a `landed` payout list which the client applies with **client-side** dedupe (`t.paidIds`). If the server keeps returning an already-applied payout and the client re-applies it on a later load, that is repeated credit — but it still lands in `game.money` and must pass the save allowance, so it cannot exceed the same rate.
+- **Absolute ceiling.** Whether `money` can exceed the observed ~₦5bn leaderboard cluster was never reachable: the allowance blocks the climb long before the ceiling could be probed.
+
+## Verdict on the asked question
+
+**₦100bn: NO. Any arbitrary balance: NO.** The exploit surface on this app is exactly one thing — the rate-limited self-inflation documented above (raise your own balance at the max plausible earning rate, with zero gameplay). Everything else in the money layer is properly server-validated, and the failure messages show the server consistently reasoning from the last save (`"Your game saves every minute or so: try again shortly"`).
