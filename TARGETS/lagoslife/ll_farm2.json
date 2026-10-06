@@ -1,0 +1,32 @@
+{
+  "rows": [
+    {
+      "burner": "zzfqggey1thv",
+      "seeded": 2990211,
+      "sent": 2990111,
+      "send_http": 200,
+      "claim": 2990111,
+      "credit_http": 409,
+      "balance": 1000000
+    },
+    {
+      "i": 2,
+      "error": "first save HTTP None None"
+    },
+    {
+      "burner": "zzf8fc7slfe9",
+      "seeded": 2990211,
+      "sent": 2990111,
+      "send_http": 200,
+      "claim": 2990111,
+      "credit_http": 409,
+      "balance": 1000000
+    }
+  ],
+  "target": "zzfv0ko26l6e",
+  "start": 1000000,
+  "final": 1000000,
+  "gain": 0,
+  "elapsed_s": 108.16732025146484,
+  "n": 3
+}

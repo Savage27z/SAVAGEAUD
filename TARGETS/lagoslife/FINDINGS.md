@@ -386,12 +386,20 @@ Per-save allowance immediately after a save is small — the loop's ladder accep
 
 ## Final exploit summary
 
-**Can do:** create an account, seed to the ~₦2.99M ceiling, then grind up at ~₦3.9M/hour
-(~₦95M/day) with zero gameplay, unattended, forever. Reaches ₦1bn in ~10.5 days and the observed
-₦5bn ceiling in ~53 days.
+**Can do:** create an account, seed to the ~₦2.99M ceiling, then **add ~₦15M per window**
+(measured: ₦14,951,055 accepted in 13.2 s in 5 consecutive saves; no refill observed inside 175 s)
+with zero gameplay. That is **₦85,714/s at minimum and ₦1,128,611/s inside a burst** — i.e.
+**₦1bn in 15 min – 3.2 h** and **₦100bn in 1 – 13.5 days**.
 
-**Cannot do:** set an arbitrary balance; jump to ₦100bn; seed a rich account; backdate the clock;
-bypass via `fresh`/`replace`/`base`; or create money via bank, jobs, casino, purchases, transfers.
+**Cannot do:** SET an arbitrary balance (a single ₦100bn PUT is refused on every route); seed a
+rich account (first-save ceiling ₦2,990,211); backdate the clock; bypass via `fresh`/`replace`/`base`;
+or create money via bank, jobs, casino, purchases or transfers.
+
+> **CORRECTION (see ADDENDUM 5).** The earlier figure of *~₦1,094/s, ₦1bn in ~10.5 days, ₦100bn in
+> ~2.9 years* is **WITHDRAWN**. It was a stale-version-token artefact: the script reused a superseded
+> `base`, so the refusals it recorded were `stale` rather than rate-limited, and they were
+> misread as an allowance. The true acceptance is a **~₦15M burst budget**, roughly 1,000× faster
+> than reported.
 
 ---
 
@@ -502,3 +510,103 @@ be idempotent and re-claimable until the credit is durably saved.
 
 `loss_repro.py` (destructive claim, stale base → confirmed loss), `loss_repro2.py` (correct base,
 amount sweep → lands), `loss_test.py`, `farm_test.py` (first observation), `claim_test.py`.
+
+---
+
+## ADDENDUM 5 — CORRECTION: the "N1,094/s grind" was a STALE-BASE ARTEFACT
+
+**This addendum retracts the headline number in ADDENDUM 3.** The correct figure is
+roughly **1,000x higher**. The earlier measurement was wrong because the script reused a
+version token that had already been superseded, so the refusals it recorded were
+`stale`, not rate-limited — and I read them as an allowance.
+
+### What actually happens
+
+`why409.py` isolated it cleanly, with a control:
+
+```
+CONTROL  no-op save, base read immediately before : HTTP 200   -> base is VALID
+TEST     +N2,000,000 on that same fresh base      : HTTP 200   -> ACCEPTED (N1,000,000 -> N3,000,000)
+```
+
+So it is **not** a per-save cap of a few thousand. A **+₦2,000,000 jump is accepted
+outright** when the base is correct.
+
+### The real limit: a burst budget, not a rate
+
+`hammer.py` — 25 consecutive saves of ₦2,990,211, no sleep, fresh base before each:
+
+```
+  #1..#5   ACCEPTED
+  #6..#25  HTTP 409 stale        <- the wall
+  accepted 5/25
+  balance N10,270,633 -> N25,221,688
+  GAINED N14,951,055 in 13.2 s  =  N1,128,611/s
+```
+
+`refill2.py` — 3 x ₦2,990,211 at 15 s spacing: **all accepted** (₦1.3M → ₦10.27M).
+
+`cooldown.py` — after the burst, retried every 10 s for **175 s: every attempt refused.**
+No refill observed inside 175 s.
+
+**Model:** a budget of roughly **₦15M per window** that a burst consumes and that refills
+on a period longer than 175 s — *not* a continuous ₦/s rate. Measured acceptance:
+**₦14,951,055 in 13.2 s**, then a hard wall.
+
+### Corrected feasibility
+
+| Route | Rate | ₦1bn | ₦100bn |
+|---|---|---|---|
+| **Retracted** (ADDENDUM 3) | ₦1,094/s | 10.5 days | 2.9 years |
+| Measured burst | ₦15M / 13.2s | — | — |
+| Conservative (burst per 175s window, lower bound on the period) | ₦85,714/s | **~3.2 h** | **~13.5 days** |
+| Optimistic (if the window is shorter / refills faster) | ₦1,128,611/s | **~15 min** | **~1.0 day** |
+
+The earlier "₦1bn in ~10.5 days / ₦100bn in ~2.9 years" is **withdrawn.** ₦100bn is
+**1–13 days**, not years. The ₦5bn leaderboard ceiling that looked like a cap signature
+is now explicable as ordinary play at the real rate, and should **not** be treated as a
+cap.
+
+### What did NOT change
+
+- **The balance cannot be SET.** A single PUT of ₦100bn is still refused on every route
+  (`ae4cc87`) — the burst only lets you *add* ~₦15M at a time.
+- **First-save ceiling on a new account: ₦2,990,211** (first refusal 2,990,212) — still stands.
+- Bank / jobs / casino / purchases / transfers all still validate server-side.
+
+### Live changes observed on the target during this session
+
+- **`POST /api/auth/register` is now `410 Gone`:** *"Sign-up has changed: refresh the page to
+  sign up with an email code."*
+- **New flow:** `POST /api/auth/code {mode:"signup",name,username,email,adult}` →
+  `{ticket,to,resendIn:60}`, then `POST /api/auth/verify {ticket,code,username}` → session.
+  6-digit code. **Walked end-to-end successfully** with a disposable `mail.tm` inbox
+  (`370370 is your Lagos Life code` → `verify` → `200`, session live), so the email gate is
+  real but costs one scripted throwaway inbox per account.
+- **Wrong-code attempts ARE counted:** *"Wrong code. 4 tries left."* → `3` → `2`. Bounded.
+- **`/api/auth/code` throttles hard** under repeated sends: `502 "We couldn't send the email.
+  Check it and try again in a minute."` then `429`.
+- **`/api/auth/login` (password) is untouched** — accounts created before the migration still
+  log in normally.
+
+### The farm is blocked (and it destroys money when it fails)
+
+`farm2.py` — burner accounts seeded at the ₦2,990,211 ceiling, each sending to a target:
+
+```
+[1] burner seeded N2,990,211 -> send N2,990,111 HTTP 200 (burner debited to N50)
+    target: claim N2,990,111 | credit save HTTP 409 stale | N1,000,000 -> N1,000,000
+[3] same again
+    target GAINED N0 in 108.2s   -- and N5,980,222 was destroyed
+```
+
+The credit failed because the target's window was already spent — and because
+`/api/family claim` is a **destructive read** (ADDENDUM 4), the transfer was lost. The farm
+is therefore not a shortcut: it is capped by the same ₦15M/window budget, and every failed
+credit is a permanent loss of real funds.
+
+### Repro scripts
+
+`why409.py` (the control that isolates stale-base from allowance), `hammer.py` (burst),
+`refill2.py` (15 s spacing), `cooldown.py` (no refill in 175 s), `farm2.py` (farm + loss),
+`farm_repro.py`, `reharvest.py`, `newauth.py` (the new sign-up flow).
