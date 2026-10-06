@@ -1,0 +1,18 @@
+{
+  "balances": {
+    "bondContract": 0,
+    "safeVault": 118102621005,
+    "treasuryProxy": 158286258200,
+    "tokenBuyRouter": 0,
+    "depositNft": 0,
+    "liquidityRecip": 304544687,
+    "lendingProxy": 0,
+    "liquidityMgr": 0,
+    "gilderToken": 0,
+    "multisig": 0
+  },
+  "accountedPrincipal": 157913167458,
+  "totalLoaned": 39810546453,
+  "totalActivePrincipal": 197391459299,
+  "interestReserve": 21713060522
+}
