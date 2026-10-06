@@ -335,3 +335,60 @@ Both are data-integrity defects. They matter because the balance is compared ari
 ## Verdict on the asked question
 
 **₦100bn: NO. Any arbitrary balance: NO.** The exploit surface on this app is exactly one thing — the rate-limited self-inflation documented above (raise your own balance at the max plausible earning rate, with zero gameplay). Everything else in the money layer is properly server-validated, and the failure messages show the server consistently reasoning from the last save (`"Your game saves every minute or so: try again shortly"`).
+
+---
+
+# ADDENDUM 3 — "little by little": the climb MEASURED (2026-10-06)
+
+Asked to keep pushing and to try it gradually. So I stopped theorising about the allowance
+formula (it refused to be characterised cleanly) and **measured the actual sustained climb**
+in a loop: add the largest accepted jump, brief pause, repeat — 129 seconds on a fresh account.
+
+```
+account seeded at the measured first-save ceiling   2,990,211
+after 129s of looping                               3,131,211
+gained                                                141,000
+
+measured rate        ~1,094 per second
+                     = ~3,939,495 per hour
+                     = ~94,547,884 per day
+```
+
+Per-save allowance immediately after a save is small — the loop's ladder accepted only
+**+3,000 to +10,000** per iteration, the ceiling rising as time passes. The balance cannot be
+*set*; it can only be *ground up*.
+
+## The answer to "try 1b, 10, 100 — little by little"
+
+| Target | At ~1,094/s (measured) | Verdict |
+|---|---|---|
+| **₦1 billion** | **~253 hours ≈ 10.5 days** | **Feasible** for an unattended script |
+| ₦10 billion | ~2,538 hours ≈ 106 days | Impractical |
+| ₦100 billion | ~25,383 hours ≈ **2.9 years** | **No** |
+| (observed leaderboard ceiling ~₦5bn) | ~53 days | consistent with the top-12 cluster |
+
+**₦1bn is genuinely reachable in about ten days of a script that never sleeps. ₦100bn is not.**
+
+## Also established this round
+
+- **First-save ceiling = ₦2,990,211** (first rejection 2,990,212). A new account's money is
+  validated against a plausible starter amount, so you **cannot seed an account rich**. Good.
+- **Transfers are correctly debited.** `/api/send` moved 1,500,000; the server reduced the
+  *sender's saved balance itself* (my script applied no debit) → unsaved-debit duplication
+  **falsified**.
+- **Recipient credits must clear the recipient's own allowance.** The claim hands back the item
+  and consumes it from the inbox; if the resulting save is rejected the credit cannot be banked.
+  Observed once (`claim=2,930,406, credited=False`) → **potential funds-loss path: sender has
+  paid, recipient cannot receive.** Guard: apply the credit server-side, not via the recipient's
+  client save.
+- `/api/send` rate-limited (`429 "Too many tries..."`).
+- `FRIEND_SEND = {min: 100, max: 1e10}` — one transfer may be ₦10bn, but the sender must hold it.
+
+## Final exploit summary
+
+**Can do:** create an account, seed to the ~₦2.99M ceiling, then grind up at ~₦3.9M/hour
+(~₦95M/day) with zero gameplay, unattended, forever. Reaches ₦1bn in ~10.5 days and the observed
+₦5bn ceiling in ~53 days.
+
+**Cannot do:** set an arbitrary balance; jump to ₦100bn; seed a rich account; backdate the clock;
+bypass via `fresh`/`replace`/`base`; or create money via bank, jobs, casino, purchases, transfers.
