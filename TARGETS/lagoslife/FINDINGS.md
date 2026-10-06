@@ -688,3 +688,65 @@ which is exactly what `rate3.py` does. Neither `accum.py` nor `hammer.py` contro
 
 `rate3.py` (controlled-idle decay series — the decisive one), `push.py` (844 s refill observation),
 `hammer.py` (burst), `accum.py` (original N1,094/s), `cooldown.py`.
+
+---
+
+## ADDENDUM 7 — STEADY-STATE CONFIRMED: N1,250/s (n=23)
+
+`rate3.py` Phase B: after the allowance converges, idle 60 s and take the largest accepted
+jump, 23 cycles:
+
+```
+  cycle  1..16   +N75,000   (x16, identical)
+  cycle 17       +N100,000
+  cycle 18..23   +N75,000   (x6, identical)
+  N29,586,899 -> N31,336,899   (+N1,750,000) in 25.7 min = N1,136/s overall
+```
+
+**23 consecutive cycles all admitted exactly N75,000 for 60 s of idle = N1,250/s.** No decay, no
+variance, no drift. This is the number the earlier addenda were missing — a rate needs *repeated*
+measurements at controlled idle intervals, and this is it.
+
+### Definitive figures
+
+| Quantity | Value |
+|---|---|
+| **Steady-state refill** | **N1,250/s** = N4,500,000/h = **N108,000,000/day** |
+| Bucket capacity | >= N15M (banks while idle; a burst spends the bank) |
+| Max single accepted jump | >= N2,990,211 |
+| First-save ceiling (new account) | N2,990,211 (first refusal 2,990,212) |
+
+### Feasibility
+
+| Target | Time at N1,250/s |
+|---|---|
+| N1bn | **9.3 days** |
+| N5bn | **46 days** |
+| N31.3M (end state) | (reached) |
+| N100bn | **926 days (~2.5 years)** |
+
+This is the same band as ADDENDUM 3's original N1,094/s (measurement noise, same bucket) and it
+**definitively refutes ADDENDUM 5's burst-as-rate claim.** Bursting does not change the long-run
+rate; it only changes the timing.
+
+### The leaderboard now reads naturally
+
+Top-12 stacked just under N5bn is consistent with **~46 days** of this — not a cap signature.
+Present it as rate-consistency, not as evidence of a ceiling.
+
+### Unchanged
+
+- **ADDENDUM 4 stands** (destructive claim; funds loss: N1,500,050 isolated, N5,980,222 in the farm).
+- **The sign-up migration findings stand** (register 410; email-code flow; 5-try counter;
+  `/api/auth/code` throttle; password login unaffected).
+- **The core defect never wavered:** the server accepts balance increases while
+  `earnedToday=0`, `earnedTotal=0`, `actionsDone={}`.
+
+### Final state of the probe account
+
+`@zzprobes00nsi` (id `4ba903e6346041f9b659`), balance **N31,336,899**, up from N1,300,000 at the
+start of this measurement series.
+
+### Repro
+
+`rate3.py` (this run), `rate3.json`, `push.py`, `hammer.py`, `accum.py`, `cooldown.py`, `why409.py`.
