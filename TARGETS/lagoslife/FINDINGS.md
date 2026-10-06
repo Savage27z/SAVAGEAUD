@@ -227,3 +227,58 @@ The public top-12 is stacked immediately under a hard ceiling — `5,000,000,000
 ### Fix
 
 The saving client must not be trusted with the ledger. The server should keep the authoritative `money` and apply **validated deltas** from named actions, rejecting a wholesale `game.money`. Note that **everything monetary in the blob has the same exposure** as `money` — `pantry`, `wardrobe`, `fleet`, property, `stats.earnedTotal` are all equally client-authored. A rate allowance slows the bleed but cannot close it, because it still assumes the client is honest about *earning*.
+
+---
+
+# ADDENDUM — can the balance be pushed to ₦100bn? (2026-10-06)
+
+**Answer: NO. Falsified on every route tested.**
+
+| Attempt | Result |
+|---|---|
+| single PUT `money=100,000,000,000`, correct `base` | **409** |
+| `... fresh:true` | 409 |
+| `... fresh:true, replace:<at>` | 409 |
+| `... replace:<at>` | 409 |
+| `... base:0` | 409 |
+| `... no base at all` | 409 |
+
+## The allowance is a RATE, not proportional to the balance
+
+Measured max accepted single jump after a fixed ~48s wait, at two balance levels:
+
+```
+balance  4,542,554  ->  max jump  +272,553   ratio 0.0600   (~5,600/s)
+balance  4,815,107  ->  max jump  +144,453   ratio 0.0300   (~3,000/s)
+```
+
+The ratio **halved** as the balance grew 1.06×. So the allowance does **not** scale with wealth — it is a roughly constant earning rate, on the order of **1,300–5,600 per second** across all measurements (`+50,000/27s ≈ 1,850/s`; `+100,000/75s ≈ 1,333/s`).
+
+Consequence: reaching ₦100bn would need **~205 days** of continuous scripted ticking. Infeasible.
+
+## The in-game clock is server-owned (a second bypass attempt, falsified)
+
+`game.time`, `stats.dayStarted`, `lastEventCheck` are all client-authored fields in the blob, so if the allowance were keyed to *in-game* time a cheater could advance the calendar and unlock a bigger jump. Tested directly:
+
+```
+PUT game.time = T + 43,200 min  (30 in-game days)  -> HTTP 200
+  but server stored game.time = T + 16.3 min       <- the client's jump was DISCARDED
+PUT game.time = T + 525,600 min (365 days)         -> HTTP 200, again stored only wall-clock
+  then money +100,000,000     -> 409
+  then money +100,000,000,000 -> 409
+```
+
+The server **ignores client-time jumps and advances time by wall-clock only**. No bypass.
+
+## What remains untested
+
+`/api/save/backup` and `/api/save/old-account` both return `{"backup": null}` / `{"old": null}` for this account — a backup is only created when a save is *replaced* (the "Start a new life" flow; the UI offers "We kept X's life from <date>, with ₦Y. Bring it back"). So the backup/restore route **could not be probed** without first triggering a save replacement. That is the last plausible bypass of the allowance and it is **OPEN**.
+
+## Corrected severity
+
+The exploit is **rate-limited, not unbounded**. Restated honestly:
+
+- **CONFIRMED:** the client can raise its own balance at the maximum plausible earning rate with **zero gameplay** — `stats.actionsDone = {}` and `stats.earnedTotal = 0` throughout. Achieved live: ₦1,096,000 → ₦4,959,560 (₦3.86M) without playing.
+- **NOT CONFIRMED / FALSIFIED:** setting an arbitrary balance (₦100bn). The allowance prevents it; in-game time cannot extend it.
+- Net effect: a cheater can earn **~5–7M/hour ≈ 120–170M/day, 24/7, unattended**, forever. That is a real economic exploit (it out-earns any human player and needs no effort) but it is not "set your balance".
+- **OPEN:** whether an absolute ceiling exists near the observed ₦5bn leaderboard cluster, and whether the backup/restore route bypasses the allowance.
