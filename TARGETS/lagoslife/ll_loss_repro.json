@@ -1,0 +1,12 @@
+{
+  "sender_lost": 1500050,
+  "recipient_gained": 0,
+  "destroyed": 1500050,
+  "amount": 1500000,
+  "recipient": "zzrxagz585",
+  "sender": "zzr5nbo8v5",
+  "save_rejected_with": 409,
+  "second_claim": {
+    "received": []
+  }
+}

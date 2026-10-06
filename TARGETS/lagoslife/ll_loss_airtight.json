@@ -1,0 +1,44 @@
+[
+  {
+    "amount": 1500000,
+    "claim_returned": 1500000,
+    "credit_save_http": 200,
+    "credit_save_body": null,
+    "sender_before": 2000000,
+    "sender_after": 499950,
+    "recipient_before": 500000,
+    "recipient_after": 2000000,
+    "destroyed": 50,
+    "reclaim_recovers": false,
+    "recipient": "zzqbtj3gca",
+    "sender": "zzqn7obq9s"
+  },
+  {
+    "amount": 200000,
+    "claim_returned": 200000,
+    "credit_save_http": 200,
+    "credit_save_body": null,
+    "sender_before": 2000000,
+    "sender_after": 1799950,
+    "recipient_before": 500000,
+    "recipient_after": 700000,
+    "destroyed": 50,
+    "reclaim_recovers": false,
+    "recipient": "zzqmhrm81w",
+    "sender": "zzqyy86i0b"
+  },
+  {
+    "amount": 50000,
+    "claim_returned": 50000,
+    "credit_save_http": 200,
+    "credit_save_body": null,
+    "sender_before": 2000000,
+    "sender_after": 1949975,
+    "recipient_before": 500000,
+    "recipient_after": 550000,
+    "destroyed": 25,
+    "reclaim_recovers": false,
+    "recipient": "zzq7mw3elq",
+    "sender": "zzq3f2ef56"
+  }
+]

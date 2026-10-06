@@ -392,3 +392,113 @@ Per-save allowance immediately after a save is small — the loop's ladder accep
 
 **Cannot do:** set an arbitrary balance; jump to ₦100bn; seed a rich account; backdate the clock;
 bypass via `fresh`/`replace`/`base`; or create money via bank, jobs, casino, purchases, transfers.
+
+---
+
+## ADDENDUM 4 — CLAIM IS A DESTRUCTIVE READ (funds-loss, reproduced live)
+
+**Status:** REPRODUCED LIVE. **Severity: High** (permanent loss of user funds; no recovery path).
+This is the one finding on this target that harms *players* rather than the operator.
+
+### The mechanism, quoted from the shipped client
+
+`/api/family {action:"claim"}` returns the incoming transfer to the caller **and deletes it from
+the server inbox, applying no server-side credit.** The only thing that credits the recipient's
+balance is a *client-side* mutation on the recipient's machine, persisted afterwards by the
+recipient's own save.
+
+Chain of evidence, all from the live bundle (`bundle/`):
+
+**1. The claim handler mutates local state ONLY** — `1612a514a829_2j1h0hlotdsmr.js`
+(sha256 `84df5992e79137752206bdd5aeb0168433345147c7c2230f6add69671ff5f5c3`):
+
+```js
+async function M(){
+  let e = await r.api.claimMoney().catch(()=>null);
+  e?.received.length && c.useGame.getState().mutate(t => receiveMoney(t, e.received))
+}
+```
+No server call after the mutation. The money exists only in the browser's memory.
+
+**2. A rejected save REPLACES the local game** — `30d25c6c6be1_1y_lxahgl78xu.js`
+(sha256 `a121f2dfca5551d8f23f5122025ac8b6a51659d346c025098af077edf33efad7`):
+
+```js
+(0,p.onStaleSave)(e=>{
+  let t = ob(e), s = x.useGame.getState();
+  t ? s.setElsewhere({game:ok(e), at:t.at, updatedAt:t.updatedAt})
+    : s.elsewhere || (s.loadLatest(ok(e)),
+                      (0,r.toast)("We loaded your latest saved game 🔄",{duration:5e3}))
+})
+```
+
+and `loadLatest` — `f92aa326182e_3-zfsb856geix.js`:
+
+```js
+loadLatest: e => { p = !0, t({ game: { ...e, outbox:{notices:[],fx:[]} } }) }
+```
+
+`loadLatest` **overwrites the whole game object with the server's copy.** The live 409 body keys are
+`['code','error','game','updatedAt']` — there is **no `__elsewhere` key**, so `ob(e)` returns `null`
+and the handler takes the `else` branch → `loadLatest(serverGame)` → **the `receiveMoney` mutation
+is discarded.** The toast the player sees is "We loaded your latest saved game 🔄".
+
+So the sequence is: server hands over the money and forgets it → client holds it in RAM → the next
+save fails → client throws its own copy away → the money is gone.
+
+### Live reproduction (deterministic, `/tmp/ll_loss_repro.json`)
+
+```
+sender @zzr5nbo8v5     N2,000,000
+recipient @zzrxagz585  N500,000
+
+[1] sender -> recipient N1,500,000      HTTP 200   {"ok":true,"amount":1500000,"fee":50}
+    sender debited N1,500,050
+[2] recipient anchors (no-op save)      HTTP 200
+[3] recipient CLAIMS                    HTTP 200   received N1,500,000
+    server balance right after claim: N500,000      uncredited delta = N0     <-- claim credits NOTHING
+[4] recipient saves the credit          HTTP 409   {"error":"A newer save exists","code":"stale"}
+[5] recipient balance after recovery:   N500,000
+[6] second claim                        HTTP 200   {"received": []}          <-- item consumed
+
+    sender paid        N1,500,050
+    recipient gained   N0
+    NET DESTROYED      N1,500,050
+    recoverable?       NO
+```
+
+### Why a correct base does NOT save the transfer
+
+With a **fresh, correct base** the credit save succeeds — so the loss is triggered by *any* rejected
+save, whatever the cause. Confirmed in the same session: three transfers (₦1.5M, ₦200k, ₦50k) each
+saved with the post-anchor base were all `HTTP 200` and landed correctly
+(`/tmp/ll_loss_airtight.json`). The trigger set is therefore:
+
+- **the per-save allowance** after a burst of incoming transfers — *observed live* during the
+  farming run (`claim=2,930,406, credited=False`);
+- **a stale base** from a second tab / second device / re-login — the exact case the app's own
+  `__elsewhere` ("signed in elsewhere") code exists to handle, and the case reproduced above;
+- **a closed tab, a crash, or the recipient being offline** before the next autosave — the app's own
+  server string says *"Your game saves every minute or so"*, so the exposed window is up to ~60 s
+  per recipient.
+
+In every one of those cases the inbox item is already consumed, the sender has already been debited,
+and a re-claim returns `[]`. **The funds are unrecoverable by either party.**
+
+### Note on `claim` and the version token
+
+`claim` does NOT advance `updatedAt` (verified: `1791263767495 → 1791263767495`). The base going
+stale is therefore not caused by the claim itself — the exposure is the client-side credit window,
+not a version-token race.
+
+### Fix
+
+Apply the credit **server-side, atomically, in the same request that consumes the inbox item** —
+credit `players.money` in a transaction and return the new balance, instead of handing the amount to
+the client and hoping its next save is accepted. If the client-side model must stay, the claim must
+be idempotent and re-claimable until the credit is durably saved.
+
+### Repro scripts
+
+`loss_repro.py` (destructive claim, stale base → confirmed loss), `loss_repro2.py` (correct base,
+amount sweep → lands), `loss_test.py`, `farm_test.py` (first observation), `claim_test.py`.
