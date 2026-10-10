@@ -177,13 +177,53 @@ Also confirmed: the sale's `EIP-3009` typehash matches the canonical
 (`authorizationState` responds), and `isValidSignature` correctly refuses a signature that
 recovers to `address(0)` — a guard implementations of this pattern often miss.
 
+## Fork attack phase — run on an anvil fork of chain 4663
+
+`anvil --fork-url https://rpc.mainnet.chain.robinhood.com --chain-id 4663 --auto-impersonate`
+(`TARGETS/_obol_fork.py`). The chain-id is not cosmetic: `DaemonAccount.owner()` returns
+`address(0)` unless `block.chainid` matches the id baked into the account's ERC-6551 footer,
+so a fork on any other id would silently "prove" the wallet has no owner.
+
+| # | Attack | Result |
+|---|---|---|
+| A | **F2 sellout panic** — set `sold = supply` (slot 11) and read `price()` | **REPRODUCED.** `sold=10047` → `currentBand=9`, `price=0.10604499373 ETH`; `sold=10048` → `currentBand=10`, `price()` reverts **panic: array out-of-bounds access (0x32)** |
+| B | **F1 agent ETH drain** — holder arms agent with `maxPerCall=1 USDG`, `maxPerDay=1 USDG`, `maxEthPerCall=0.005 ETH`; agent calls `execute` 5× | **REPRODUCED.** wallet **1.000 → 0.975 ETH**, payee **+0.025 ETH**, and **`spentToday()` stayed `0`**. 0.025 ETH moved against a stated 1-USDG/day ceiling — the daily cap does not exist for ETH |
+| B2 | approve path vs the daily counter — 3 × `execute(dollar, approve(spender, 1 USDG))` | **`spentToday` still 0** — approvals never reach `_spend` |
+| C | **wallet takeover** — pre-create an unsold daemon's account from an arbitrary EOA, then use it | **BLOCKED.** `account.owner()` = the sale, `nft.ownerOf()` = the sale; attacker `execute()` reverts |
+| D | gates — wrong value / already sold / before `opensAt` | **ALL BLOCKED** (`WrongPrice`, `NotForSale`, `NotOpen`) |
+| E | **x402: does USDG consult ERC-1271?** (open question 1) | **YES — the mechanism is real.** See below |
+
+### E is a real result, not a formality
+
+The account's whole "selling skills over x402" story needs USDG to ask the *account*
+(a contract) to sign. Tested with a **zero-filled signature**, which no ECDSA check can
+accept:
+
+- digest **pre-approved** by the account → USDG reverts **`InsufficientFunds()` (0x356680b7)** —
+  i.e. it passed the signature gate and failed only on balance (the account holds no USDG);
+- same call, nonce **never approved** → USDG reverts **`InvalidSignature()` (0x8baa579f)**.
+
+Two outcomes from the same garbage signature, decided only by the account's approval, is
+exactly the behaviour of an ERC-1271 check on a contract signer. It also independently
+confirms the account's `paymentDigest` is correct — USDG's own digest matched the approved
+one, or we would have seen `InvalidSignature()` in the first case.
+
+**Consequence for severity:** because x402 genuinely works, the agent's caps are load-bearing
+— which is what makes F1 (a bypassable daily ceiling) worth fixing rather than cosmetic.
+
 ## Open questions
-1. **Does USDG honour ERC-1271 for EIP-3009?** The account's `approvePayment` marks a digest
-   that a relayer must then execute against USDG. If USDG only ecrecovers, x402 is inert.
-   Needs a testnet PoC (guide says the reference runs on testnet today).
-2. **Fork attack not yet run** — mandatory before this target can be called closed. Queue:
-   sellout index panic (F2) reproduced in a fork, an agent ETH drain past `maxPerDay` (F1),
-   wallet-takeover attempt via registry pre-creation, reentrancy through the wallet/treasury
-   during `buy`.
-3. Name collision worth a buyer's attention: this is **not** Obol Network (the DVT project at
+
+1. ~~Does USDG honour ERC-1271 for EIP-3009?~~ **RESOLVED — yes, proven on the fork (E). The
+   USDG verified sources contain no `isValidSignature`/`SignatureChecker` at all and the
+   proxy dispatches unknown selectors with `0x800ab12c`, so the 3009 facet is not in the
+   published source set; the behavioural test is the evidence.**
+2. **Not yet exercised: the agent path on a *live* daemon.** Activation is 24h after the
+   sale (Sun 11 Oct 18:00 UTC) and every daemon wallet I sampled has an empty constitution.
+   F1 was therefore proven on a fork with the holder acting exactly as the UI would.
+3. **Reentrancy through `buy()` was reasoned, not run.** The buyer never gets control during
+   the transaction (the NFT move has no hook, the wallet's `receive()` is empty, the treasury
+   is a Safe), so there is no callback to reenter from — but a contract-buyer harness was not
+   written. Low value: `sold` increments before any external call and each `buy` demands its
+   own full payment, so even a successful reentry gains nothing.
+4. Name collision worth a buyer's attention: this is **not** Obol Network (the DVT project at
    obol.tech). Different entity — `SHYGUY LLC`, design credited to Chad Neal.
