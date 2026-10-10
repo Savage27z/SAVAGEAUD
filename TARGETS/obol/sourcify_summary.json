@@ -1,0 +1,116 @@
+{
+ "collection": {
+  "address": "0x1BD783d8dcc50db3f610d1c46ec7e97d7f457402",
+  "creationMatch": "exact_match",
+  "runtimeMatch": "exact_match",
+  "verifiedAt": "2026-10-09T20:20:19Z",
+  "compiler": "0.8.33+commit.64118f21",
+  "files": [
+   [
+    "lib/openzeppelin-contracts/contracts/utils/math/SafeCast.sol",
+    34943
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
+    28097
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol",
+    21425
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/token/ERC721/ERC721.sol",
+    16456
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Consecutive.sol",
+    7404
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol",
+    6532
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol",
+    4929
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/utils/Strings.sol",
+    3932
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/utils/math/SignedMath.sol",
+    2613
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/utils/structs/BitMaps.sol",
+    2020
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/utils/Panic.sol",
+    1973
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Utils.sol",
+    1912
+   ],
+   [
+    "src/DaemonNFT.sol",
+    1737
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol",
+    997
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+    963
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+    912
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+    870
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/IERC721Metadata.sol",
+    792
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/interfaces/IERC2309.sol",
+    532
+   ]
+  ]
+ },
+ "sale": {
+  "address": "0xD22301bcA4eCfFb9F4B87792885D766595e7363c",
+  "creationMatch": "exact_match",
+  "runtimeMatch": "exact_match",
+  "verifiedAt": "2026-10-09T20:20:02Z",
+  "compiler": "0.8.33+commit.64118f21",
+  "files": [
+   [
+    "src/DaemonSale.sol",
+    6275
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol",
+    4929
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol",
+    997
+   ],
+   [
+    "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+    870
+   ]
+  ]
+ },
+ "treasury_safe": {
+  "address": "0xA7DC540d12E53Cf8d6615921Fe7b4f9Ca73A0dBC",
+  "error": "HTTP Error 404: Not Found"
+ }
+}

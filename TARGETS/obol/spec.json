@@ -1,0 +1,106 @@
+{
+  "_README": "Per-target spec for obol.sh (Daemon) — Robinhood Chain 4663. Every claim carries an evidence string. Sections without evidence are OPEN.",
+
+  "target": {
+    "name": "Daemon (obol.sh)",
+    "app": "https://obol.sh",
+    "chain": "Robinhood Chain",
+    "chain_id": 4663,
+    "rpc": "https://rpc.mainnet.chain.robinhood.com",
+    "opened": "2026-10-10T18:00:00Z (sale opens; opensAt=1791655200) — audited while LIVE, sold=329 at block 85218989",
+    "source": {
+      "verified": true,
+      "route": "Sourcify v2 ?fields=all chain 4663 (Blockscout for this chain is Cloudflare-walled: 403 on /api and /api/v2)",
+      "note": "All three project contracts are exact_match and NOT proxies. Checksums re-derived from the runtime bytecode immutables, not read from the website."
+    },
+    "contracts": [
+      {"address": "0xD22301bcA4eCfFb9F4B87792885D766595e7363c", "role": "sale (banded, one daemon per tx, 90/10 split)", "impl": "none", "proxy_kind": "none", "code_size": 7459, "known": true},
+      {"address": "0x1BD783d8dcc50db3f610d1c46ec7e97d7f457402", "role": "collection (ERC721Consecutive, all 10048 pre-minted to the sale)", "impl": "none", "proxy_kind": "none", "code_size": 8960, "known": true},
+      {"address": "0xac855818bc77cd378d7ce24ab6151491e1623dc6", "role": "DaemonAccount — ERC-6551 implementation for every daemon wallet (holds 90% of each sale)", "impl": "none", "proxy_kind": "none", "code_size": 11483, "known": true},
+      {"address": "0x000000006551c19487814612e58FE06813775758", "role": "ERC-6551 registry (canonical, permissionless createAccount)", "impl": "", "proxy_kind": "minimal", "code_size": 571, "known": true},
+      {"address": "0xA7DC540d12E53Cf8d6615921Fe7b4f9Ca73A0dBC", "role": "treasury (SHYGUY LLC) — receives 10%", "impl": "", "proxy_kind": "Safe proxy", "code_size": 171, "known": true},
+      {"address": "0x76c4eEE755Ee20c973db55C522F1E75AD3132DFF", "role": "deployer EOA (constructor arg + setNft authority)", "impl": "none", "proxy_kind": "none", "code_size": 0, "known": true},
+      {"address": "0x5fc5360d0400a0fd4f2af552add042d716f1d168", "role": "USDG traded/charged inside the account (Paxos USDG), proxy -> 0x68184c449e1a8f34fa18d289737129fd27b66f8f", "impl": "0x68184c449e1a8f34fa18d289737129fd27b66f8f", "proxy_kind": "ERC-1967 (custom 170B proxy)", "code_size": 170, "known": true}
+    ],
+    "coverage_gap": "none known. $DAEMON (0x242edd4e...) is a separate Pons/Uniswap-v4 token explicitly excluded from the sale by the docs — out of scope, not mapped."
+  },
+
+  "integrations": [
+    {"name": "ERC-6551 registry singleton", "kind": "contract", "trusted": true, "notes": "canonical 0x0000...5758; sale calls createAccount (idempotent) — an existing account is reused, and the address is impl-bound so a third party cannot substitute code"},
+    {"name": "USDG (Paxos)", "kind": "token", "trusted": true, "notes": "EIP-3009 confirmed live (authorizationState(address,bytes32) responds, DOMAIN_SEPARATOR() responds, name='Global Dollar'). Account hardcodes the canonical TransferWithAuthorization typehash (keccak verified with cast)."},
+    {"name": "obol.sh web/agent runtime", "kind": "off-chain", "trusted": true, "notes": "serves tokenURI art (https://obol.sh/d/<n>/os), the agentfile execution, and the trait/seed reveal. NOT anchored on-chain — see F3."},
+    {"name": "treasury Safe", "kind": "EOA-controlled Safe", "trusted": true, "notes": "receives the 10%; the Safe address is also DaemonNFT.owner (marketplace metadata only — verified no powers in DaemonNFT: no setter, no mint, no pause)"}
+  ],
+
+  "actors": [
+    {"name": "buyer", "address": "any", "authority": "EOA or contract", "can": ["buy any unsold daemon by paying exactly the current band price", "withdraw everything from the daemon wallet it then holds"], "cannot": ["pay less than the current band price", "obtain a daemon without incrementing sold", "choose the band price"], "verified_how": "buy() read + INV-3 measured live"},
+    {"name": "deployer", "address": "0x76c4eEE755Ee20c973db55C522F1E75AD3132DFF", "authority": "EOA", "can": ["setNft(address) ONCE, before it is set"], "cannot": ["change prices", "change split", "change opensAt", "re-set nft", "touch funds", "change metadata"], "verified_how": "nft already set (0x47ccca02 -> 0x1BD7...) so setNft is permanently dead; all other params immutable (immutableReferences decoded from runtime bytecode)"},
+    {"name": "daemon holder", "address": "nft.ownerOf(tokenId)", "authority": "whatever wallet holds the NFT", "can": ["execute() anything from that daemon's wallet", "constitute() the agent + limits", "withdraw the 90%"], "cannot": ["touch another daemon's wallet"], "verified_how": "DaemonAccount.owner() reads IERC721(tokenContract).ownerOf(tokenId) live; live check token0/token1 account.owner() == nft.ownerOf()"},
+    {"name": "daemon agent", "address": "holder-chosen", "authority": "EOA/contract key", "can": ["call allowlisted targets inside per-call caps", "approve allowlisted spenders", "send tokens back to the holder", "pre-approve one EIP-3009 payment to an allowlisted payee"], "cannot": ["act after the NFT changes hands (InertAfterTransfer)", "transferFrom", "delegatecall (operation must be 0)", "exceed maxPerCall for the dollar"], "verified_how": "DaemonAccount lines 112-158"},
+    {"name": "treasury (SHYGUY LLC)", "address": "0xA7DC540d12E53Cf8d6615921Fe7b4f9Ca73A0dBC", "authority": "Safe", "can": ["receive the 10%"], "cannot": ["reach the daemons' wallets", "change the sale"], "verified_how": "no code path to treasury except the 10% call in buy()"}
+  ],
+
+  "assumptions": [
+    {"id": "ASM-1", "statement": "The publisher pre-commits the trait table and the seed before the sale so no one can pick rare daemons.", "accepted_by_design": true, "breaks_if": "the seed is ground off-chain before its hash is published, or the hashes are not anchored anywhere immutable (F3)"},
+    {"id": "ASM-2", "statement": "accountImpl will always resolve owner() from the NFT, so a daemon wallet always follows the token.", "accepted_by_design": false, "breaks_if": "accountImpl is a different implementation; verified NOT to be the case here — owner() reads ownerOf() live (account line 89-93)"},
+    {"id": "ASM-3", "statement": "A daemon's agent is untrusted and must be unable to exceed the holder's stated limits.", "accepted_by_design": false, "breaks_if": "the per-day accounting does not cover every outflow path (F1 — ETH has no daily cap)"},
+    {"id": "ASM-4", "statement": "USDG honours ERC-1271 so an account's pre-approved EIP-3009 digest can be executed by a relayer.", "accepted_by_design": true, "breaks_if": "USDG validates 3009 signatures by ecrecover only — then approvePayment marks digests nobody can use. OPEN (needs testnet PoC)."}
+  ],
+
+  "invariants": [
+    {"id": "INV-1", "statement": "nft.balanceOf(sale) == supply - sold (every increment of sold corresponds to exactly one daemon leaving)", "where": "DaemonSale.buy", "check": "live eth_call", "checked": true, "result": "PASS", "evidence": "block 85218989: balanceOf(sale)=9719, supply-led=10048-329=9719, drift 0"},
+    {"id": "INV-2", "statement": "toWallet + toTreasury == price exactly, with toWallet == 90%", "where": "DaemonSale.buy:84-88", "check": "decode real Bought logs", "checked": true, "result": "PASS on 92/92 events in a 20k-block window", "evidence": "topic0 0x7e59c65d9aaa8d98b7d4e6a75211cfeb3432907b6af4aeb217db383092985b20; e.g. #1214 price 0.01 toWallet 0.009 toTreasury 0.001"},
+    {"id": "INV-3", "statement": "bandPrice[i] == floor(0.01e18 * 1.3^i) and bandPrice[9] == 0.10604499373 ETH as advertised", "where": "DaemonSale constructor:50-54", "check": "read bandPrice[0..9] live", "checked": true, "result": "PASS — all ten exact, no rounding drift", "evidence": "bandPrice[9]=106044993730000000 wei; bandPrice[0]=10000000000000000"},
+    {"id": "INV-4", "statement": "The sale holds no ETH between transactions", "where": "DaemonSale.buy", "check": "live balance", "checked": true, "result": "PASS", "evidence": "sale balance 0.000000000000 ETH at block 85218989"},
+    {"id": "INV-5", "statement": "treasury balance == sold * (price - 90%) for a single-band run", "where": "DaemonSale.buy", "check": "live balance vs sold", "checked": true, "result": "PASS", "evidence": "treasury 0.329000 ETH == sold(329) * 0.001"},
+    {"id": "INV-6", "statement": "A daemon wallet answers to the NFT holder and nobody else", "where": "DaemonAccount.owner()/execute", "check": "live read + source", "checked": true, "result": "PASS", "evidence": "token0 account 0x0490414a... owner()==0xf3658ae5... == nft.ownerOf(0)"},
+    {"id": "INV-7", "statement": "currentBand() is always a valid index into bandPrice[0..9]", "where": "DaemonSale.currentBand:63-65", "check": "boundary analysis", "checked": true, "result": "FAIL at sold == supply (returns 10) -> index OOB -> panic", "evidence": "F2; bandPrice is uint256[10]; sold=10048 -> 10048*10/10048 = 10"}
+  ],
+
+  "never_should_happen": [
+    {"id": "NSH-1", "statement": "A buyer pays less than the current band price, or gets a daemon without paying", "attempt": "static: msg.value != p reverts; ownerOf != address(this) reverts; ++sold after both checks", "result": "blocked", "evidence": "DaemonSale.buy:77-82"},
+    {"id": "NSH-2", "statement": "An outsider extracts ETH from the sale contract", "attempt": "static: no receive/fallback, no withdraw, both value calls are forwards in the same tx and the sale ends at 0", "result": "blocked", "evidence": "INV-4; contract has no payable entry other than buy"},
+    {"id": "NSH-3", "statement": "A third party substitutes the daemon wallet implementation or hijacks an existing account", "attempt": "static: address is CREATE2-bound to (impl, salt=0, chainId, nft, tokenId); registry returns early when code exists; no attacker can deploy other code there", "result": "blocked", "evidence": "DaemonSale.walletOf / registry createAccount idempotency; 173-byte minimal proxies observed for sold tokens"},
+    {"id": "NSH-4", "statement": "The agent exceeds the holder's stated limits", "attempt": "static + accounting: dollar delta measured on the general path, but ETH is only capped per call and never accumulated", "result": "PARTIAL — ETH drainable in maxEthPerCall-sized steps, dollar bypassable via repeated approve", "evidence": "F1; DaemonAccount:152 caps value once, _spend never sees ETH"},
+    {"id": "NSH-5", "statement": "A buyer over-pays because the band moved", "attempt": "static: exact-value match means a moved band reverts the tx instead of overcharging", "result": "blocked (reverts instead)", "evidence": "F5"}
+  ],
+
+  "sections": [
+    {"id": "S1", "name": "DaemonSale — pricing, band maths, split, fund flow", "contracts": ["DaemonSale"], "depends_on": [], "value_flows": ["buyer ETH in -> 90% daemon wallet, 10% treasury"], "status": "closed", "evidence": "INV-1..INV-5 all measured live; band table exact; split exact on 92 events; no payable surface other than buy(); sold increment sits after every gate", "findings": ["F2", "F5"]},
+    {"id": "S2", "name": "DaemonNFT — supply, ownership, metadata mutability, ERC721Consecutive edge cases", "contracts": ["DaemonNFT"], "depends_on": [], "value_flows": [], "status": "closed", "evidence": "10048 minted to the sale in 5000/5000/48 batches; no mint/burn/pause/admin; baseUri and collectionUri set once, no setters; owner is informational only; totalSupply absent because OZ 5.x moved it to Enumerable (not a mismatch)", "findings": []},
+    {"id": "S3", "name": "DaemonAccount — ERC-6551 wiring, owner resolution, agent constitution, spend accounting, x402", "contracts": ["DaemonAccount"], "depends_on": ["ERC-6551 registry"], "value_flows": ["in: 90% of each sale", "out: holder execute()", "out: agent calls inside caps"], "status": "closed", "evidence": "owner() == ownerOf() live; _activeAgent binds to configuredBy==owner() (inert after transfer); transferFrom banned; operation!=0 banned; general path measures the real dollar delta; canonical EIP-3009 typehash verified by keccak", "findings": ["F1"]},
+    {"id": "S4", "name": "Rarity / provenance / off-chain surface", "contracts": [], "depends_on": ["obol.sh"], "value_flows": [], "status": "closed", "evidence": "tokenURI -> https://obol.sh/d/<n>/os (mutable, publisher-controlled); trait-table and seed hashes appear only as website strings; no on-chain anchor in any of the three contracts", "findings": ["F3"]}
+  ],
+
+  "value_movers": [
+    {"function": "buy(uint256) payable", "contract": "DaemonSale", "direction": "in+out", "caller_can_be": "anyone", "guards": ["timestamp >= opensAt", "msg.value == bandPrice[currentBand()]", "nft.ownerOf(tokenId) == address(this)"], "bounded_by": "exact price match; one daemon per call", "notes": "sale retains 0"},
+    {"function": "transferFrom(address,address,uint256)", "contract": "DaemonNFT", "direction": "n/a", "caller_can_be": "token owner/approved", "guards": ["ERC721 auth"], "bounded_by": "nothing (standard NFT move; the wallet follows)", "notes": "moving the NFT moves the daemon wallet, its balance and its limits"},
+    {"function": "execute(address,uint256,bytes,uint8)", "contract": "DaemonAccount", "direction": "out", "caller_can_be": "holder (unrestricted) / agent (bounded)", "guards": ["operation==0", "agent: targetAllowed", "agent: value<=maxEthPerCall", "agent: transfer only to holder", "agent: approve spender allowlisted (+ dollar per-call cap)", "agent: dollar delta <= maxPerCall/maxPerDay"], "bounded_by": "caps that cover only the dollar delta and per-call ETH", "notes": "F1"},
+    {"function": "approvePayment(address,uint256,uint256,uint256,bytes32)", "contract": "DaemonAccount", "direction": "out (later, by a relayer)", "caller_can_be": "agent", "guards": ["payeeAllowlisted", "_spend(value)"], "bounded_by": "per-call + per-day caps", "notes": "digest never expires on-chain"}
+  ],
+
+  "main_functions": [
+    {"function": "DaemonSale.buy", "why_everything_depends_on_it": "the only money-in path; sets the price, the split, the wallet and the sold counter in one transaction", "state_it_touches": ["sold", "nft ownership", "daemon wallet balance", "treasury balance"]},
+    {"function": "DaemonAccount.owner", "why_everything_depends_on_it": "every permission check in the wallet resolves through it", "state_it_touches": ["none (reads the ERC-6551 footer + ownerOf)"]},
+    {"function": "DaemonAccount.execute", "why_everything_depends_on_it": "the only way value leaves a daemon wallet", "state_it_touches": ["state", "token/ETH balances", "spentToday/spentDay"]}
+  ],
+
+  "passes": [
+    {"pass": 1, "lens": "flow gap (money in/out, ordering)", "scope": "DaemonSale.buy end to end", "hypotheses": ["cheap-price front-run", "sold inflation", "reentrancy via wallet or treasury", "partial-split dust"], "result": "none reachable; all eight funds-flow claims measured on-chain", "evidence": "INV-1..INV-5"},
+    {"pass": 2, "lens": "trust gap (privileged actor + economic primitive)", "scope": "deployer vs immutable params; holder vs agent; publisher vs rarity", "hypotheses": ["deployer repoints the NFT", "agent exceeds limits", "publisher grinds the seed"], "result": "F1 (agent limits), F3 (publisher rarity) confirmed by code; deployer closed (setNft dead)", "evidence": "F1, F3"},
+    {"pass": 3, "lens": "numerical gap (band maths, indices, caps)", "scope": "currentBand, bandPrice, _spend, _eth/_uint", "hypotheses": ["band boundary off-by-one", "OOB index at sellout", "day rollover error"], "result": "F2 (OOB at sold==supply); band boundaries verified 1005x9+1003=10048; _spend rollover correct", "evidence": "F2, INV-7"},
+    {"pass": 4, "lens": "fork attack", "scope": "anvil fork of RHC 4663: sellout index, agent ETH drain, wallet takeover attempt, reentrancy", "hypotheses": [], "result": "PENDING — mandatory before any clean verdict (verdict here is not clean: F1-F3 open)", "evidence": ""}
+  ],
+
+  "status": {
+    "done": false,
+    "sections_closed": 4,
+    "sections_total": 4,
+    "open_questions": [
+      "Does USDG honour ERC-1271 for EIP-3009 (needed for the account's approvePayment/x402 to be usable at all)? authorizationState exists; ERC-1271 path unverified — testnet PoC.",
+      "The agent path is not yet live: both sampled sold accounts have an empty constitution (configuredBy=0) and state=1 (one owner-side call happened) — the agent limits can only be exercised after activation (Sun 11 Oct 18:00 UTC).",
+      "Fork attack pending (NSH-4 partial by inspection only)."
+    ],
+    "blocked_on": "nothing"
+  }
+}
